@@ -1,0 +1,161 @@
+export interface Concert {
+  id: number;
+  slug: string;
+  date: string;
+  venue: string;
+  city: string;
+  country: string;
+  status: 'upcoming' | 'past' | 'sold-out' | 'cancelled';
+  festival?: string;
+  ticketsUrl?: string;
+  attendance?: string;
+  support?: string;
+}
+
+export const concerts: Concert[] = [
+  // Upcoming concerts
+  {
+    id: 1,
+    slug: 'paris-accor-arena-2026',
+    date: '2026-06-15',
+    venue: 'Accor Arena',
+    city: 'Paris',
+    country: 'France',
+    status: 'upcoming',
+    ticketsUrl: '#',
+    support: 'Gojira',
+  },
+  {
+    id: 2,
+    slug: 'berlin-mercedes-benz-arena-2026',
+    date: '2026-06-18',
+    venue: 'Mercedes-Benz Arena',
+    city: 'Berlin',
+    country: 'Allemagne',
+    status: 'upcoming',
+    ticketsUrl: '#',
+    support: 'Rammstein',
+  },
+  {
+    id: 3,
+    slug: 'clisson-hellfest-2026',
+    date: '2026-06-21',
+    venue: 'Hellfest Mainstage',
+    city: 'Clisson',
+    country: 'France',
+    status: 'sold-out',
+    festival: 'Hellfest 2026',
+    ticketsUrl: '#',
+    support: 'Slipknot, Deftones',
+  },
+  {
+    id: 4,
+    slug: 'london-o2-arena-2026',
+    date: '2026-06-25',
+    venue: 'The O2',
+    city: 'London',
+    country: 'Royaume-Uni',
+    status: 'upcoming',
+    ticketsUrl: '#',
+    support: 'Architects',
+  },
+  {
+    id: 5,
+    slug: 'amsterdam-ziggo-dome-2026',
+    date: '2026-06-28',
+    venue: 'Ziggo Dome',
+    city: 'Amsterdam',
+    country: 'Pays-Bas',
+    status: 'upcoming',
+    ticketsUrl: '#',
+  },
+  {
+    id: 6,
+    slug: 'lyon-halle-tony-garnier-2026',
+    date: '2026-07-02',
+    venue: 'Halle Tony Garnier',
+    city: 'Lyon',
+    country: 'France',
+    status: 'upcoming',
+    ticketsUrl: '#',
+  },
+  {
+    id: 7,
+    slug: 'barcelona-palau-sant-jordi-2026',
+    date: '2026-07-05',
+    venue: 'Palau Sant Jordi',
+    city: 'Barcelona',
+    country: 'Espagne',
+    status: 'upcoming',
+    ticketsUrl: '#',
+  },
+  {
+    id: 8,
+    slug: 'brussels-forest-national-2026',
+    date: '2026-07-08',
+    venue: 'Forest National',
+    city: 'Brussels',
+    country: 'Belgique',
+    status: 'upcoming',
+    ticketsUrl: '#',
+  },
+  // Past concerts
+  {
+    id: 100,
+    slug: 'paris-accor-arena-2023',
+    date: '2023-11-28',
+    venue: 'Accor Arena',
+    city: 'Paris',
+    country: 'France',
+    status: 'past',
+    attendance: '20,000',
+    support: 'Code Orange',
+  },
+  {
+    id: 101,
+    slug: 'clisson-hellfest-2023',
+    date: '2023-06-17',
+    venue: 'Hellfest',
+    city: 'Clisson',
+    country: 'France',
+    status: 'past',
+    festival: 'Hellfest 2023',
+    attendance: '60,000+',
+    support: 'Gojira, Mastodon',
+  },
+  {
+    id: 102,
+    slug: 'clisson-hellfest-2022',
+    date: '2022-06-19',
+    venue: 'Hellfest',
+    city: 'Clisson',
+    country: 'France',
+    status: 'past',
+    festival: 'Hellfest 2022',
+    attendance: '55,000+',
+    support: 'Lamb of God, Deftones',
+  },
+  {
+    id: 103,
+    slug: 'clisson-hellfest-2019',
+    date: '2019-06-21',
+    venue: 'Hellfest',
+    city: 'Clisson',
+    country: 'France',
+    status: 'past',
+    festival: 'Hellfest 2019',
+    attendance: '60,000+',
+    support: 'Gojira, Parkway Drive',
+  },
+  {
+    id: 104,
+    slug: 'paris-accorhotels-arena-2019',
+    date: '2019-11-15',
+    venue: 'AccorHotels Arena',
+    city: 'Paris',
+    country: 'France',
+    status: 'past',
+    attendance: '18,500',
+    support: 'Ho99o9',
+  },
+];
