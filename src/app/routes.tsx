@@ -31,6 +31,7 @@ import { EditProfilePage } from '@/app/pages/Profile/EditProfilePage';
 import { SettingsPage } from '@/app/pages/Profile/SettingsPage';
 import { ActivityPage } from '@/app/pages/Profile/ActivityPage';
 import { NotFoundPage } from '@/app/pages/NotFoundPage';
+import { ComingSoonPage } from '@/app/pages/ComingSoonPage';
 import { RootLayout } from '@/app/components/RootLayout';
 
 export const router = createBrowserRouter([
@@ -97,5 +98,10 @@ export const router = createBrowserRouter([
       // 404 - Must be last
       { path: '*', Component: NotFoundPage },
     ],
+  },
+  // Coming Soon - Standalone page without navbar
+  { 
+    path: 'coming-soon', 
+    Component: ComingSoonPage 
   },
 ]);
