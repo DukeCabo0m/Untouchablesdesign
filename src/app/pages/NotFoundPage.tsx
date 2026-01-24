@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { Search, Home } from 'lucide-react';
 import { Button } from '@/app/components/Button';

@@ -1,12 +1,29 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { GlitchText } from '@/app/components/GlitchText';
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { Button } from '@/app/components/Button';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Mock login - dans une vraie app, on vérifierait les credentials
+    if (email && password) {
+      // Extraire le username depuis l'email (partie avant le @)
+      const username = email.split('@')[0];
+      login(username, email);
+      navigate('/profile');
+    }
+  };
 
   return (
     <div className="min-h-screen pt-32 pb-24 px-4 flex items-center justify-center">
@@ -36,7 +53,7 @@ export function LoginPage() {
           transition={{ delay: 0.2 }}
           className="bg-[#0A0A0A] border-2 border-[#E0E0E0]/20 p-8"
         >
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Email */}
             <div>
               <label className="block font-mono text-xs text-[#8B0000] uppercase mb-2">
@@ -51,6 +68,8 @@ export function LoginPage() {
                   type="email"
                   placeholder="votre@email.fr"
                   className="w-full bg-[#0A0A0A] border border-[#E0E0E0]/20 focus:border-[#8B0000] outline-none text-[#E0E0E0] font-mono text-sm pl-12 pr-4 py-3 transition-colors"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -69,6 +88,8 @@ export function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   className="w-full bg-[#0A0A0A] border border-[#E0E0E0]/20 focus:border-[#8B0000] outline-none text-[#E0E0E0] font-mono text-sm pl-12 pr-4 py-3 transition-colors"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"

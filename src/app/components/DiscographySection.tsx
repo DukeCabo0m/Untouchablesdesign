@@ -1,7 +1,5 @@
-import { motion } from 'motion/react';
-import { GlitchText } from './GlitchText';
 import { ImageWithFallback } from '@/app/components/figma/ImageWithFallback';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const albums = [
   {

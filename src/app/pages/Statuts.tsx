@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { GlitchText } from '@/app/components/GlitchText';
+import { PageHeader } from '@/app/components/PageHeader';
 import { SectionSeparator } from '@/app/components/SectionSeparator';
 import { FileText, Calendar, Users, Scale, Shield } from 'lucide-react';
 
@@ -78,160 +79,132 @@ export function Statuts() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(139,0,0,0.03)_0%,transparent_65%)]" />
-        <div 
-          className="absolute inset-0 opacity-[0.015]"
-          style={{
-            backgroundImage: `repeating-linear-gradient(
-              0deg,
-              rgba(0, 0, 0, 0.15),
-              rgba(0, 0, 0, 0.15) 1px,
-              transparent 1px,
-              transparent 2px
-            )`
-          }}
-        />
-      </div>
+    <div className="min-h-screen">
+      {/* Page Header */}
+      <PageHeader
+        title="STATUTS DE L'ASSOCIATION"
+        description="UNTOUCHABLES est une association de fans à but non lucratif, constituée selon la loi de 1901.<br />Rassembler les passionnés francophones du groupe Korn autour d'une communauté active et créative."
+        backgroundImage="https://images.unsplash.com/photo-1696041757950-62e2c030283b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhc3NvY2lhdGlvbiUyMGNvbW11bml0eSUyMG1lZXRpbmclMjBkb2N1bWVudHxlbnwxfHx8fDE3NjkxOTMyODB8MA&ixlib=rb-4.1.0&q=80&w=1080"
+        breadcrumbs={[
+          { label: 'ACCUEIL', path: '/' },
+          { label: 'STATUTS' }
+        ]}
+        glitchIntensity="low"
+      />
 
-      <div className="relative z-10">
-        {/* Hero Section */}
-        <section className="py-12 px-4">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-8"
-            >
-              <div className="inline-flex items-center gap-3 mb-6 px-6 py-2 border-2 border-[#8B0000] bg-[#8B0000]/10">
-                <Scale className="text-[#8B0000]" size={20} />
-                <span className="font-mono text-xs text-[#8B0000] uppercase tracking-widest">
-                  ASSOCIATION LOI 1901
-                </span>
-              </div>
+      <div className="bg-[#0A0A0A] relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="fixed inset-0 pointer-events-none z-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(139,0,0,0.03)_0%,transparent_65%)]" />
+          <div 
+            className="absolute inset-0 opacity-[0.015]"
+            style={{
+              backgroundImage: `repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+              )`
+            }}
+          />
+        </div>
 
-              <GlitchText 
-                text="STATUTS DE L'ASSOCIATION" 
-                className="text-4xl md:text-6xl lg:text-7xl font-black text-[#E0E0E0] mb-6 leading-none tracking-tight"
-              />
-
-              <div className="flex items-center justify-center gap-6 font-mono text-xs text-[#E0E0E0]/60 uppercase">
-                <div className="flex items-center gap-2">
-                  <Calendar size={14} className="text-[#8B0000]" />
-                  <span>Adoptés le 15 janvier 2026</span>
-                </div>
-                <div className="w-1 h-1 bg-[#8B0000] rounded-full" />
-                <div className="flex items-center gap-2">
-                  <Shield size={14} className="text-[#8B0000]" />
-                  <span>Version 1.0</span>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Introduction */}
+        <div className="relative z-10 px-4 pb-24">
+          <div className="max-w-7xl mx-auto">
+            {/* Introduction badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="border-l-4 border-[#8B0000] pl-8 py-6 bg-[#8B0000]/5 mb-12"
+              className="border-l-4 border-[#8B0000] pl-8 py-6 bg-[#8B0000]/5 mb-16"
             >
               <p className="font-mono text-sm text-[#E0E0E0]/80 leading-relaxed">
-                <span className="text-[#8B0000] font-black">PRÉAMBULE :</span> UNTOUCHABLES est une association de fans à but non lucratif, 
+                <span className="text-[#8B0000] font-black">// PRÉAMBULE :</span> UNTOUCHABLES est une association de fans à but non lucratif, 
                 constituée selon la loi du 1er juillet 1901 et le décret du 16 août 1901. Elle rassemble les passionnés francophones 
                 du groupe Korn autour d'une communauté active, créative et respectueuse de l'héritage artistique du groupe.
               </p>
             </motion.div>
-          </div>
-        </section>
 
-        <SectionSeparator />
-
-        {/* Articles Section */}
-        <section className="py-12 px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="space-y-8">
-              {articles.map((article, index) => (
-                <motion.div
-                  key={article.number}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.6, delay: index * 0.05 }}
-                  className="group"
-                >
-                  <div className="border-2 border-[#E0E0E0]/10 hover:border-[#8B0000]/30 transition-all duration-300 bg-[#000000]/50 backdrop-blur-sm">
-                    <div className="border-b-2 border-[#8B0000] bg-[#8B0000]/10 px-6 py-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 flex items-center justify-center bg-[#8B0000] text-[#E0E0E0] font-black text-sm">
-                          {String(index + 1).padStart(2, '0')}
-                        </div>
-                        <div>
-                          <div className="font-mono text-[10px] text-[#8B0000] uppercase tracking-widest mb-1">
-                            {article.number}
+            {/* Articles Section */}
+            <section className="py-12 px-4">
+              <div className="space-y-8">
+                {articles.map((article, index) => (
+                  <motion.div
+                    key={article.number}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.6, delay: index * 0.05 }}
+                    className="group"
+                  >
+                    <div className="border-2 border-[#E0E0E0]/10 hover:border-[#8B0000]/30 transition-all duration-300 bg-[#000000]/50 backdrop-blur-sm">
+                      <div className="border-b-2 border-[#8B0000] bg-[#8B0000]/10 px-6 py-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 flex items-center justify-center bg-[#8B0000] text-[#E0E0E0] font-black text-sm">
+                            {String(index + 1).padStart(2, '0')}
                           </div>
-                          <h3 className="font-black text-lg text-[#E0E0E0] uppercase tracking-tight">
-                            {article.title}
-                          </h3>
+                          <div>
+                            <div className="font-mono text-[10px] text-[#8B0000] uppercase tracking-widest mb-1">
+                              {article.number}
+                            </div>
+                            <h3 className="font-black text-lg text-[#E0E0E0] uppercase tracking-tight">
+                              {article.title}
+                            </h3>
+                          </div>
                         </div>
                       </div>
+                      <div className="px-6 py-6">
+                        <p className="font-mono text-sm text-[#E0E0E0]/80 leading-relaxed">
+                          {article.content}
+                        </p>
+                      </div>
                     </div>
-                    <div className="px-6 py-6">
-                      <p className="font-mono text-sm text-[#E0E0E0]/80 leading-relaxed">
-                        {article.content}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
 
-        <SectionSeparator />
-
-        {/* Footer Note */}
-        <section className="py-12 px-4">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="border-2 border-[#8B0000] bg-[#8B0000]/5 p-8"
-            >
-              <div className="flex items-start gap-4 mb-6">
-                <FileText className="text-[#8B0000] mt-1 flex-shrink-0" size={24} />
-                <div>
-                  <h3 className="font-black text-lg text-[#8B0000] uppercase tracking-tight mb-3">
-                    Certification et validité
-                  </h3>
-                  <p className="font-mono text-sm text-[#E0E0E0]/80 leading-relaxed mb-4">
-                    Les présents statuts ont été adoptés par l'assemblée générale constitutive du 15 janvier 2026. 
-                    Ils peuvent être modifiés par l'assemblée générale extraordinaire dans les conditions prévues à l'article 12.
-                  </p>
-                  <div className="flex flex-wrap gap-6 font-mono text-xs text-[#E0E0E0]/60 uppercase">
-                    <div>
-                      <span className="text-[#8B0000]">Fait à :</span> Paris, France
-                    </div>
-                    <div>
-                      <span className="text-[#8B0000]">Le :</span> 15 janvier 2026
+            {/* Footer Note */}
+            <section className="py-12 px-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="border-2 border-[#8B0000] bg-[#8B0000]/5 p-8"
+              >
+                <div className="flex items-start gap-4 mb-6">
+                  <FileText className="text-[#8B0000] mt-1 flex-shrink-0" size={24} />
+                  <div>
+                    <h3 className="font-black text-lg text-[#8B0000] uppercase tracking-tight mb-3">
+                      Certification et validité
+                    </h3>
+                    <p className="font-mono text-sm text-[#E0E0E0]/80 leading-relaxed mb-4">
+                      Les présents statuts ont été adoptés par l'assemblée générale constitutive du 15 janvier 2026. 
+                      Ils peuvent être modifiés par l'assemblée générale extraordinaire dans les conditions prévues à l'article 12.
+                    </p>
+                    <div className="flex flex-wrap gap-6 font-mono text-xs text-[#E0E0E0]/60 uppercase">
+                      <div>
+                        <span className="text-[#8B0000]">Fait à :</span> Paris, France
+                      </div>
+                      <div>
+                        <span className="text-[#8B0000]">Le :</span> 15 janvier 2026
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              
-              <div className="border-t-2 border-[#8B0000]/30 pt-6">
-                <p className="font-mono text-[10px] text-[#E0E0E0]/60 leading-relaxed">
-                  Pour toute question concernant ces statuts, veuillez contacter le conseil d'administration via notre 
-                  <a href="/contact" className="text-[#8B0000] hover:underline ml-1">page de contact</a>.
-                </p>
-              </div>
-            </motion.div>
+                
+                <div className="border-t-2 border-[#8B0000]/30 pt-6">
+                  <p className="font-mono text-[10px] text-[#E0E0E0]/60 leading-relaxed">
+                    Pour toute question concernant ces statuts, veuillez contacter le conseil d'administration via notre 
+                    <a href="/contact" className="text-[#8B0000] hover:underline ml-1">page de contact</a>.
+                  </p>
+                </div>
+              </motion.div>
+            </section>
           </div>
-        </section>
+        </div>
       </div>
     </div>
   );

@@ -1,18 +1,10 @@
+import { useState } from 'react';
+import { Link } from 'react-router';
 import { motion } from 'motion/react';
 import { GlitchText } from '@/app/components/GlitchText';
 import { SectionSeparator } from '@/app/components/SectionSeparator';
-import { 
-  Mail, 
-  Lock, 
-  Bell,
-  Eye,
-  Shield,
-  Trash2,
-  Save,
-  AlertTriangle
-} from 'lucide-react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { PageHeader } from '@/app/components/PageHeader';
+import { Mail, Lock, Bell, Eye, AlertTriangle, Trash2, Shield, Save, X } from 'lucide-react';
 
 export function SettingsPage() {
   const [emailData, setEmailData] = useState({
@@ -142,330 +134,323 @@ export function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen py-32">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
-        >
-          <div className="inline-block bg-[#8B0000] px-4 py-2 mb-6">
-            <span className="font-black text-sm text-[#E0E0E0] uppercase tracking-wider">
-              CONFIGURATION
-            </span>
-          </div>
+    <div className="min-h-screen">
+      <PageHeader
+        title="PARAMÈTRES DU COMPTE"
+        description="Gère ton compte, ta sécurité, tes notifications et ta confidentialité.<br />Personnalise tes préférences pour une expérience optimale sur Untouchables."
+        backgroundImage="https://images.unsplash.com/photo-1721623777765-1381ba32859c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXJrJTIwY29uY2VydCUyMHN0YWdlJTIwbGlnaHRzfGVufDF8fHx8MTc2OTE3Nzk1M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+        breadcrumbs={[
+          { label: 'ACCUEIL', path: '/' },
+          { label: 'PROFIL', path: '/profile' },
+          { label: 'PARAMÈTRES' }
+        ]}
+        glitchIntensity="high"
+      />
 
-          <h1
-            className="text-5xl lg:text-7xl font-black text-[#FFFFFF] tracking-tighter uppercase mb-8 leading-tight"
-            style={{ fontFamily: 'Arial Black, sans-serif', letterSpacing: '-0.05em' }}
-          >
-            <GlitchText glitchIntensity="high">PARAMÈTRES</GlitchText>
-          </h1>
-
-          <p className="text-xl text-[#a8a8a8] leading-loose">
-            Gère ton compte et ta confidentialité
-          </p>
-        </motion.div>
-
+      <div className="max-w-7xl mx-auto pt-0 pb-0">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="space-y-12"
         >
-          {/* Modifier l'email */}
-          <div className="bg-[#0A0A0A] border-2 border-[#8B0000]/30 p-8">
-            <h2 className="text-2xl font-black text-[#FFFFFF] uppercase mb-2 flex items-center gap-3">
-              <Mail size={24} className="text-[#8B0000]" />
-              ADRESSE EMAIL
-            </h2>
-            <p className="text-[#a8a8a8] text-sm mb-6">
-              Email actuel : <span className="text-[#FFFFFF] font-mono">{emailData.currentEmail}</span>
-            </p>
+          {/* Layout en 2 colonnes 1/3 - 2/3 */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {/* COLONNE GAUCHE - 1/3 */}
+            <div className="lg:col-span-1 space-y-8">
+              
+              {/* Modifier l'email */}
+              <div className="bg-[#8B0000]/20 border border-[#8B0000] p-6">
+                <h2 className="text-xl font-black text-[#FFFFFF] uppercase mb-2 flex items-center gap-2">
+                  <Mail size={16} className="text-[#8B0000]" />
+                  ADRESSE EMAIL
+                </h2>
+                <p className="text-[#a8a8a8] font-mono text-xs mb-6">
+                  Email actuel : <span className="text-[#FFFFFF]">{emailData.currentEmail}</span>
+                </p>
 
-            <form onSubmit={handleEmailSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="newEmail" className="block font-mono text-xs text-[#8B0000] uppercase mb-2">
-                  Nouvel email
-                </label>
-                <input
-                  type="email"
-                  id="newEmail"
-                  name="newEmail"
-                  value={emailData.newEmail}
-                  onChange={handleEmailChange}
-                  className={`w-full bg-[#0A0A0A] border-2 ${errors.newEmail ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
-                    focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
-                    hover:border-[#8B0000]/50`}
-                  placeholder="nouveau.email@example.com"
-                />
-                {errors.newEmail && (
-                  <p className="text-[#8B0000] font-mono text-xs mt-2">⚠ {errors.newEmail}</p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="confirmEmail" className="block font-mono text-xs text-[#8B0000] uppercase mb-2">
-                  Confirmer le nouvel email
-                </label>
-                <input
-                  type="email"
-                  id="confirmEmail"
-                  name="confirmEmail"
-                  value={emailData.confirmEmail}
-                  onChange={handleEmailChange}
-                  className={`w-full bg-[#0A0A0A] border-2 ${errors.confirmEmail ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
-                    focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
-                    hover:border-[#8B0000]/50`}
-                  placeholder="nouveau.email@example.com"
-                />
-                {errors.confirmEmail && (
-                  <p className="text-[#8B0000] font-mono text-xs mt-2">⚠ {errors.confirmEmail}</p>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                className="bg-[#8B0000] hover:bg-[#8B0000]/80 text-[#FFFFFF] font-black text-sm uppercase tracking-wider px-6 py-3 transition-all duration-300 cursor-none border-2 border-[#8B0000] hover:border-[#FFFFFF] flex items-center gap-2"
-              >
-                <Save size={16} />
-                METTRE À JOUR L'EMAIL
-              </button>
-            </form>
-          </div>
-
-          <SectionSeparator />
-
-          {/* Modifier le mot de passe */}
-          <div className="bg-[#0A0A0A] border-2 border-[#8B0000]/30 p-8">
-            <h2 className="text-2xl font-black text-[#FFFFFF] uppercase mb-6 flex items-center gap-3">
-              <Lock size={24} className="text-[#8B0000]" />
-              MOT DE PASSE
-            </h2>
-
-            <form onSubmit={handlePasswordSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="currentPassword" className="block font-mono text-xs text-[#8B0000] uppercase mb-2">
-                  Mot de passe actuel
-                </label>
-                <input
-                  type="password"
-                  id="currentPassword"
-                  name="currentPassword"
-                  value={passwordData.currentPassword}
-                  onChange={handlePasswordChange}
-                  className="w-full bg-[#0A0A0A] border-2 border-[#E0E0E0]/20 px-4 py-3 text-[#FFFFFF] font-mono text-sm
-                    focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
-                    hover:border-[#8B0000]/50"
-                  placeholder="••••••••"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="newPassword" className="block font-mono text-xs text-[#8B0000] uppercase mb-2">
-                  Nouveau mot de passe
-                </label>
-                <input
-                  type="password"
-                  id="newPassword"
-                  name="newPassword"
-                  value={passwordData.newPassword}
-                  onChange={handlePasswordChange}
-                  className={`w-full bg-[#0A0A0A] border-2 ${errors.newPassword ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
-                    focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
-                    hover:border-[#8B0000]/50`}
-                  placeholder="Minimum 8 caractères"
-                />
-                {errors.newPassword && (
-                  <p className="text-[#8B0000] font-mono text-xs mt-2">⚠ {errors.newPassword}</p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="confirmPassword" className="block font-mono text-xs text-[#8B0000] uppercase mb-2">
-                  Confirmer le nouveau mot de passe
-                </label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={passwordData.confirmPassword}
-                  onChange={handlePasswordChange}
-                  className={`w-full bg-[#0A0A0A] border-2 ${errors.confirmPassword ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
-                    focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
-                    hover:border-[#8B0000]/50`}
-                  placeholder="••••••••"
-                />
-                {errors.confirmPassword && (
-                  <p className="text-[#8B0000] font-mono text-xs mt-2">⚠ {errors.confirmPassword}</p>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                className="bg-[#8B0000] hover:bg-[#8B0000]/80 text-[#FFFFFF] font-black text-sm uppercase tracking-wider px-6 py-3 transition-all duration-300 cursor-none border-2 border-[#8B0000] hover:border-[#FFFFFF] flex items-center gap-2"
-              >
-                <Save size={16} />
-                METTRE À JOUR LE MOT DE PASSE
-              </button>
-            </form>
-          </div>
-
-          <SectionSeparator />
-
-          {/* Notifications */}
-          <div className="bg-[#0A0A0A] border-2 border-[#8B0000]/30 p-8">
-            <h2 className="text-2xl font-black text-[#FFFFFF] uppercase mb-6 flex items-center gap-3">
-              <Bell size={24} className="text-[#8B0000]" />
-              NOTIFICATIONS
-            </h2>
-
-            <div className="space-y-4">
-              {Object.entries(notifications).map(([key, value]) => (
-                <div key={key} className="flex items-center justify-between p-4 border-2 border-[#E0E0E0]/20 hover:border-[#8B0000]/50 transition-colors">
+                <form onSubmit={handleEmailSubmit} className="space-y-6">
                   <div>
-                    <h3 className="text-[#FFFFFF] font-black uppercase text-sm mb-1">
-                      {key === 'newsletter' && 'Newsletter Untouchables'}
-                      {key === 'newPosts' && 'Nouveaux articles'}
-                      {key === 'comments' && 'Réponses à mes commentaires'}
-                      {key === 'mentions' && 'Mentions'}
-                      {key === 'likes' && 'Likes sur mes posts'}
-                      {key === 'events' && 'Événements et concerts'}
-                    </h3>
-                    <p className="text-[#a8a8a8] text-xs font-mono">
-                      {key === 'newsletter' && 'Recevoir les actualités et nouveautés par email'}
-                      {key === 'newPosts' && 'Notification quand un nouvel article est publié'}
-                      {key === 'comments' && 'Recevoir les réponses à mes commentaires'}
-                      {key === 'mentions' && 'Quand quelqu\'un te mentionne'}
-                      {key === 'likes' && 'Quand quelqu\'un aime tes contributions'}
-                      {key === 'events' && 'Annonces de concerts et événements'}
-                    </p>
+                    <label htmlFor="newEmail" className="block font-mono text-xs text-[#8B0000] uppercase mb-2">
+                      Nouvel email
+                    </label>
+                    <input
+                      type="email"
+                      id="newEmail"
+                      name="newEmail"
+                      value={emailData.newEmail}
+                      onChange={handleEmailChange}
+                      className={`w-full bg-black border ${errors.newEmail ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
+                        focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
+                        hover:border-[#8B0000]/50`}
+                      placeholder="nouveau.email@example.com"
+                    />
+                    {errors.newEmail && (
+                      <p className="text-[#8B0000] font-mono text-xs mt-2">⚠ {errors.newEmail}</p>
+                    )}
                   </div>
+
+                  <div>
+                    <label htmlFor="confirmEmail" className="block font-mono text-xs text-[#8B0000] uppercase mb-2">
+                      Confirmer le nouvel email
+                    </label>
+                    <input
+                      type="email"
+                      id="confirmEmail"
+                      name="confirmEmail"
+                      value={emailData.confirmEmail}
+                      onChange={handleEmailChange}
+                      className={`w-full bg-black border ${errors.confirmEmail ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
+                        focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
+                        hover:border-[#8B0000]/50`}
+                      placeholder="nouveau.email@example.com"
+                    />
+                    {errors.confirmEmail && (
+                      <p className="text-[#8B0000] font-mono text-xs mt-2">⚠ {errors.confirmEmail}</p>
+                    )}
+                  </div>
+
                   <button
-                    type="button"
-                    onClick={() => handleNotificationToggle(key as keyof typeof notifications)}
-                    className={`w-14 h-8 rounded-full transition-all duration-300 cursor-none border-2 relative
-                      ${value ? 'bg-[#8B0000] border-[#8B0000]' : 'bg-transparent border-[#E0E0E0]/20'}`}
+                    type="submit"
+                    className="w-full bg-[#8B0000] hover:bg-[#FFFFFF] text-[#FFFFFF] hover:text-[#0A0A0A] font-black text-xs uppercase tracking-wider px-6 py-3 transition-all duration-300 cursor-none border border-[#8B0000] hover:border-[#FFFFFF] flex items-center justify-center gap-2"
                   >
-                    <div className={`w-6 h-6 bg-[#FFFFFF] rounded-full absolute top-0.5 transition-all duration-300
-                      ${value ? 'right-0.5' : 'left-0.5'}`} />
+                    <Save size={14} />
+                    METTRE À JOUR L'EMAIL
                   </button>
+                </form>
+              </div>
+
+              {/* Modifier le mot de passe */}
+              <div className="bg-[#8B0000]/20 border border-[#8B0000] p-6">
+                <h2 className="text-xl font-black text-[#FFFFFF] uppercase mb-6 flex items-center gap-2">
+                  <Lock size={16} className="text-[#8B0000]" />
+                  MOT DE PASSE
+                </h2>
+
+                <form onSubmit={handlePasswordSubmit} className="space-y-6">
+                  <div>
+                    <label htmlFor="currentPassword" className="block font-mono text-xs text-[#8B0000] uppercase mb-2">
+                      Mot de passe actuel
+                    </label>
+                    <input
+                      type="password"
+                      id="currentPassword"
+                      name="currentPassword"
+                      value={passwordData.currentPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full bg-black border border-[#E0E0E0]/20 px-4 py-3 text-[#FFFFFF] font-mono text-sm
+                        focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
+                        hover:border-[#8B0000]/50"
+                      placeholder="••••••••"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="newPassword" className="block font-mono text-xs text-[#8B0000] uppercase mb-2">
+                      Nouveau mot de passe
+                    </label>
+                    <input
+                      type="password"
+                      id="newPassword"
+                      name="newPassword"
+                      value={passwordData.newPassword}
+                      onChange={handlePasswordChange}
+                      className={`w-full bg-black border ${errors.newPassword ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
+                        focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
+                        hover:border-[#8B0000]/50`}
+                      placeholder="Minimum 8 caractères"
+                    />
+                    {errors.newPassword && (
+                      <p className="text-[#8B0000] font-mono text-xs mt-2">⚠ {errors.newPassword}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="confirmPassword" className="block font-mono text-xs text-[#8B0000] uppercase mb-2">
+                      Confirmer le nouveau mot de passe
+                    </label>
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      value={passwordData.confirmPassword}
+                      onChange={handlePasswordChange}
+                      className={`w-full bg-black border ${errors.confirmPassword ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
+                        focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
+                        hover:border-[#8B0000]/50`}
+                      placeholder="••••••••"
+                    />
+                    {errors.confirmPassword && (
+                      <p className="text-[#8B0000] font-mono text-xs mt-2">⚠ {errors.confirmPassword}</p>
+                    )}
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-[#8B0000] hover:bg-[#FFFFFF] text-[#FFFFFF] hover:text-[#0A0A0A] font-black text-xs uppercase tracking-wider px-6 py-3 transition-all duration-300 cursor-none border border-[#8B0000] hover:border-[#FFFFFF] flex items-center justify-center gap-2"
+                  >
+                    <Save size={14} />
+                    METTRE À JOUR LE MOT DE PASSE
+                  </button>
+                </form>
+              </div>
+
+            </div>
+
+            {/* COLONNE DROITE - 2/3 */}
+            <div className="lg:col-span-2 space-y-8">
+              
+              {/* Notifications */}
+              <div className="border border-[#a8a8a8]/30 bg-[#0A0A0A]/95 p-6">
+                <h2 className="text-xl font-black text-[#FFFFFF] uppercase mb-6 flex items-center gap-2">
+                  <Bell size={16} className="text-[#8B0000]" />
+                  NOTIFICATIONS
+                </h2>
+
+                <div className="space-y-4">
+                  {Object.entries(notifications).map(([key, value]) => (
+                    <div key={key} className="flex items-center justify-between p-3 border border-[#E0E0E0]/20 hover:border-[#8B0000]/50 transition-colors">
+                      <div className="flex-1 pr-4">
+                        <h3 className="text-[#FFFFFF] font-black uppercase text-xs mb-1">
+                          {key === 'newsletter' && 'Newsletter Untouchables'}
+                          {key === 'newPosts' && 'Nouveaux articles'}
+                          {key === 'comments' && 'Réponses à mes commentaires'}
+                          {key === 'mentions' && 'Mentions'}
+                          {key === 'likes' && 'Likes sur mes posts'}
+                          {key === 'events' && 'Événements et concerts'}
+                        </h3>
+                        <p className="text-[#a8a8a8] text-xs font-mono">
+                          {key === 'newsletter' && 'Recevoir les actualités par email'}
+                          {key === 'newPosts' && 'Notification nouvel article'}
+                          {key === 'comments' && 'Recevoir les réponses'}
+                          {key === 'mentions' && 'Quand quelqu\'un te mentionne'}
+                          {key === 'likes' && 'Quand quelqu\'un aime tes posts'}
+                          {key === 'events' && 'Annonces concerts'}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleNotificationToggle(key as keyof typeof notifications)}
+                        className={`relative w-12 h-6 rounded-full transition-colors cursor-none flex-shrink-0 ${
+                          value ? 'bg-[#8B0000]' : 'bg-[#E0E0E0]/20'
+                        }`}
+                      >
+                        <div
+                          className={`absolute top-1 left-1 w-4 h-4 bg-[#FFFFFF] rounded-full transition-transform ${
+                            value ? 'translate-x-6' : 'translate-x-0'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {/* Confidentialité */}
+              <div className="border border-[#a8a8a8]/30 bg-[#0A0A0A]/95 p-6">
+                <h2 className="text-xl font-black text-[#FFFFFF] uppercase mb-6 flex items-center gap-2">
+                  <Eye size={16} className="text-[#8B0000]" />
+                  CONFIDENTIALITÉ
+                </h2>
+
+                <div className="space-y-4">
+                  {Object.entries(privacy).map(([key, value]) => (
+                    <div key={key} className="flex items-center justify-between p-3 border border-[#E0E0E0]/20 hover:border-[#8B0000]/50 transition-colors">
+                      <div className="flex-1 pr-4">
+                        <h3 className="text-[#FFFFFF] font-black uppercase text-xs mb-1">
+                          {key === 'showEmail' && 'Afficher mon email'}
+                          {key === 'showLocation' && 'Afficher ma localisation'}
+                          {key === 'showActivity' && 'Afficher mon activité'}
+                          {key === 'allowMessages' && 'Autoriser les messages privés'}
+                        </h3>
+                        <p className="text-[#a8a8a8] text-xs font-mono">
+                          {key === 'showEmail' && 'Email visible sur mon profil'}
+                          {key === 'showLocation' && 'Ville/pays sur mon profil'}
+                          {key === 'showActivity' && 'Activité publique'}
+                          {key === 'allowMessages' && 'Messages des membres'}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handlePrivacyToggle(key as keyof typeof privacy)}
+                        className={`relative w-12 h-6 rounded-full transition-colors cursor-none flex-shrink-0 ${
+                          value ? 'bg-[#8B0000]' : 'bg-[#E0E0E0]/20'
+                        }`}
+                      >
+                        <div
+                          className={`absolute top-1 left-1 w-4 h-4 bg-[#FFFFFF] rounded-full transition-transform ${
+                            value ? 'translate-x-6' : 'translate-x-0'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
             </div>
           </div>
 
-          <SectionSeparator />
+          {/* Zone de danger - Pleine largeur en dessous */}
+          <div className="mt-8">
+            <div className="bg-black border-2 border-[#8B0000] p-6">
+              <h2 className="text-xl font-black text-[#8B0000] uppercase mb-2 flex items-center gap-2">
+                <AlertTriangle size={16} />
+                ZONE DE DANGER
+              </h2>
+              <p className="text-[#a8a8a8] font-mono text-xs mb-6">
+                Actions irréversibles - utilise avec précaution
+              </p>
 
-          {/* Confidentialité */}
-          <div className="bg-[#0A0A0A] border-2 border-[#8B0000]/30 p-8">
-            <h2 className="text-2xl font-black text-[#FFFFFF] uppercase mb-6 flex items-center gap-3">
-              <Eye size={24} className="text-[#8B0000]" />
-              CONFIDENTIALITÉ
-            </h2>
-
-            <div className="space-y-4">
-              {Object.entries(privacy).map(([key, value]) => (
-                <div key={key} className="flex items-center justify-between p-4 border-2 border-[#E0E0E0]/20 hover:border-[#8B0000]/50 transition-colors">
-                  <div>
-                    <h3 className="text-[#FFFFFF] font-black uppercase text-sm mb-1">
-                      {key === 'showEmail' && 'Afficher mon email'}
-                      {key === 'showLocation' && 'Afficher ma localisation'}
-                      {key === 'showActivity' && 'Afficher mon activité'}
-                      {key === 'allowMessages' && 'Autoriser les messages privés'}
-                    </h3>
-                    <p className="text-[#a8a8a8] text-xs font-mono">
-                      {key === 'showEmail' && 'Rendre mon adresse email visible sur mon profil'}
-                      {key === 'showLocation' && 'Afficher ma ville/pays sur mon profil'}
-                      {key === 'showActivity' && 'Rendre mon activité publique'}
-                      {key === 'allowMessages' && 'Permettre aux autres membres de m\'envoyer des messages'}
-                    </p>
+              {!showDeleteConfirm ? (
+                <button
+                  type="button"
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="bg-transparent hover:bg-[#8B0000]/20 text-[#8B0000] font-black text-xs uppercase tracking-wider px-6 py-3 transition-all duration-300 cursor-none border-2 border-[#8B0000] flex items-center gap-2"
+                >
+                  <Trash2 size={14} />
+                  SUPPRIMER MON COMPTE
+                </button>
+              ) : (
+                <div className="bg-[#0A0A0A] border-2 border-[#8B0000] p-6">
+                  <div className="flex items-start gap-4 mb-6">
+                    <Shield size={20} className="text-[#8B0000] flex-shrink-0 mt-1" />
+                    <div>
+                      <h3 className="text-[#FFFFFF] font-black uppercase text-sm mb-2">
+                        CONFIRMER LA SUPPRESSION
+                      </h3>
+                      <p className="text-[#a8a8a8] font-mono text-xs leading-relaxed mb-4">
+                        Cette action est <span className="text-[#8B0000] font-bold">DÉFINITIVE</span>. 
+                        Toutes tes données, posts, commentaires et badges seront supprimés de manière permanente. 
+                        Tu ne pourras pas récupérer ton compte.
+                      </p>
+                      <p className="text-[#FFFFFF] font-mono text-xs mb-4">
+                        Es-tu absolument certain(e) de vouloir continuer ?
+                      </p>
+                    </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => handlePrivacyToggle(key as keyof typeof privacy)}
-                    className={`w-14 h-8 rounded-full transition-all duration-300 cursor-none border-2 relative
-                      ${value ? 'bg-[#8B0000] border-[#8B0000]' : 'bg-transparent border-[#E0E0E0]/20'}`}
-                  >
-                    <div className={`w-6 h-6 bg-[#FFFFFF] rounded-full absolute top-0.5 transition-all duration-300
-                      ${value ? 'right-0.5' : 'left-0.5'}`} />
-                  </button>
+
+                  <div className="flex flex-col lg:flex-row gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setShowDeleteConfirm(false)}
+                      className="flex-1 bg-transparent hover:bg-[#E0E0E0]/10 text-[#E0E0E0] font-black text-xs uppercase tracking-wider px-6 py-3 transition-all duration-300 cursor-none border-2 border-[#E0E0E0]/20 flex items-center justify-center gap-2"
+                    >
+                      <X size={14} />
+                      ANNULER
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDeleteAccount}
+                      className="flex-1 bg-[#8B0000] hover:bg-[#8B0000]/80 text-[#FFFFFF] font-black text-xs uppercase tracking-wider px-6 py-3 transition-all duration-300 cursor-none border-2 border-[#8B0000] hover:border-[#FFFFFF] flex items-center justify-center gap-2"
+                    >
+                      <Trash2 size={14} />
+                      OUI, SUPPRIMER DÉFINITIVEMENT
+                    </button>
+                  </div>
                 </div>
-              ))}
+              )}
             </div>
-          </div>
-
-          <SectionSeparator />
-
-          {/* Zone de danger */}
-          <div className="bg-[#8B0000]/10 border-2 border-[#8B0000] p-8">
-            <h2 className="text-2xl font-black text-[#8B0000] uppercase mb-2 flex items-center gap-3">
-              <AlertTriangle size={24} />
-              ZONE DE DANGER
-            </h2>
-            <p className="text-[#a8a8a8] text-sm mb-6">
-              Actions irréversibles - utilise avec précaution
-            </p>
-
-            {!showDeleteConfirm ? (
-              <button
-                type="button"
-                onClick={() => setShowDeleteConfirm(true)}
-                className="bg-transparent hover:bg-[#8B0000]/20 text-[#8B0000] font-black text-sm uppercase tracking-wider px-6 py-3 transition-all duration-300 cursor-none border-2 border-[#8B0000] flex items-center gap-2"
-              >
-                <Trash2 size={16} />
-                SUPPRIMER MON COMPTE
-              </button>
-            ) : (
-              <div className="bg-[#0A0A0A] border-2 border-[#8B0000] p-6">
-                <div className="flex items-start gap-4 mb-6">
-                  <Shield size={24} className="text-[#8B0000] flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="text-[#FFFFFF] font-black uppercase mb-2">
-                      CONFIRMER LA SUPPRESSION
-                    </h3>
-                    <p className="text-[#a8a8a8] text-sm leading-relaxed mb-4">
-                      Cette action est <span className="text-[#8B0000] font-bold">DÉFINITIVE</span>. 
-                      Toutes tes données, posts, commentaires et badges seront supprimés de manière permanente. 
-                      Tu ne pourras pas récupérer ton compte.
-                    </p>
-                    <p className="text-[#FFFFFF] font-mono text-sm mb-4">
-                      Es-tu absolument certain(e) de vouloir continuer ?
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowDeleteConfirm(false)}
-                    className="flex-1 bg-transparent hover:bg-[#E0E0E0]/10 text-[#E0E0E0] font-black text-sm uppercase tracking-wider px-6 py-3 transition-all duration-300 cursor-none border-2 border-[#E0E0E0]/20"
-                  >
-                    ANNULER
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleDeleteAccount}
-                    className="flex-1 bg-[#8B0000] hover:bg-[#8B0000]/80 text-[#FFFFFF] font-black text-sm uppercase tracking-wider px-6 py-3 transition-all duration-300 cursor-none border-2 border-[#8B0000] hover:border-[#FFFFFF] flex items-center justify-center gap-2"
-                  >
-                    <Trash2 size={16} />
-                    OUI, SUPPRIMER DÉFINITIVEMENT
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Retour au profil */}
-          <div className="text-center pt-8">
-            <Link
-              to="/profile"
-              className="inline-block bg-transparent hover:bg-[#8B0000]/20 text-[#8B0000] font-black text-sm uppercase tracking-wider px-8 py-4 transition-all duration-300 cursor-none border-2 border-[#8B0000]"
-            >
-              RETOUR AU PROFIL
-            </Link>
           </div>
         </motion.div>
       </div>

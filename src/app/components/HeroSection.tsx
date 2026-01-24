@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { GlitchText } from './GlitchText';
 import { GlitchLogo } from './GlitchLogo';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { ChevronDown } from 'lucide-react';
 import { COLORS } from '@/app/constants/colors';
 import { Button } from './Button';

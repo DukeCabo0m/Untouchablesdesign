@@ -1,10 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { motion } from 'motion/react';
-import { Mail, Instagram, Hash, MessageSquare, FileText, Send, ArrowRight, Youtube, Facebook, Twitch } from 'lucide-react';
-import UntouchablesLogo from '@/imports/untouchables-logo.svg';
 import { GlitchImage } from './GlitchImage';
-import { GlitchText } from './GlitchText';
-import { TikTokIcon } from './TikTokIcon';
+import { LogoText } from './LogoText';
+import { Instagram, Facebook, Youtube, Twitter, Mail, Send } from 'lucide-react';
 import { useState } from 'react';
 
 export function Footer() {
@@ -40,11 +38,8 @@ export function Footer() {
               transition={{ duration: 0.6 }}
             >
               <div className="mb-6">
-                <Link to="/" className="block cursor-none hover:opacity-80 transition-opacity w-[75%]">
-                  <GlitchImage 
-                    src="https://www.untouchables.fr/img/untouchables-white.svg" 
-                    alt="UNTOUCHABLES"
-                  />
+                <Link to="/" className="block cursor-none hover:opacity-80 transition-opacity">
+                  <LogoText className="h-10 max-w-[180px]" />
                 </Link>
                 <div className="w-16 h-1 bg-[#8B0000] mt-2" />
               </div>
@@ -149,22 +144,13 @@ export function Footer() {
                   <span className="uppercase">Instagram</span>
                 </a>
                 <a 
-                  href="https://tiktok.com" 
+                  href="https://twitter.com" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none group"
                 >
-                  <TikTokIcon size={16} className="group-hover:scale-110 transition-transform" />
-                  <span className="uppercase">TikTok</span>
-                </a>
-                <a 
-                  href="https://twitch.tv" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none group"
-                >
-                  <Twitch size={16} className="group-hover:scale-110 transition-transform" />
-                  <span className="uppercase">Twitch</span>
+                  <Twitter size={16} className="group-hover:scale-110 transition-transform" />
+                  <span className="uppercase">Twitter</span>
                 </a>
               </div>
             </motion.div>

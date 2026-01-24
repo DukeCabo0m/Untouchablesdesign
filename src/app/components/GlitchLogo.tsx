@@ -1,45 +1,41 @@
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { UntouchablesLogo } from './UntouchablesLogo';
 
-interface GlitchLogoProps {
-  className?: string;
-}
-
-export function GlitchLogo({ className = '' }: GlitchLogoProps) {
+export function GlitchLogo({ className = "" }: { className?: string }) {
   const [isGlitching, setIsGlitching] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setIsGlitching(true);
-      setTimeout(() => setIsGlitching(false), 180);
-    }, 4000 + Math.random() * 2000);
+      setTimeout(() => setIsGlitching(false), 300);
+    }, 3000 + Math.random() * 3000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className={`relative inline-block ${className}`}>
-      {/* Image principale */}
-      <motion.img
-        src="https://www.untouchables.fr/img/untouchables-white.svg"
-        alt="Untouchables"
-        className="relative z-10"
+      {/* Logo principal */}
+      <motion.div
+        className="relative z-10 w-full text-[#E0E0E0]"
         animate={
           isGlitching
             ? {
-                x: [0, -4, 4, -3, 3, -2, 2, 0],
-                skewX: [0, -2, 2, -1, 1, 0],
+                x: [0, -8, 5, -3, 7, -2, 0],
+                y: [0, 2, -3, 1, -2, 1, 0],
+                skewX: [0, -2, 3, -1, 2, 0],
               }
             : {}
         }
-        transition={{ duration: 0.18, ease: 'easeInOut' }}
-      />
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
+        <UntouchablesLogo className="w-full h-auto" />
+      </motion.div>
 
-      {/* Couche rouge (canal R) */}
-      <motion.img
-        src="https://www.untouchables.fr/img/untouchables-white.svg"
-        alt=""
-        className="absolute top-0 left-0 z-0 pointer-events-none"
+      {/* Couche rouge (canal R) - effet glitch avec slicing */}
+      <motion.div
+        className="absolute top-0 left-0 z-0 pointer-events-none w-full text-[#8B0000]"
         style={{ 
           mixBlendMode: 'screen',
           opacity: 0,
@@ -47,29 +43,20 @@ export function GlitchLogo({ className = '' }: GlitchLogoProps) {
         animate={
           isGlitching
             ? {
-                x: [-8, 8, -6, 6, -10, 8, -4],
-                y: [0, -2, 2, -1, 1, 0],
-                opacity: [0, 0.9, 0.8, 0.9, 0.7, 0.9, 0],
-                filter: [
-                  'none',
-                  'brightness(0) saturate(100%) invert(13%) sepia(97%) saturate(7466%) hue-rotate(0deg) brightness(94%) contrast(113%)',
-                  'brightness(0) saturate(100%) invert(13%) sepia(97%) saturate(7466%) hue-rotate(0deg) brightness(94%) contrast(113%)',
-                  'brightness(0) saturate(100%) invert(13%) sepia(97%) saturate(7466%) hue-rotate(0deg) brightness(94%) contrast(113%)',
-                  'brightness(0) saturate(100%) invert(13%) sepia(97%) saturate(7466%) hue-rotate(0deg) brightness(94%) contrast(113%)',
-                  'brightness(0) saturate(100%) invert(13%) sepia(97%) saturate(7466%) hue-rotate(0deg) brightness(94%) contrast(113%)',
-                  'none',
-                ],
+                x: [-12, 10, -8, 12, -6, 0],
+                opacity: [0, 0.9, 0.7, 0.9, 0.6, 0],
+                scaleX: [1, 1.02, 0.98, 1.03, 1],
               }
             : { opacity: 0 }
         }
-        transition={{ duration: 0.18, ease: 'easeInOut' }}
-      />
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
+        <UntouchablesLogo className="w-full h-auto" />
+      </motion.div>
 
-      {/* Couche verte (canal G) */}
-      <motion.img
-        src="https://www.untouchables.fr/img/untouchables-white.svg"
-        alt=""
-        className="absolute top-0 left-0 z-0 pointer-events-none"
+      {/* Couche verte (canal G) - effet glitch */}
+      <motion.div
+        className="absolute top-0 left-0 z-0 pointer-events-none w-full text-green-500"
         style={{ 
           mixBlendMode: 'screen',
           opacity: 0,
@@ -77,60 +64,63 @@ export function GlitchLogo({ className = '' }: GlitchLogoProps) {
         animate={
           isGlitching
             ? {
-                x: [8, -8, 6, -6, 10, -8, 4],
-                y: [0, 2, -2, 1, -1, 0],
-                opacity: [0, 0.8, 0.7, 0.8, 0.6, 0.8, 0],
-                filter: [
-                  'none',
-                  'brightness(0) saturate(100%) invert(72%) sepia(98%) saturate(4969%) hue-rotate(75deg) brightness(118%) contrast(119%)',
-                  'brightness(0) saturate(100%) invert(72%) sepia(98%) saturate(4969%) hue-rotate(75deg) brightness(118%) contrast(119%)',
-                  'brightness(0) saturate(100%) invert(72%) sepia(98%) saturate(4969%) hue-rotate(75deg) brightness(118%) contrast(119%)',
-                  'brightness(0) saturate(100%) invert(72%) sepia(98%) saturate(4969%) hue-rotate(75deg) brightness(118%) contrast(119%)',
-                  'brightness(0) saturate(100%) invert(72%) sepia(98%) saturate(4969%) hue-rotate(75deg) brightness(118%) contrast(119%)',
-                  'none',
-                ],
+                x: [10, -12, 8, -10, 6, 0],
+                opacity: [0, 0.8, 0.6, 0.8, 0.5, 0],
+                scaleX: [1, 0.98, 1.02, 0.99, 1],
               }
             : { opacity: 0 }
         }
-        transition={{ duration: 0.18, ease: 'easeInOut' }}
-      />
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
+        <UntouchablesLogo className="w-full h-auto" />
+      </motion.div>
 
-      {/* Effet de cassure / bandes horizontales */}
+      {/* Couche bleue (canal B) - troisième couche pour effet plus intense */}
+      <motion.div
+        className="absolute top-0 left-0 z-0 pointer-events-none w-full text-blue-500"
+        style={{ 
+          mixBlendMode: 'screen',
+          opacity: 0,
+        }}
+        animate={
+          isGlitching
+            ? {
+                x: [8, -6, 10, -8, 4, 0],
+                y: [-2, 3, -1, 2, -1, 0],
+                opacity: [0, 0.6, 0.4, 0.6, 0.3, 0],
+              }
+            : { opacity: 0 }
+        }
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
+        <UntouchablesLogo className="w-full h-auto" />
+      </motion.div>
+
+      {/* VHS Tracking Lines - Lignes horizontales de distorsion */}
       {isGlitching && (
         <>
           <motion.div
-            className="absolute top-[20%] left-0 w-full h-[15%] overflow-hidden pointer-events-none z-20"
-            initial={{ x: 0, opacity: 0 }}
+            className="absolute top-[20%] left-0 w-full h-[2px] bg-white z-20 pointer-events-none"
+            initial={{ opacity: 0, scaleX: 0 }}
             animate={{
-              x: [0, 20, -15, 10, 0],
-              opacity: [0, 1, 1, 1, 0],
+              opacity: [0, 0.8, 0],
+              scaleX: [0, 1.5, 0],
+              x: [-100, 100],
             }}
-            transition={{ duration: 0.18, ease: 'easeInOut' }}
-          >
-            <img
-              src="https://www.untouchables.fr/img/untouchables-white.svg"
-              alt=""
-              className="absolute top-[-20%] left-0 w-full h-auto"
-              style={{ transform: 'translateY(-20%)' }}
-            />
-          </motion.div>
-
+            transition={{ duration: 0.15, ease: 'linear' }}
+            style={{ mixBlendMode: 'overlay' }}
+          />
           <motion.div
-            className="absolute top-[60%] left-0 w-full h-[12%] overflow-hidden pointer-events-none z-20"
-            initial={{ x: 0, opacity: 0 }}
+            className="absolute top-[60%] left-0 w-full h-[1px] bg-white z-20 pointer-events-none"
+            initial={{ opacity: 0, scaleX: 0 }}
             animate={{
-              x: [0, -25, 18, -12, 0],
-              opacity: [0, 1, 1, 1, 0],
+              opacity: [0, 0.6, 0],
+              scaleX: [0, 1.2, 0],
+              x: [100, -100],
             }}
-            transition={{ duration: 0.18, ease: 'easeInOut' }}
-          >
-            <img
-              src="https://www.untouchables.fr/img/untouchables-white.svg"
-              alt=""
-              className="absolute top-[-60%] left-0 w-full h-auto"
-              style={{ transform: 'translateY(-60%)' }}
-            />
-          </motion.div>
+            transition={{ duration: 0.2, delay: 0.05, ease: 'linear' }}
+            style={{ mixBlendMode: 'overlay' }}
+          />
         </>
       )}
     </div>

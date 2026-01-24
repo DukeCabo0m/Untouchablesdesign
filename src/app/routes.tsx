@@ -12,6 +12,8 @@ import { TrackDetailPage } from '@/app/pages/TrackDetailPage';
 import { NewsPage } from '@/app/pages/NewsPage';
 import { NewsDetailPage } from '@/app/pages/NewsDetailPage';
 import { TourPage } from '@/app/pages/TourPage';
+import { UpcomingConcertsPage } from '@/app/pages/UpcomingConcertsPage';
+import { ArchivesPage } from '@/app/pages/ArchivesPage';
 import { ConcertDetailPage } from '@/app/pages/ConcertDetailPage';
 import { LoginPage } from '@/app/pages/Auth/LoginPage';
 import { SignupPage } from '@/app/pages/Auth/SignupPage';
@@ -61,6 +63,8 @@ export const router = createBrowserRouter([
       
       // Tour
       { path: 'tour', Component: TourPage },
+      { path: 'tour/upcoming', Component: UpcomingConcertsPage },
+      { path: 'tour/archives', Component: ArchivesPage },
       { path: 'tour/concert/:slug', Component: ConcertDetailPage },
       
       // Auth

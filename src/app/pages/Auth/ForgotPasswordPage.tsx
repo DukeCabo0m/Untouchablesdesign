@@ -1,7 +1,5 @@
-import { motion } from 'motion/react';
-import { GlitchText } from '@/app/components/GlitchText';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useState } from 'react';
 
 export function ForgotPasswordPage() {

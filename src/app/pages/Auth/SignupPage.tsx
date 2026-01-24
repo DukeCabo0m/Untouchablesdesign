@@ -1,6 +1,6 @@
-import { motion } from 'motion/react';
 import { GlitchText } from '@/app/components/GlitchText';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
+import { motion } from 'motion/react';
 import { User, Mail, Lock, Shield, Calendar, Check } from 'lucide-react';
 import { useState } from 'react';
 

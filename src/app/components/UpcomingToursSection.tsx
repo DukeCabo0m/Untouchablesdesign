@@ -1,9 +1,10 @@
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Calendar, MapPin, ArrowRight, Ticket } from 'lucide-react';
 import { concerts } from '@/app/data/concerts';
 import { FlagIcon } from '@/app/components/FlagIcon';
 import { GlitchText } from './GlitchText';
+import { SectionHeading } from './SectionHeading';
 
 export function UpcomingToursSection() {
   // Get next 4 upcoming concerts
@@ -15,32 +16,25 @@ export function UpcomingToursSection() {
     <section className="bg-[#0A0A0A] py-12 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="flex items-end justify-between mb-16">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2
-              className="text-6xl md:text-8xl font-black text-[#E0E0E0] uppercase tracking-[-0.05em] mb-4"
-              style={{ fontFamily: 'Arial Black, sans-serif' }}
-            >
-              <span className="text-[#8B0000]">&gt;&gt;</span>{' '}
-              <GlitchText glitchIntensity="low">ON_THE_ROAD</GlitchText>
-            </h2>
-            <motion.div
-              initial={{ opacity: 0, width: 0 }}
-              whileInView={{ opacity: 1, width: '128px' }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="h-1 bg-[#8B0000]"
-            />
-          </motion.div>
+        <div className="flex items-start justify-between mb-16">
+          <SectionHeading 
+            title="ON_THE_ROAD" 
+            glitchIntensity="low"
+            maxWidth="max-w-3xl"
+            description={
+              <>
+                Retrouvez toutes les dates de concerts de Korn à travers le monde.<br />
+                Réservez vos places dès maintenant pour ne rien manquer de la tournée 2026.
+              </>
+            }
+          />
           
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={{ delay: 2.6 }}
+            className="mt-4"
           >
             <Link
               to="/tour"
@@ -51,17 +45,6 @@ export function UpcomingToursSection() {
             </Link>
           </motion.div>
         </div>
-
-        {/* Info text */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="font-mono text-sm text-[#E0E0E0]/70 mb-12 max-w-3xl"
-        >
-          <span className="text-[#8B0000] font-black">//</span> Retrouvez toutes les dates de concerts de Korn à travers le monde.<br />
-          Réservez vos places dès maintenant pour ne rien manquer de la tournée 2026.
-        </motion.p>
 
         {/* Concerts List */}
         <div className="space-y-4">

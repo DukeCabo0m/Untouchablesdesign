@@ -1,7 +1,8 @@
 import { motion } from 'motion/react';
-import { BookOpen, Calendar, ArrowRight, Edit3, Mail } from 'lucide-react';
 import { GlitchText } from './GlitchText';
-import { Link } from 'react-router-dom';
+import { SectionHeading } from './SectionHeading';
+import { Link } from 'react-router';
+import { BookOpen, Download, ArrowRight, Edit3 } from 'lucide-react';
 
 // Mock data - premier numéro du fanzine
 const firstIssue = {
@@ -27,32 +28,25 @@ export function FanzineSection() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2
-              className="text-6xl md:text-8xl font-black text-[#E0E0E0] uppercase tracking-[-0.05em] mb-4"
-              style={{ fontFamily: 'Arial Black, sans-serif' }}
-            >
-              <span className="text-[#8B0000]">&gt;&gt;</span>{' '}
-              <GlitchText glitchIntensity="low">LE_FANZINE</GlitchText>
-            </h2>
-            <motion.div
-              initial={{ opacity: 0, width: 0 }}
-              whileInView={{ opacity: 1, width: '128px' }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="h-1 bg-[#8B0000]"
-            />
-          </motion.div>
+        <div className="flex items-start justify-between mb-16">
+          <SectionHeading 
+            title="LE_FANZINE" 
+            glitchIntensity="low"
+            maxWidth="max-w-3xl"
+            description={
+              <>
+                Marre de scroller ? Tenez un vrai truc entre vos mains. Un rendez-vous mensuel physique, livré directement dans votre boîte aux lettres.{' '}
+                <span className="text-[#8B0000] font-black">12 pages A4 couleur + Poster A3 + Stickers</span>
+              </>
+            }
+          />
 
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={{ delay: 2.6 }}
+            className="mt-4"
           >
             <Link
               to="/fanzine"
@@ -63,17 +57,6 @@ export function FanzineSection() {
             </Link>
           </motion.div>
         </div>
-
-        {/* Info text */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="font-mono text-sm text-[#E0E0E0]/70 mb-12 max-w-3xl leading-relaxed"
-        >
-          <span className="text-[#8B0000] font-black">//</span> Marre de scroller ? Tiens un vrai truc entre tes mains. 
-          Un rendez-vous mensuel physique, livré directement dans ta boîte aux lettres. <span className="text-[#8B0000] font-black">12 pages A4 couleur + Poster A3 + Stickers</span>
-        </motion.p>
 
         {/* Grille principale : 2/3 pour Korn 2026 + 1/3 pour Family Values */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
@@ -172,7 +155,7 @@ export function FanzineSection() {
                   </p>
                   <p className="font-mono text-xs text-[#E0E0E0]/50 italic">
                     Quasi à prix coûtant pour couvrir l'impression et l'envoi.<br />
-                    Ton soutien finance l'hébergement du site.
+                    Votre soutien finance l'hébergement du site.
                   </p>
                 </div>
               </motion.div>
@@ -190,7 +173,7 @@ export function FanzineSection() {
               <span className="text-[#8B0000]">//</span> FAMILY VALUES
             </h3>
             <p className="font-mono text-xs text-[#E0E0E0]/70 leading-relaxed mb-6">
-              Le fanzine Untouchables, c'est aussi votre truc. Participe en partageant tes créations.
+              Le fanzine Untouchables, c'est aussi votre truc. Participez en partageant vos créations.
             </p>
             
             <div className="space-y-4 mb-6 flex-1">
@@ -225,7 +208,7 @@ export function FanzineSection() {
                     Tattoos & Collections
                   </h4>
                   <p className="font-mono text-[10px] text-[#E0E0E0]/60">
-                    Ta collection, tes merch rares
+                    Votre collection, vos merch rares
                   </p>
                 </div>
               </div>

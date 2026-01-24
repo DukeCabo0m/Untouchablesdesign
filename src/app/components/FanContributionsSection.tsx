@@ -1,7 +1,8 @@
 import { motion } from 'motion/react';
-import { Hash, Heart, MessageCircle, ExternalLink, Upload, ArrowRight, Instagram } from 'lucide-react';
 import { GlitchText } from './GlitchText';
-import { Link } from 'react-router-dom';
+import { SectionHeading } from './SectionHeading';
+import { Link } from 'react-router';
+import { Heart, MessageCircle, ArrowRight } from 'lucide-react';
 
 // Mock data - contributions des fans
 const fanContributions = [
@@ -56,32 +57,25 @@ export function FanContributionsSection() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-16">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2
-              className="text-6xl md:text-8xl font-black text-[#E0E0E0] uppercase tracking-[-0.05em] mb-4"
-              style={{ fontFamily: 'Arial Black, sans-serif' }}
-            >
-              <span className="text-[#8B0000]">&gt;&gt;</span>{' '}
-              <GlitchText glitchIntensity="low">FAMILY_VALUES</GlitchText>
-            </h2>
-            <motion.div
-              initial={{ opacity: 0, width: 0 }}
-              whileInView={{ opacity: 1, width: '128px' }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="h-1 bg-[#8B0000]"
-            />
-          </motion.div>
+        <div className="flex items-start justify-between mb-16">
+          <SectionHeading 
+            title="FAMILY_VALUES" 
+            glitchIntensity="low"
+            maxWidth="max-w-3xl"
+            description={
+              <>
+                Partagez vos fanarts, tatouages, collections et souvenirs avec la communauté.<br />
+                Utilisez le hashtag <span className="text-[#8B0000] font-black">#UntouchablesFR</span> sur Instagram pour apparaître ici.
+              </>
+            }
+          />
 
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={{ delay: 2.6 }}
+            className="mt-4"
           >
             <Link
               to="/gallery"
@@ -92,17 +86,6 @@ export function FanContributionsSection() {
             </Link>
           </motion.div>
         </div>
-
-        {/* Info text */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="font-mono text-sm text-[#E0E0E0]/70 mb-12 max-w-3xl"
-        >
-          <span className="text-[#8B0000] font-black">//</span> Partagez vos fanarts, tatouages, collections et souvenirs avec la communauté.<br />
-          Utilisez le hashtag <span className="text-[#8B0000] font-black">#UntouchablesFR</span> sur Instagram pour apparaître ici.
-        </motion.p>
 
         {/* Contributions Grid - 4 columns */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -167,7 +150,7 @@ export function FanContributionsSection() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#8B0000] text-[#E0E0E0] font-mono text-xs uppercase hover:bg-transparent hover:border-2 hover:border-[#8B0000] transition-all cursor-none whitespace-nowrap flex-shrink-0"
               >
-                <Instagram size={14} />
+                <Heart size={14} />
                 INSTAGRAM
                 <ArrowRight size={14} />
               </a>

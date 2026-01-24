@@ -1,8 +1,9 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Calendar, ArrowRight, User } from 'lucide-react';
 import { newsArticles } from '@/app/data/news';
 import { GlitchText } from './GlitchText';
+import { SectionHeading } from './SectionHeading';
 import { useState, useEffect } from 'react';
 
 export function LatestNewsSection() {
@@ -44,22 +45,25 @@ export function LatestNewsSection() {
     <section className="bg-[#0A0A0A] py-12 px-4 pb-4">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="flex items-end justify-between mb-4">
-          <motion.h2
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="text-6xl md:text-8xl font-black text-[#E0E0E0] uppercase tracking-[-0.05em]"
-            style={{ fontFamily: 'Arial Black, sans-serif' }}
-          >
-            <span className="text-[#8B0000]">&gt;&gt;</span>{' '}
-            <GlitchText glitchIntensity="low">ACTUALITÉS</GlitchText>
-          </motion.h2>
+        <div className="flex items-start justify-between mb-16">
+          <SectionHeading 
+            title="ACTUALITÉS" 
+            glitchIntensity="low"
+            maxWidth="max-w-3xl"
+            description={
+              <>
+                Suivez l'actualité de Korn en temps réel, sans filtre ni compromis.<br />
+                Annonces officielles, tournées, sorties et exclusivités de la communauté.
+              </>
+            }
+          />
           
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={{ delay: 2.6 }}
+            className="mt-4"
           >
             <Link
               to="/news"
@@ -70,27 +74,6 @@ export function LatestNewsSection() {
             </Link>
           </motion.div>
         </div>
-        
-        {/* Red Bar */}
-        <motion.div
-          initial={{ opacity: 0, width: 0 }}
-          whileInView={{ opacity: 1, width: '128px' }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="h-1 bg-[#8B0000] mb-6"
-        />
-
-        {/* Description */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="font-mono text-sm text-[#E0E0E0]/70 max-w-2xl mb-16"
-        >
-          <span className="text-[#8B0000] font-black">//</span> Suivez l'actualité de Korn en temps réel, sans filtre ni compromis.<br />
-          Annonces officielles, tournées, sorties et exclusivités de la communauté.
-        </motion.p>
 
         {/* News Grid - Asymmetric Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

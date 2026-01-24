@@ -1,16 +1,9 @@
+import { useState } from 'react';
+import { Link } from 'react-router';
 import { motion } from 'motion/react';
 import { GlitchText } from '@/app/components/GlitchText';
 import { SectionSeparator } from '@/app/components/SectionSeparator';
-import { 
-  MessageSquare,
-  Heart,
-  Trash2,
-  Filter,
-  Calendar,
-  ChevronLeft
-} from 'lucide-react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { ChevronLeft, Filter, MessageSquare, Heart, Trash2, Calendar } from 'lucide-react';
 
 // Mock data - activité complète
 const fullActivityData = [

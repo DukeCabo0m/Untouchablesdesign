@@ -1,8 +1,5 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { X, Menu } from 'lucide-react';
 import { GlitchText } from './GlitchText';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { COLORS } from '@/app/constants/colors';
 
 const menuItems = [

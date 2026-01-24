@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { Youtube, Play, Heart, MessageCircle, Instagram, UserPlus } from 'lucide-react';
 import { GlitchText } from './GlitchText';
+import { SectionHeading } from './SectionHeading';
 import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'motion/react';
 
@@ -210,30 +211,23 @@ export function SocialMediaSection() {
   );
 
   return (
-    <section id="social-media-section" className="min-h-screen bg-[#0A0A0A] py-12 px-4 pt-24">
+    <section id="social-media-section" className="min-h-screen bg-[#0A0A0A] py-12 px-4 pt-24 scroll-mt-20">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
-          <h2
-            className="text-6xl md:text-8xl font-black text-[#E0E0E0] uppercase tracking-[-0.05em] mb-4"
-            style={{ fontFamily: 'Arial Black, sans-serif' }}
-          >
-            <span className="text-[#8B0000]">&gt;&gt;</span>{' '}
-            <GlitchText glitchIntensity="low">SOCIAL_FEED</GlitchText>
-          </h2>
-          <motion.div
-            initial={{ opacity: 0, width: 0 }}
-            whileInView={{ opacity: 1, width: '128px' }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="h-1 bg-[#8B0000]"
-          />
-        </motion.div>
+        <SectionHeading 
+          title="SOCIAL_FEED" 
+          glitchIntensity="low"
+          maxWidth="max-w-3xl"
+          description={
+            <>
+              Notre contenu exclusif : analyses, reportages et extraits de concerts.<br />
+              Rejoignez-nous sur YouTube, TikTok et Instagram pour ne rien manquer.
+            </>
+          }
+        />
+        
+        {/* Add spacing after description */}
+        <div className="mb-16" />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Latest YouTube Video */}

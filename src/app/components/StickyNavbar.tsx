@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { GlitchText } from './GlitchText';
-import { GlitchImage } from './GlitchImage';
+import { LogoText } from './LogoText';
 import { UserPlus, LogIn } from 'lucide-react';
 import { COLORS } from '@/app/constants/colors';
-import logoSvg from '@/imports/svg-1f0qy1uyg3';
+import { useAuth } from '@/app/contexts/AuthContext';
+import { UserMenu } from '@/app/components/UserMenu';
 
 const menuItems = [
   { label: 'ACCUEIL', href: '/' },
@@ -23,6 +24,7 @@ const authButtons = [
 export function StickyNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,11 +59,7 @@ export function StickyNavbar() {
             to="/"
             className="hover:opacity-80 transition-opacity cursor-none"
           >
-            <GlitchImage 
-              src="https://www.untouchables.fr/img/untouchables-white.svg" 
-              alt="UNTOUCHABLES"
-              className="h-6 w-auto max-w-[120px]"
-            />
+            <LogoText className="h-6 max-w-[120px]" />
           </Link>
 
           {/* Menu items */}
@@ -101,58 +99,62 @@ export function StickyNavbar() {
 
           {/* Auth buttons */}
           <div className="flex items-center gap-3">
-            {authButtons.map(({ label, href, icon: Icon }) => (
-              <Link
-                key={label}
-                to={href}
-                className={`flex items-center gap-2 px-4 py-2 transition-colors cursor-none group ${
-                  label === 'INSCRIPTION'
-                    ? scrolled
-                      ? 'border border-[#0A0A0A] bg-white hover:bg-[#E0E0E0]'
-                      : `border bg-opacity-20`
-                    : scrolled
-                      ? 'border border-[#E0E0E0]/50 bg-transparent hover:bg-[#E0E0E0]/10'
-                      : 'border border-[#E0E0E0]/30 bg-transparent hover:bg-[#E0E0E0]/10'
-                }`}
-                style={
-                  label === 'INSCRIPTION' && !scrolled
-                    ? { borderColor: COLORS.red.pure, backgroundColor: `${COLORS.red.pure}33` }
-                    : undefined
-                }
-                onMouseEnter={(e) => {
-                  if (label === 'INSCRIPTION' && !scrolled) {
-                    e.currentTarget.style.backgroundColor = `${COLORS.red.pure}4D`;
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (label === 'INSCRIPTION' && !scrolled) {
-                    e.currentTarget.style.backgroundColor = `${COLORS.red.pure}33`;
-                  }
-                }}
-              >
-                <Icon 
-                  className={`w-4 h-4 transition-colors ${
+            {user ? (
+              <UserMenu scrolled={scrolled} />
+            ) : (
+              authButtons.map(({ label, href, icon: Icon }) => (
+                <Link
+                  key={label}
+                  to={href}
+                  className={`flex items-center gap-2 px-4 py-2 transition-colors cursor-none group ${
                     label === 'INSCRIPTION'
                       ? scrolled
-                        ? 'text-[#0A0A0A]'
-                        : 'group-hover:text-[#E0E0E0]'
-                      : 'text-[#E0E0E0] group-hover:text-white'
+                        ? 'border border-[#0A0A0A] bg-white hover:bg-[#E0E0E0]'
+                        : `border bg-opacity-20`
+                      : scrolled
+                        ? 'border border-[#E0E0E0]/50 bg-transparent hover:bg-[#E0E0E0]/10'
+                        : 'border border-[#E0E0E0]/30 bg-transparent hover:bg-[#E0E0E0]/10'
                   }`}
                   style={
                     label === 'INSCRIPTION' && !scrolled
-                      ? { color: COLORS.red.pure }
+                      ? { borderColor: COLORS.red.pure, backgroundColor: `${COLORS.red.pure}33` }
                       : undefined
                   }
-                />
-                <span className={`font-mono text-xs uppercase tracking-wider ${
-                  label === 'INSCRIPTION' && scrolled
-                    ? 'text-[#0A0A0A]'
-                    : 'text-[#E0E0E0]'
-                }`}>
-                  {label}
-                </span>
-              </Link>
-            ))}
+                  onMouseEnter={(e) => {
+                    if (label === 'INSCRIPTION' && !scrolled) {
+                      e.currentTarget.style.backgroundColor = `${COLORS.red.pure}4D`;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (label === 'INSCRIPTION' && !scrolled) {
+                      e.currentTarget.style.backgroundColor = `${COLORS.red.pure}33`;
+                    }
+                  }}
+                >
+                  <Icon 
+                    className={`w-4 h-4 transition-colors ${
+                      label === 'INSCRIPTION'
+                        ? scrolled
+                          ? 'text-[#0A0A0A]'
+                          : 'group-hover:text-[#E0E0E0]'
+                        : 'text-[#E0E0E0] group-hover:text-white'
+                    }`}
+                    style={
+                      label === 'INSCRIPTION' && !scrolled
+                        ? { color: COLORS.red.pure }
+                        : undefined
+                    }
+                  />
+                  <span className={`font-mono text-xs uppercase tracking-wider ${
+                    label === 'INSCRIPTION' && scrolled
+                      ? 'text-[#0A0A0A]'
+                      : 'text-[#E0E0E0]'
+                  }`}>
+                    {label}
+                  </span>
+                </Link>
+              ))
+            )}
           </div>
         </div>
       </div>

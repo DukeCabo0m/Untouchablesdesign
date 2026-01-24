@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router';
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { GlitchText } from '@/app/components/GlitchText';

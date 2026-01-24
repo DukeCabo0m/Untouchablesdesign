@@ -1,8 +1,7 @@
-import { FlagIcon } from '@/app/components/FlagIcon';
-import { Link } from 'react-router';
-import { PageHeader } from '@/app/components/PageHeader';
 import { motion } from 'motion/react';
-import { Calendar, MapPin, Clock, Ticket, ExternalLink, UserCheck, Archive, ArrowRight } from 'lucide-react';
+import { PageHeader } from '@/app/components/PageHeader';
+import { Calendar, MapPin, Clock, Ticket, ExternalLink, UserCheck } from 'lucide-react';
+import { FlagIcon } from '@/app/components/FlagIcon';
 
 // Données - Concerts à venir 2026
 const upcomingConcerts = [
@@ -89,79 +88,33 @@ const upcomingConcerts = [
   }
 ];
 
-export function TourPage() {
+export function UpcomingConcertsPage() {
   return (
     <div className="min-h-screen">
       {/* Page Header */}
       <PageHeader
-        title="TOURNÉE"
+        title="CONCERTS À VENIR"
         description="Retrouvez toutes les dates de concerts 2026 de Korn.<br />Achetez vos billets et rejoignez la communauté Untouchables sur place."
         backgroundImage="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25jZXJ0JTIwY3Jvd2QlMjBsaXZlfGVufDF8fHx8MTc2OTE5Mjc3OXww&ixlib=rb-4.1.0&q=80&w=1080"
         breadcrumbs={[
           { label: 'ACCUEIL', path: '/' },
-          { label: 'TOURNÉE' }
+          { label: 'CONCERTS À VENIR' }
         ]}
         glitchIntensity="high"
       />
 
       <div className="px-4 py-12 bg-[#0A0A0A]">
         <div className="max-w-7xl mx-auto">
-          {/* Section Archives - Call to action */}
+          {/* Section concerts */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Link
-              to="/tour/archives"
-              className="group block bg-[#0A0A0A] border-2 border-[#8B0000]/30 hover:border-[#8B0000] transition-all duration-300 overflow-hidden cursor-none"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <div 
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 grayscale"
-                  style={{
-                    backgroundImage: 'url(https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2aW50YWdlJTIwY29uY2VydCUyMGFyY2hpdmV8ZW58MXx8fHwxNzY5MTkyNzc5fDA&ixlib=rb-4.1.0&q=80&w=1080)'
-                  }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent"></div>
-                </div>
-
-                <div className="absolute inset-0 flex items-center px-8">
-                  <div className="flex items-center gap-6 w-full">
-                    <Archive className="text-[#8B0000]" size={56} />
-                    
-                    <div className="flex-1">
-                      <h2 className="text-3xl font-black text-[#FFFFFF] uppercase mb-2 group-hover:text-[#8B0000] transition-colors">
-                        ARCHIVES DES CONCERTS
-                      </h2>
-                      <p className="font-mono text-sm text-[#E0E0E0]/70">
-                        Revivez l'histoire des concerts de Korn en France depuis 2005 • 24 concerts • 10 années
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-3 text-[#8B0000] group-hover:text-[#FFFFFF] transition-colors">
-                      <span className="font-black text-sm uppercase tracking-wider hidden lg:block">
-                        Consulter les archives
-                      </span>
-                      <ArrowRight size={32} className="transition-transform group-hover:translate-x-2" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </motion.section>
-
-          {/* Section concerts à venir */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-16"
-          >
             <div className="flex items-center gap-4 mb-12">
               <Calendar className="text-[#8B0000]" size={32} />
               <h2 className="text-4xl font-black text-[#FFFFFF] uppercase tracking-tight">
-                CONCERTS À VENIR 2026
+                TOURNÉE 2026
               </h2>
             </div>
 
