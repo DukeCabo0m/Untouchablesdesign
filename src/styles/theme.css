@@ -25,6 +25,10 @@
 :root {
   --font-size: 16px;
   
+  /* Typography */
+  --font-heading: 'Anton SC', sans-serif;
+  --font-body: 'Special Elite', monospace;
+  
   /* Korn Brand Colors */
   --korn-abyssal: #0A0A0A;
   --korn-rust: #8B0000;
@@ -161,6 +165,22 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  /* Override Tailwind's font-mono to use Special Elite */
+  .font-mono {
+    font-family: var(--font-body) !important;
+  }
+
+  /* Add font-heading utility class for Anton SC */
+  .font-heading {
+    font-family: var(--font-heading) !important;
+  }
+
+  /* Navbar text size override */
+  .navbar-text-lg * {
+    font-size: 0.875rem !important; /* 14px instead of 12px */
   }
 
   /**
@@ -173,45 +193,56 @@
   }
 
   h1 {
+    font-family: var(--font-heading);
     font-size: var(--text-2xl);
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
   h2 {
+    font-family: var(--font-heading);
     font-size: var(--text-xl);
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
   h3 {
+    font-family: var(--font-heading);
     font-size: var(--text-lg);
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
   h4 {
+    font-family: var(--font-heading);
     font-size: var(--text-base);
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
   label {
+    font-family: var(--font-body);
     font-size: var(--text-base);
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
   button {
+    font-family: var(--font-body);
     font-size: var(--text-base);
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
   input {
+    font-family: var(--font-body);
     font-size: var(--text-base);
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
+  }
+
+  p {
+    font-family: var(--font-body);
   }
 
   /* Custom Select Styling - Remove native arrow and add custom one */

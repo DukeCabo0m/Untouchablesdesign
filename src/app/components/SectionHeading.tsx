@@ -39,7 +39,7 @@ export function SectionHeading({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: 2.2 }}
-        className={`font-mono text-sm text-[#E0E0E0]/70 leading-relaxed mt-2 ${maxWidth}`}
+        className={`font-mono text-base text-[#E0E0E0]/70 leading-relaxed mt-2 ${maxWidth}`}
       >
         <span className="text-[#8B0000]">//</span> {processDescription(description)}
       </motion.p>

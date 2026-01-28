@@ -65,7 +65,7 @@ export function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 1 }}
-          className="font-mono text-[#FFFFFF] text-sm md:text-base tracking-wider"
+          className="text-[#FFFFFF] text-sm md:text-base tracking-wider"
         >
           <p className="mb-2 font-bold">COMMUNAUTÉ FRANCOPHONE // FANS DE KORN</p>
           <p className="font-bold" style={{ color: COLORS.red.pure }}>&gt; LA PASSION NE S'ÉTEINT JAMAIS_</p>
@@ -79,12 +79,12 @@ export function HeroSection() {
           className="mt-16 flex flex-wrap gap-4 justify-center"
         >
           <Button onClick={scrollToNext} variant="primary" size="lg">
-            <GlitchText glitchIntensity="low">EXPLORER LE SITE</GlitchText>
+            EXPLORER LE SITE
             <ChevronDown className="w-5 h-5 text-white animate-bounce" />
           </Button>
           <Link to="/signup">
             <Button variant="secondary" size="lg">
-              <GlitchText glitchIntensity="low">REJOINDRE LA COMMUNAUTÉ</GlitchText>
+              REJOINDRE LA COMMUNAUTÉ
             </Button>
           </Link>
         </motion.div>
@@ -105,7 +105,7 @@ export function HeroSection() {
 
         {/* Content - ABOVE textures */}
         <motion.div
-          className="flex whitespace-nowrap font-mono text-[#E0E0E0] text-xs tracking-widest relative z-10"
+          className="flex whitespace-nowrap text-[#E0E0E0] text-xs tracking-widest relative z-10 font-mono"
           animate={{ x: [0, -1000] }}
           transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
         >

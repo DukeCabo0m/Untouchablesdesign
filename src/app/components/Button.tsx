@@ -24,7 +24,7 @@ export function Button({
   className = '',
   ...props 
 }: ButtonProps) {
-  const baseClasses = 'font-black uppercase tracking-tight border-2 transition-all cursor-none inline-flex items-center justify-center gap-2';
+  const baseClasses = 'font-black uppercase tracking-tight border-2 transition-all cursor-none inline-flex items-center justify-center gap-2 font-bold';
   
   if (variant === 'primary') {
     return (

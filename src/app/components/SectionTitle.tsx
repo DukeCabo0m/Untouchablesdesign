@@ -51,16 +51,14 @@ export function SectionTitle({
           initial={{ opacity: 0, x: -100 }}
           animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="font-black text-[#8B0000] leading-none flex-shrink-0 text-6xl md:text-8xl"
-          style={{ fontFamily: 'Arial Black, sans-serif' }}
+          className="font-heading text-[#8B0000] uppercase text-7xl md:text-9xl flex-shrink-0"
         >
           &gt;&gt;
         </motion.span>
 
         {/* Titre avec effet typing */}
         <h2
-          className="font-black text-[#E0E0E0] uppercase tracking-[-0.05em] leading-none whitespace-nowrap overflow-hidden flex-1 min-w-0 text-6xl md:text-8xl"
-          style={{ fontFamily: 'Arial Black, sans-serif' }}
+          className="font-heading text-[#E0E0E0] uppercase text-6xl md:text-8xl whitespace-nowrap overflow-hidden flex-1 min-w-0"
         >
           <GlitchText glitchIntensity={glitchIntensity}>
             {displayedTitle}

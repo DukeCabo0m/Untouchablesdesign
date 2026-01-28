@@ -53,7 +53,7 @@ export function StickyNavbar() {
 
       {/* Content - ABOVE textures */}
       <div className="max-w-7xl mx-auto px-0 py-6 relative z-10">
-        <div className="flex items-center gap-12">
+        <div className="flex items-center gap-12 font-mono font-bold navbar-text-lg">
           {/* Logo */}
           <Link
             to="/"
@@ -68,7 +68,7 @@ export function StickyNavbar() {
               <li key={item.label}>
                 <Link
                   to={item.href}
-                  className={`font-mono text-xs font-bold uppercase transition-colors cursor-none tracking-wider ${
+                  className={`text-xs font-bold uppercase transition-colors cursor-none tracking-wider ${
                     location.pathname === item.href
                       ? `bg-white px-2 py-1`
                       : scrolled
@@ -145,7 +145,7 @@ export function StickyNavbar() {
                         : undefined
                     }
                   />
-                  <span className={`font-mono text-xs uppercase tracking-wider ${
+                  <span className={`text-xs uppercase tracking-wider ${
                     label === 'INSCRIPTION' && scrolled
                       ? 'text-[#0A0A0A]'
                       : 'text-[#E0E0E0]'

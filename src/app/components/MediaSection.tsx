@@ -188,7 +188,7 @@ export function MediaSection() {
           className="mt-16 text-center"
         >
           <Button variant="secondary" size="md">
-            <GlitchText glitchIntensity="medium">EXPLORER LA GALERIE COMPLÈTE</GlitchText>
+            EXPLORER LA GALERIE COMPLÈTE
           </Button>
         </motion.div>
       </div>

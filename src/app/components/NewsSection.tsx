@@ -127,7 +127,7 @@ export function NewsSection() {
         >
           <Link to="/news">
             <Button variant="secondary" size="md">
-              <GlitchText glitchIntensity="medium">TOUTES LES ACTUALITÉS</GlitchText>
+              TOUTES LES ACTUALITÉS
               <ChevronRight className="w-4 h-4" />
             </Button>
           </Link>

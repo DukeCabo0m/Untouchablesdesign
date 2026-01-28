@@ -201,7 +201,7 @@ export function CommunitySection() {
           </p>
           <div className="flex items-center justify-center gap-4">
             <Button variant="primary" size="md">
-              <GlitchText glitchIntensity="medium">CRÉER UN COMPTE</GlitchText>
+              CRÉER UN COMPTE
             </Button>
             <Button variant="secondary" size="md">
               EN SAVOIR PLUS
