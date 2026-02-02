@@ -54,6 +54,7 @@ export function LatestNewsSection() {
             glitchIntensity="low"
             maxWidth="max-w-3xl"
             description="Des studios d'enregistrement aux scènes de concerts : retrouvez les annonces officielles, les rumeurs vérifiées et les débats qui animent la communauté Untouchables."
+            noGap={true}
           />
           
           <motion.div

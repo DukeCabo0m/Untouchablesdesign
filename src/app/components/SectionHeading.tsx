@@ -6,6 +6,7 @@ interface SectionHeadingProps {
   description: string | React.ReactNode;
   glitchIntensity?: 'low' | 'medium' | 'high';
   maxWidth?: 'max-w-2xl' | 'max-w-3xl' | 'max-w-4xl';
+  noGap?: boolean;
 }
 
 // Helper function to process description and highlight #UntouchablesFR
@@ -27,11 +28,12 @@ export function SectionHeading({
   title, 
   description, 
   glitchIntensity = 'low',
-  maxWidth = 'max-w-3xl'
+  maxWidth = 'max-w-3xl',
+  noGap = false
 }: SectionHeadingProps) {
   return (
     <div className="flex-1">
-      <SectionTitle title={title} glitchIntensity={glitchIntensity} />
+      <SectionTitle title={title} glitchIntensity={glitchIntensity} noGap={noGap} />
       
       {/* Description */}
       <motion.p
@@ -39,7 +41,7 @@ export function SectionHeading({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: 2.2 }}
-        className={`font-mono text-base text-[#E0E0E0]/70 leading-relaxed mt-2 ${maxWidth}`}
+        className={`font-mono text-base text-[#E0E0E0]/70 leading-relaxed ${noGap ? 'mt-0' : 'mt-2'} ${maxWidth}`}
       >
         <span className="text-[#8B0000]">//</span> {processDescription(description)}
       </motion.p>

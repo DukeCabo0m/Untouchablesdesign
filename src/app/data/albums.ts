@@ -1,3 +1,8 @@
+import untouchablesAlbumCover from "figma:asset/c5e08dea6b791ae7301cb4c71c93fcba42510e6b.png";
+import issuesAlbumCover from "figma:asset/63f9b26615ccbc978498105fd95b0993f04380aa.png";
+import followTheLeaderAlbumCover from "figma:asset/95553117ae0c03532acfb12f2885d1e3b686f8f9.png";
+import kornAlbumCover from "figma:asset/818685074b24b54bf10e2d414271058ee58a17e9.png";
+
 export interface Album {
   id: string;
   slug: string;
@@ -36,7 +41,7 @@ export const albums: Album[] = [
     title: 'Korn',
     year: 1994,
     type: 'studio',
-    cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800',
+    cover: kornAlbumCover,
     producer: 'Ross Robinson',
     label: 'Immortal / Epic',
     description: `L'album qui a tout déclenché. "Korn" (1994) invente littéralement le nu metal : basse claquante de Fieldy, riffs accordés en drop A, voix torturée de Jonathan Davis oscillant entre murmures et hurlements primal.
@@ -128,7 +133,7 @@ L'artwork controversé (enfant dans un terrain de jeux sordide) renforce l'esth�
     title: 'Follow the Leader',
     year: 1998,
     type: 'studio',
-    cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800',
+    cover: followTheLeaderAlbumCover,
     producer: 'Steve Thompson, Toby Wright',
     label: 'Immortal / Epic',
     description: `L'album qui propulse Korn au statut de superstars mondiales. "Follow the Leader" (1998) est LE monument du nu metal, l'album qui définit une génération entière.
@@ -186,7 +191,7 @@ Artwork mémorable (enfant sur terrain de jeux désolé), production léchée sa
     title: 'Issues',
     year: 1999,
     type: 'studio',
-    cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800',
+    cover: issuesAlbumCover,
     producer: 'Brendan O\'Brien',
     label: 'Immortal / Epic',
     description: `L'album le plus sombre et personnel de Korn. "Issues" (1999) plonge dans les traumatismes, la dépression, les addictions. Jonathan Davis met à nu ses démons les plus profonds.
@@ -257,7 +262,7 @@ Artwork minimaliste troublant (miroir déformant, enfant). #1 Billboard dès la 
     title: 'Untouchables',
     year: 2002,
     type: 'studio',
-    cover: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800',
+    cover: untouchablesAlbumCover,
     producer: 'Michael Beinhorn',
     label: 'Immortal / Epic',
     description: `L'ALBUM ÉPONYME de notre communauté ! "Untouchables" (2002) est l'opus le plus expérimental et ambitieux de Korn, une œuvre-fleuve de 74 minutes qui repousse toutes les limites du nu metal.

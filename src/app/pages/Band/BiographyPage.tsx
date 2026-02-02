@@ -7,7 +7,7 @@ export function BiographyPage() {
     <div className="min-h-screen">
       {/* Page Header */}
       <PageHeader
-        title="BIOGRAPHIE"
+        title="KORN : L'HÉRITAGE NU METAL"
         description="L'histoire complète de Korn, de Bakersfield à la légende mondiale.<br />Trois décennies de révolution musicale et d'influence culturelle."
         backgroundImage="https://images.unsplash.com/photo-1739051261848-fdf6c43fe0d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYW5kJTIwYmlvZ3JhcGh5JTIwZGFyayUyMHBvcnRyYWl0fGVufDF8fHx8MTc2OTE5MzU1MXww&ixlib=rb-4.1.0&q=80&w=1080"
         breadcrumbs={[

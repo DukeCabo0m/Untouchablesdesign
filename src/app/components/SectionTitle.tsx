@@ -6,11 +6,13 @@ import { HandDrawnLine } from './HandDrawnLine';
 interface SectionTitleProps {
   title: string;
   glitchIntensity?: 'low' | 'medium' | 'high';
+  noGap?: boolean;
 }
 
 export function SectionTitle({
   title,
   glitchIntensity = 'low',
+  noGap = false,
 }: SectionTitleProps) {
   const [displayedTitle, setDisplayedTitle] = useState('');
   const [animationComplete, setAnimationComplete] = useState(false);
@@ -46,7 +48,7 @@ export function SectionTitle({
   return (
     <div ref={ref} className="mb-6">
       {/* Titre avec chevrons */}
-      <div className="flex items-center gap-4 mb-4 overflow-hidden">
+      <div className={`flex items-center ${noGap ? '' : 'gap-4'} mb-4 overflow-hidden`}>
         {/* Chevrons animés depuis la gauche */}
         <motion.span
           initial={{ opacity: 0, x: -100 }}
