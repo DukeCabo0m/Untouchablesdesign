@@ -3,6 +3,8 @@ import { GlitchText } from './GlitchText';
 import { MessageSquare, Users, Clock, Eye } from 'lucide-react';
 import { COLORS } from '@/app/constants/colors';
 import { Button } from './Button';
+import { HandDrawnBox } from './HandDrawnBox';
+import { HandDrawnLine } from './HandDrawnLine';
 
 const forumCategories = [
   {
@@ -87,22 +89,42 @@ export function ForumSection() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16"
         >
-          <div className="border-2 border-[#8B0000] p-6 bg-[#0A0A0A]">
+          <HandDrawnBox
+            color="#8B0000"
+            strokeWidth={3}
+            roughness={2.5}
+            className="p-6 bg-[#0A0A0A]"
+          >
             <p className="font-mono text-xs text-[#8B0000] mb-2">MEMBRES ACTIFS</p>
             <p className="text-3xl font-black text-[#E0E0E0]">8,547</p>
-          </div>
-          <div className="border-2 border-[#8B0000] p-6 bg-[#0A0A0A]">
+          </HandDrawnBox>
+          <HandDrawnBox
+            color="#8B0000"
+            strokeWidth={3}
+            roughness={2.5}
+            className="p-6 bg-[#0A0A0A]"
+          >
             <p className="font-mono text-xs text-[#8B0000] mb-2">SUJETS TOTAUX</p>
             <p className="text-3xl font-black text-[#E0E0E0]">3,201</p>
-          </div>
-          <div className="border-2 border-[#8B0000] p-6 bg-[#0A0A0A]">
+          </HandDrawnBox>
+          <HandDrawnBox
+            color="#8B0000"
+            strokeWidth={3}
+            roughness={2.5}
+            className="p-6 bg-[#0A0A0A]"
+          >
             <p className="font-mono text-xs text-[#8B0000] mb-2">MESSAGES TOTAUX</p>
             <p className="text-3xl font-black text-[#E0E0E0]">44,170</p>
-          </div>
-          <div className="border-2 border-[#8B0000] p-6 bg-[#0A0A0A]">
+          </HandDrawnBox>
+          <HandDrawnBox
+            color="#8B0000"
+            strokeWidth={3}
+            roughness={2.5}
+            className="p-6 bg-[#0A0A0A]"
+          >
             <p className="font-mono text-xs text-[#8B0000] mb-2">EN LIGNE</p>
             <p className="text-3xl font-black text-[#E0E0E0]">127</p>
-          </div>
+          </HandDrawnBox>
         </motion.div>
 
         {/* Forum Categories */}
@@ -112,33 +134,39 @@ export function ForumSection() {
           </h3>
           <div className="space-y-4">
             {forumCategories.map((category, index) => (
-              <motion.div
+              <HandDrawnBox
                 key={category.id}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="border-2 border-[#8B0000] p-6 bg-[#0A0A0A] hover:bg-[#8B0000]/5 transition-colors cursor-none group"
+                color="#8B0000"
+                strokeWidth={3}
+                roughness={2.5}
+                className="p-6 bg-[#0A0A0A] hover:bg-[#8B0000]/5 transition-colors cursor-pointer group"
               >
-                <div className="flex items-start justify-between gap-6">
-                  <div className="flex-1">
-                    <h4 className="text-xl font-black text-[#E0E0E0] mb-3 uppercase tracking-tight group-hover:text-[#8B0000] transition-colors">
-                      {category.title}
-                    </h4>
-                    <div className="flex items-center gap-6 font-mono text-xs text-[#E0E0E0]/60">
-                      <span>{category.topics} SUJETS</span>
-                      <span>{category.posts} MESSAGES</span>
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="flex-1">
+                      <h4 className="text-xl font-black text-[#E0E0E0] mb-3 uppercase tracking-tight group-hover:text-[#8B0000] transition-colors">
+                        {category.title}
+                      </h4>
+                      <div className="flex items-center gap-6 font-mono text-xs text-[#E0E0E0]/60">
+                        <span>{category.topics} SUJETS</span>
+                        <span>{category.posts} MESSAGES</span>
+                      </div>
+                    </div>
+                    <div className="flex-shrink-0">
+                      <p className="font-mono text-xs text-[#8B0000] mb-1">DERNIER MESSAGE :</p>
+                      <p className="font-mono text-xs text-[#E0E0E0] mb-1">{category.lastPost.title}</p>
+                      <p className="font-mono text-xs text-[#E0E0E0]/60">
+                        par {category.lastPost.author} • {category.lastPost.time}
+                      </p>
                     </div>
                   </div>
-                  <div className="flex-shrink-0">
-                    <p className="font-mono text-xs text-[#8B0000] mb-1">DERNIER MESSAGE :</p>
-                    <p className="font-mono text-xs text-[#E0E0E0] mb-1">{category.lastPost.title}</p>
-                    <p className="font-mono text-xs text-[#E0E0E0]/60">
-                      par {category.lastPost.author} • {category.lastPost.time}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              </HandDrawnBox>
             ))}
           </div>
         </div>
@@ -150,37 +178,43 @@ export function ForumSection() {
           </h3>
           <div className="space-y-3">
             {recentTopics.map((topic, index) => (
-              <motion.div
+              <HandDrawnBox
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="border border-[#E0E0E0]/20 p-4 bg-[#0A0A0A] hover:border-[#8B0000] transition-colors cursor-none group"
+                color="#E0E0E0"
+                strokeWidth={2}
+                roughness={2}
+                className="p-4 bg-[#0A0A0A] hover:bg-[#8B0000]/5 transition-colors cursor-pointer group"
               >
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3 flex-1">
-                    <MessageSquare size={16} className="text-[#8B0000] flex-shrink-0" />
-                    <span className="font-mono text-sm text-[#E0E0E0] group-hover:text-[#8B0000] transition-colors">
-                      {topic.title}
-                    </span>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.05 }}
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 flex-1">
+                      <MessageSquare size={16} className="text-[#8B0000] flex-shrink-0" />
+                      <span className="font-mono text-sm text-[#E0E0E0] group-hover:text-[#8B0000] transition-colors">
+                        {topic.title}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-6 font-mono text-xs text-[#E0E0E0]/60 flex-shrink-0">
+                      <span className="flex items-center gap-1">
+                        <MessageSquare size={12} />
+                        {topic.replies}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Users size={12} />
+                        {topic.views}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock size={12} />
+                        {topic.time}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-6 font-mono text-xs text-[#E0E0E0]/60 flex-shrink-0">
-                    <span className="flex items-center gap-1">
-                      <MessageSquare size={12} />
-                      {topic.replies}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Users size={12} />
-                      {topic.views}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock size={12} />
-                      {topic.time}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              </HandDrawnBox>
             ))}
           </div>
         </div>

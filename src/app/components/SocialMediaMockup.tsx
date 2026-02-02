@@ -1,23 +1,24 @@
 import { motion } from 'motion/react';
 import { Heart, MessageCircle, Send, Bookmark } from 'lucide-react';
 import { GlitchText } from './GlitchText';
+import { generatePlaceholder } from '@/app/utils/placeholder';
 
 const socialPosts = [
   {
     type: 'abstract',
-    image: 'https://images.unsplash.com/photo-1629229002497-fe93b56ecd17?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxydXN0JTIwbWV0YWwlMjB0ZXh0dXJlfGVufDF8fHx8MTc2ODk5NDMyNnww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: generatePlaceholder(1080, 1080, 'CORROSION'),
     caption: 'CORROSION // 2026',
     filter: 'contrast(1.2) saturate(0.7) brightness(0.9)',
   },
   {
     type: 'band',
-    image: 'https://images.unsplash.com/photo-1576417612431-20cacf914f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25jZXJ0JTIwY3Jvd2QlMjBkYXJrfGVufDF8fHx8MTc2ODk5NDMyOHww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: generatePlaceholder(1080, 1080, 'SOLD OUT'),
     caption: 'SOLD OUT // BERLIN',
     filter: 'contrast(1.2) saturate(0.7) brightness(0.9)',
   },
   {
     type: 'abstract',
-    image: 'https://images.unsplash.com/photo-1662558066589-e452d46b9ff9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHhYLXJheSUyMHNrZWxldG9ufGVufDF8fHx8MTc2ODk5NDMyN3ww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: generatePlaceholder(1080, 1080, 'INSIDE OUT'),
     caption: 'INSIDE OUT',
     filter: 'invert(1) contrast(2) grayscale(1) brightness(0.8)',
   },
@@ -173,7 +174,7 @@ export function SocialMediaMockup() {
             className="relative aspect-[9/16] overflow-hidden cursor-none"
           >
             <img
-              src="https://images.unsplash.com/photo-1647971149742-6c00b44c63ce?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0b3JuJTIwZmFicmljJTIwdGV4dHVyZXxlbnwxfHx8fDE3Njg5OTQzMjd8MA&ixlib=rb-4.1.0&q=80&w=1080"
+              src={generatePlaceholder(1080, 1920, 'STORY')}
               alt="Story"
               className="w-full h-full object-cover"
               style={{

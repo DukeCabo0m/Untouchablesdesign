@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MessageSquare } from 'lucide-react';
 import { motion } from 'motion/react';
+import { Button } from './Button';
 
 interface Comment {
   id: number;
@@ -42,13 +43,14 @@ export function CommentSection({ comments, onAddComment }: CommentSectionProps) 
           </h2>
           <span className="font-mono text-sm text-[#8B0000]">({comments.length})</span>
         </div>
-        <button
+        <Button
           onClick={() => setShowCommentForm(!showCommentForm)}
-          className="inline-flex items-center gap-2 px-4 py-2 font-black text-xs uppercase tracking-wider transition-all duration-300 cursor-none border-2 bg-transparent text-[#E0E0E0] border-[#E0E0E0]/30 hover:bg-[#E0E0E0] hover:text-[#0A0A0A]"
+          variant="secondary"
+          size="sm"
         >
           <MessageSquare size={14} />
           COMMENTER
-        </button>
+        </Button>
       </div>
 
       {/* Formulaire commentaire */}
@@ -62,21 +64,23 @@ export function CommentSection({ comments, onAddComment }: CommentSectionProps) 
             className="w-full bg-[#0A0A0A] border border-[#8B0000]/30 text-[#E0E0E0] font-mono text-sm p-4 min-h-[120px] focus:outline-none focus:border-[#8B0000] resize-none"
           />
           <div className="flex gap-3 mt-4">
-            <button
+            <Button
               onClick={handleSubmit}
-              className="px-6 py-2 font-black text-xs uppercase bg-[#8B0000] text-[#FFFFFF] border-2 border-[#8B0000] hover:bg-transparent transition-all cursor-none"
+              variant="primary"
+              size="sm"
             >
               PUBLIER
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => {
                 setShowCommentForm(false);
                 setCommentText('');
               }}
-              className="px-6 py-2 font-black text-xs uppercase bg-transparent text-[#E0E0E0] border-2 border-[#E0E0E0]/30 hover:border-[#E0E0E0] transition-all cursor-none"
+              variant="secondary"
+              size="sm"
             >
               ANNULER
-            </button>
+            </Button>
           </div>
         </div>
       )}

@@ -1,6 +1,7 @@
 import { motion, useInView } from 'motion/react';
 import { GlitchText } from './GlitchText';
 import { useState, useEffect, useRef } from 'react';
+import { HandDrawnLine } from './HandDrawnLine';
 
 interface SectionTitleProps {
   title: string;
@@ -51,14 +52,14 @@ export function SectionTitle({
           initial={{ opacity: 0, x: -100 }}
           animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="font-heading text-[#8B0000] uppercase text-7xl md:text-9xl flex-shrink-0"
+          className="font-heading text-[#8B0000] uppercase text-5xl md:text-7xl flex-shrink-0 leading-none"
         >
           &gt;&gt;
         </motion.span>
 
         {/* Titre avec effet typing */}
         <h2
-          className="font-heading text-[#E0E0E0] uppercase text-6xl md:text-8xl whitespace-nowrap overflow-hidden flex-1 min-w-0"
+          className="font-heading text-[#E0E0E0] uppercase text-4xl md:text-6xl whitespace-nowrap overflow-hidden flex-1 min-w-0 leading-none"
         >
           <GlitchText glitchIntensity={glitchIntensity}>
             {displayedTitle}
@@ -78,10 +79,17 @@ export function SectionTitle({
       {animationComplete && (
         <motion.div
           initial={{ opacity: 0, width: 0 }}
-          animate={{ opacity: 1, width: '128px' }}
+          animate={{ opacity: 1, width: '256px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="h-1 bg-[#8B0000] mb-6"
-        />
+          className="mb-6"
+        >
+          <HandDrawnLine 
+            color="#8B0000" 
+            strokeWidth={3} 
+            roughness={2.5} 
+            passes={2}
+          />
+        </motion.div>
       )}
     </div>
   );

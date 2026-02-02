@@ -1,72 +1,132 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { ButtonHTMLAttributes, AnchorHTMLAttributes, ReactNode } from 'react';
 import { COLORS } from '@/app/constants/colors';
+import { getGafferTexture } from '@/app/utils/gafferTexture';
+import { ExternalLink } from 'lucide-react';
 
 type ButtonVariant = 'primary' | 'secondary';
-type ButtonSize = 'sm' | 'md' | 'lg';
+type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonAsButton = {
+  as?: 'button';
+  href?: never;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
+
+type ButtonAsLink = {
+  as: 'a';
+  href: string;
+  external?: boolean;
+} & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>;
+
+type BaseButtonProps = {
   variant?: ButtonVariant;
   size?: ButtonSize;
   children: ReactNode;
   className?: string;
-}
+};
+
+type ButtonProps = BaseButtonProps & (ButtonAsButton | ButtonAsLink);
 
 const sizeClasses = {
   sm: 'px-4 py-2 text-xs',
   md: 'px-6 py-3 text-sm',
   lg: 'px-12 py-4 text-base',
+  icon: 'p-4',
 };
 
 export function Button({ 
   variant = 'primary', 
-  size = 'md',
+  size = 'md', 
   children, 
-  className = '',
+  className = '', 
+  as = 'button', 
   ...props 
 }: ButtonProps) {
-  const baseClasses = 'font-black uppercase tracking-tight border-2 transition-all cursor-none inline-flex items-center justify-center gap-2 font-bold';
+  const baseClasses = 'font-mono tracking-tight transition-all inline-flex items-center justify-center gap-2 relative overflow-visible cursor-pointer';
   
-  if (variant === 'primary') {
+  const getVariantStyles = (variant: ButtonVariant, isHovered: boolean) => {
+    // Clip-path avec bords vraiment déchirés comme sur l'image
+    const gafferStyles = {
+      clipPath: `polygon(
+        3% 0%, 5% 2%, 8% 1%, 12% 3%, 15% 1%, 20% 2%, 25% 0%, 30% 1%, 35% 3%, 40% 1%, 
+        45% 2%, 50% 0%, 55% 2%, 60% 1%, 65% 3%, 70% 1%, 75% 2%, 80% 0%, 85% 3%, 
+        90% 1%, 94% 2%, 97% 0%, 99% 3%, 100% 6%, 100% 10%, 99% 15%, 100% 20%, 
+        99% 30%, 100% 40%, 99% 50%, 100% 60%, 99% 70%, 100% 80%, 99% 85%, 100% 90%, 
+        99% 94%, 97% 97%, 100% 100%, 95% 99%, 90% 100%, 85% 98%, 80% 100%, 75% 99%, 
+        70% 100%, 65% 98%, 60% 100%, 55% 99%, 50% 100%, 45% 99%, 40% 100%, 35% 98%, 
+        30% 100%, 25% 99%, 20% 100%, 15% 98%, 10% 100%, 5% 99%, 2% 97%, 0% 100%, 
+        1% 95%, 0% 90%, 2% 85%, 0% 80%, 1% 70%, 0% 60%, 1% 50%, 0% 40%, 1% 30%, 
+        0% 20%, 1% 15%, 0% 10%, 2% 6%
+      )`,
+      transform: isHovered ? 'rotate(-1deg) translateY(-2px)' : 'rotate(-0.5deg)',
+      border: 'none',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+    };
+
+    if (variant === 'primary') {
+      return {
+        ...gafferStyles,
+        color: isHovered ? '#000000' : '#FFFFFF',
+        backgroundImage: isHovered 
+          ? `url(${getGafferTexture('white', true)})`
+          : `url(${getGafferTexture('red')})`,
+      };
+    }
+    
+    // Secondary variant - avec bordure et texture semi-transparente
+    return {
+      ...gafferStyles,
+      color: isHovered ? '#0A0A0A' : '#E0E0E0',
+      backgroundImage: isHovered
+        ? `url(${getGafferTexture('grey', false)})`
+        : `url(${getGafferTexture('black', false)})`,
+    };
+  };
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    const styles = getVariantStyles(variant, true);
+    Object.assign(e.currentTarget.style, styles);
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    const styles = getVariantStyles(variant, false);
+    Object.assign(e.currentTarget.style, styles);
+  };
+
+  const defaultStyles = getVariantStyles(variant, false);
+  const combinedClassName = `${baseClasses} ${sizeClasses[size]} ${className}`;
+
+  if (as === 'a') {
+    const { href, external, ...linkProps } = props as ButtonAsLink;
     return (
-      <button
-        className={`${baseClasses} ${sizeClasses[size]} text-[#E0E0E0] ${className}`}
-        style={{ 
-          backgroundColor: COLORS.red.pure,
-          borderColor: COLORS.red.pure,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = '#E0E0E0';
-          e.currentTarget.style.color = COLORS.red.pure;
-          e.currentTarget.style.borderColor = COLORS.red.pure;
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = COLORS.red.pure;
-          e.currentTarget.style.color = '#E0E0E0';
-          e.currentTarget.style.borderColor = COLORS.red.pure;
-        }}
-        {...props}
+      <a
+        href={href}
+        className={combinedClassName}
+        style={defaultStyles}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
+        {...linkProps}
       >
         {children}
-      </button>
+        {external && <ExternalLink className="ml-2" size={12} />}
+      </a>
     );
   }
+
+  const buttonProps = props as ButtonAsButton;
+  // Remove any potential 'external' prop that might leak through
+  const { external: _, ...safeButtonProps } = buttonProps as any;
   
-  // Secondary variant
   return (
     <button
-      className={`${baseClasses} ${sizeClasses[size]} bg-transparent text-[#E0E0E0] ${className}`}
-      style={{ 
-        borderColor: COLORS.red.pure,
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = COLORS.red.pure;
-        e.currentTarget.style.borderColor = '#E0E0E0';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = 'transparent';
-        e.currentTarget.style.borderColor = COLORS.red.pure;
-      }}
-      {...props}
+      className={combinedClassName}
+      style={defaultStyles}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      {...safeButtonProps}
     >
       {children}
     </button>

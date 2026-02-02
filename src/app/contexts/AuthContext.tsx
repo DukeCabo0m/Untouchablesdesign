@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { generateAvatar } from '@/app/utils/placeholder';
 
 interface User {
   username: string;
@@ -37,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const newUser: User = {
       username,
       email,
-      avatar: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop',
+      avatar: generateAvatar(username),
     };
     setUser(newUser);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));

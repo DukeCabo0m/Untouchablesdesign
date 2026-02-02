@@ -80,7 +80,7 @@ export function AlertMessage({ alert, onClose }: AlertMessageProps) {
 
         <button
           onClick={() => onClose(alert.id)}
-          className="text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none"
+          className="text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-pointer"
           aria-label="Close alert"
         >
           <X className="w-4 h-4" />

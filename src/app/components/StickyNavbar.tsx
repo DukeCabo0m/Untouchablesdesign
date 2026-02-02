@@ -1,11 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router';
-import { GlitchText } from './GlitchText';
-import { LogoText } from './LogoText';
-import { UserPlus, LogIn } from 'lucide-react';
-import { COLORS } from '@/app/constants/colors';
-import { useAuth } from '@/app/contexts/AuthContext';
 import { UserMenu } from '@/app/components/UserMenu';
+import { Button } from '@/app/components/Button';
+import { HandDrawnLine } from './HandDrawnLine';
+import { HandDrawnCircle } from './HandDrawnCircle';
+import { NotificationBell } from './NotificationBell';
+import { UserPlus, LogIn, Menu, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/app/contexts/AuthContext';
+import { Link, useLocation } from 'react-router';
+import { LogoText } from './LogoText';
+
+const COLORS = {
+  red: {
+    pure: '#8B0000',
+  },
+};
 
 const menuItems = [
   { label: 'ACCUEIL', href: '/' },
@@ -37,11 +45,7 @@ export function StickyNavbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 cursor-none ${ 
-        scrolled
-          ? 'border-b border-[#0A0A0A] shadow-lg shadow-black/50'
-          : ''
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 cursor-none`}
     >
       {/* Background - NO TEXTURES */}
       {scrolled && (
@@ -52,12 +56,12 @@ export function StickyNavbar() {
       )}
 
       {/* Content - ABOVE textures */}
-      <div className="max-w-7xl mx-auto px-0 py-6 relative z-10">
+      <div className="max-w-[1920px] mx-auto px-4 py-6 relative z-10">
         <div className="flex items-center gap-12 font-mono font-bold navbar-text-lg">
           {/* Logo */}
           <Link
             to="/"
-            className="hover:opacity-80 transition-opacity cursor-none"
+            className="hover:opacity-80 transition-opacity cursor-pointer"
           >
             <LogoText className="h-6 max-w-[120px]" />
           </Link>
@@ -66,33 +70,37 @@ export function StickyNavbar() {
           <ul className="flex items-center gap-6 flex-1">
             {menuItems.map((item) => (
               <li key={item.label}>
-                <Link
-                  to={item.href}
-                  className={`text-xs font-bold uppercase transition-colors cursor-none tracking-wider ${
-                    location.pathname === item.href
-                      ? `bg-white px-2 py-1`
-                      : scrolled
-                        ? 'text-[#B0B0B0] hover:text-white'
-                        : 'text-[#E0E0E0]'
-                  }`}
-                  style={
-                    location.pathname === item.href
-                      ? { color: COLORS.red.pure, textShadow: `0 0 10px rgba(139, 0, 0, 0.8)` }
-                      : undefined
-                  }
-                  onMouseEnter={(e) => {
-                    if (location.pathname !== item.href && !scrolled) {
-                      e.currentTarget.style.color = COLORS.red.pure;
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (location.pathname !== item.href && !scrolled) {
-                      e.currentTarget.style.color = '#E0E0E0';
-                    }
-                  }}
-                >
-                  {item.label}
-                </Link>
+                {location.pathname === item.href ? (
+                  <Link
+                    to={item.href}
+                    className="text-xs font-bold uppercase cursor-pointer tracking-wider flex items-center gap-2"
+                    style={{
+                      color: scrolled ? '#F0F0F0' : COLORS.red.pure,
+                    }}
+                  >
+                    <span style={{ color: '#F0F0F0' }}>&gt;&gt;</span>
+                    {item.label}
+                  </Link>
+                ) : (
+                  <Link
+                    to={item.href}
+                    className={`text-xs font-bold uppercase transition-colors cursor-pointer tracking-wider ${
+                      scrolled ? 'text-[#B0B0B0] hover:text-white' : 'text-[#E0E0E0]'
+                    }`}
+                    onMouseEnter={(e) => {
+                      if (!scrolled) {
+                        e.currentTarget.style.color = COLORS.red.pure;
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!scrolled) {
+                        e.currentTarget.style.color = '#E0E0E0';
+                      }
+                    }}
+                  >
+                    {item.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -100,60 +108,29 @@ export function StickyNavbar() {
           {/* Auth buttons */}
           <div className="flex items-center gap-3">
             {user ? (
-              <UserMenu scrolled={scrolled} />
+              <>
+                <NotificationBell />
+                <UserMenu scrolled={scrolled} />
+              </>
             ) : (
-              authButtons.map(({ label, href, icon: Icon }) => (
-                <Link
-                  key={label}
-                  to={href}
-                  className={`flex items-center gap-2 px-4 py-2 transition-colors cursor-none group ${
-                    label === 'INSCRIPTION'
-                      ? scrolled
-                        ? 'border border-[#0A0A0A] bg-white hover:bg-[#E0E0E0]'
-                        : `border bg-opacity-20`
-                      : scrolled
-                        ? 'border border-[#E0E0E0]/50 bg-transparent hover:bg-[#E0E0E0]/10'
-                        : 'border border-[#E0E0E0]/30 bg-transparent hover:bg-[#E0E0E0]/10'
-                  }`}
-                  style={
-                    label === 'INSCRIPTION' && !scrolled
-                      ? { borderColor: COLORS.red.pure, backgroundColor: `${COLORS.red.pure}33` }
-                      : undefined
-                  }
-                  onMouseEnter={(e) => {
-                    if (label === 'INSCRIPTION' && !scrolled) {
-                      e.currentTarget.style.backgroundColor = `${COLORS.red.pure}4D`;
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (label === 'INSCRIPTION' && !scrolled) {
-                      e.currentTarget.style.backgroundColor = `${COLORS.red.pure}33`;
-                    }
-                  }}
+              <>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  href="/signup"
                 >
-                  <Icon 
-                    className={`w-4 h-4 transition-colors ${
-                      label === 'INSCRIPTION'
-                        ? scrolled
-                          ? 'text-[#0A0A0A]'
-                          : 'group-hover:text-[#E0E0E0]'
-                        : 'text-[#E0E0E0] group-hover:text-white'
-                    }`}
-                    style={
-                      label === 'INSCRIPTION' && !scrolled
-                        ? { color: COLORS.red.pure }
-                        : undefined
-                    }
-                  />
-                  <span className={`text-xs uppercase tracking-wider ${
-                    label === 'INSCRIPTION' && scrolled
-                      ? 'text-[#0A0A0A]'
-                      : 'text-[#E0E0E0]'
-                  }`}>
-                    {label}
-                  </span>
-                </Link>
-              ))
+                  <UserPlus className="w-4 h-4" />
+                  INSCRIPTION
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  href="/login"
+                >
+                  <LogIn className="w-4 h-4" />
+                  CONNEXION
+                </Button>
+              </>
             )}
           </div>
         </div>

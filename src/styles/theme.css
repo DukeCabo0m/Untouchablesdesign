@@ -26,61 +26,23 @@
   --font-size: 16px;
   
   /* Typography */
-  --font-heading: 'Anton SC', sans-serif;
-  --font-body: 'Special Elite', monospace;
+  --font-heading: 'Martian Mono';
+  --font-body: 'Special Elite', 'Courier New', 'Courier', 'Monaco', monospace;
   
-  /* Korn Brand Colors */
-  --korn-abyssal: #0A0A0A;
-  --korn-rust: #8B0000;
-  --korn-static: #E0E0E0;
+  /* PALETTE DÉFINITIVE & VERROUILLÉE */
+  --korn-abyssal: #0A0A0A;      /* Neutral 1: Abyssal Grey - Fond */
+  --korn-rust: #8B0000;         /* Primary: Dried Rust - Sang séché */
+  --korn-violet: #B900FF;       /* Secondary: Digital Violet - Glitch */
+  --korn-lime: #1EFF00;         /* Accent: Radioactive Lime - Néon */
+  --korn-static: #F0F0F0;       /* Neutral 2: Static White - Texte */
   --korn-white: #FFFFFF;
   
   /* Text color hierarchy for better contrast */
   --text-primary: #FFFFFF;     /* Main text - pure white */
-  --text-secondary: #E0E0E0;   /* Secondary text - pale gray */
-  --text-tertiary: rgba(224, 224, 224, 0.7);   /* Tertiary text */
-  --text-disabled: rgba(224, 224, 224, 0.5);   /* Disabled/subtle text */
+  --text-secondary: #F0F0F0;   /* Secondary text - pale gray */
+  --text-tertiary: rgba(240, 240, 240, 0.7);   /* Tertiary text */
+  --text-disabled: rgba(240, 240, 240, 0.5);   /* Disabled/subtle text */
   
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
-  --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
-  --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
@@ -107,6 +69,7 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
+  --radius: 0.625rem;
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -161,6 +124,7 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    cursor: auto !important; /* Override any cursor-none classes */
   }
 
   body {
@@ -173,7 +137,7 @@
     font-family: var(--font-body) !important;
   }
 
-  /* Add font-heading utility class for Anton SC */
+  /* Add font-heading utility class for Share Tech Mono */
   .font-heading {
     font-family: var(--font-heading) !important;
   }
@@ -195,28 +159,42 @@
   h1 {
     font-family: var(--font-heading);
     font-size: var(--text-2xl);
-    font-weight: var(--font-weight-medium);
+    font-weight: 600;
     line-height: 1.5;
   }
 
   h2 {
     font-family: var(--font-heading);
     font-size: var(--text-xl);
-    font-weight: var(--font-weight-medium);
+    font-weight: 600;
     line-height: 1.5;
   }
 
   h3 {
     font-family: var(--font-heading);
     font-size: var(--text-lg);
-    font-weight: var(--font-weight-medium);
+    font-weight: 600;
     line-height: 1.5;
   }
 
   h4 {
     font-family: var(--font-heading);
     font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  h5 {
+    font-family: var(--font-heading);
+    font-size: var(--text-base);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  h6 {
+    font-family: var(--font-heading);
+    font-size: var(--text-base);
+    font-weight: 600;
     line-height: 1.5;
   }
 
@@ -245,15 +223,39 @@
     font-family: var(--font-body);
   }
 
+  /* Screen reader only utility for accessibility and SEO */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
   /* Custom Select Styling - Remove native arrow and add custom one */
   select {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23E0E0E0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 16px;
     padding-right: 44px !important;
+  }
+  
+  /* Custom arrow for select using CSS border trick instead of SVG */
+  select::after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #E0E0E0;
+    pointer-events: none;
   }
 }

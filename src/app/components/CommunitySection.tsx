@@ -4,6 +4,8 @@ import { GlitchText } from './GlitchText';
 import { Users, MessageSquare, Calendar, Trophy } from 'lucide-react';
 import { COLORS } from '@/app/constants/colors';
 import { Button } from './Button';
+import { HandDrawnBox } from './HandDrawnBox';
+import { HandDrawnLine } from './HandDrawnLine';
 
 const communityStats = [
   {
@@ -84,23 +86,29 @@ export function CommunitySection() {
         {/* Community Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
           {communityStats.map((stat, index) => (
-            <motion.div
+            <HandDrawnBox
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="border-2 border-[#8B0000] p-6 bg-[#0A0A0A] group hover:bg-[#8B0000]/5 transition-colors cursor-none"
+              color="#8B0000"
+              strokeWidth={3}
+              roughness={2.5}
+              className="p-6 bg-[#0A0A0A] group hover:bg-[#8B0000]/5 transition-colors cursor-pointer"
             >
-              <div className="text-[#8B0000] mb-4 group-hover:scale-110 transition-transform">
-                {stat.icon}
-              </div>
-              <p className="text-4xl font-black text-[#E0E0E0] mb-2">{stat.value}</p>
-              <p className="font-mono text-xs text-[#8B0000] uppercase mb-2">{stat.label}</p>
-              <p className="font-mono text-xs text-[#E0E0E0]/60 leading-relaxed">
-                {stat.description}
-              </p>
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <div className="text-[#8B0000] mb-4 group-hover:scale-110 transition-transform">
+                  {stat.icon}
+                </div>
+                <p className="text-4xl font-black text-[#E0E0E0] mb-2">{stat.value}</p>
+                <p className="font-mono text-xs text-[#8B0000] uppercase mb-2">{stat.label}</p>
+                <p className="font-mono text-xs text-[#E0E0E0]/60 leading-relaxed">
+                  {stat.description}
+                </p>
+              </motion.div>
+            </HandDrawnBox>
           ))}
         </div>
 
@@ -116,21 +124,27 @@ export function CommunitySection() {
           </motion.h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {benefits.map((benefit, index) => (
-              <motion.div
+              <HandDrawnBox
                 key={index}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="border border-[#E0E0E0]/20 p-6 bg-[#0A0A0A] hover:border-[#8B0000] transition-colors cursor-none"
+                color="#E0E0E0"
+                strokeWidth={2}
+                roughness={2}
+                className="p-6 bg-[#0A0A0A] hover:bg-[#8B0000]/5 transition-colors cursor-none"
               >
-                <h4 className="text-xl font-black text-[#8B0000] mb-3 uppercase tracking-tight">
-                  {benefit.title}
-                </h4>
-                <p className="font-mono text-sm text-[#E0E0E0]/70 leading-relaxed">
-                  {benefit.description}
-                </p>
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <h4 className="text-xl font-black text-[#8B0000] mb-3 uppercase tracking-tight">
+                    {benefit.title}
+                  </h4>
+                  <p className="font-mono text-sm text-[#E0E0E0]/70 leading-relaxed">
+                    {benefit.description}
+                  </p>
+                </motion.div>
+              </HandDrawnBox>
             ))}
           </div>
         </div>
@@ -145,7 +159,12 @@ export function CommunitySection() {
           >
             &gt;&gt; TOP CONTRIBUTEURS
           </motion.h3>
-          <div className="border-2 border-[#8B0000] bg-[#0A0A0A]">
+          <HandDrawnBox
+            color="#8B0000"
+            strokeWidth={3}
+            roughness={2.5}
+            className="bg-[#0A0A0A]"
+          >
             {topMembers.map((member, index) => (
               <motion.div
                 key={member.rank}
@@ -182,32 +201,38 @@ export function CommunitySection() {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </HandDrawnBox>
         </div>
 
         {/* Join CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="border-2 border-[#8B0000] p-12 bg-[#0A0A0A] text-center"
+        <HandDrawnBox
+          color="#8B0000"
+          strokeWidth={3}
+          roughness={2.5}
+          className="p-12 bg-[#0A0A0A] text-center"
         >
-          <h3 className="text-4xl font-black text-[#E0E0E0] mb-4 uppercase tracking-tight">
-            PRÊT À NOUS REJOINDRE ?
-          </h3>
-          <p className="font-mono text-sm text-[#E0E0E0]/70 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Rejoignez la plus grande communauté francophone de fans de Korn. Inscription gratuite,
-            ambiance garantie. Pas de jugement, que de la passion pour le nu-metal.
-          </p>
-          <div className="flex items-center justify-center gap-4">
-            <Button variant="primary" size="md">
-              CRÉER UN COMPTE
-            </Button>
-            <Button variant="secondary" size="md">
-              EN SAVOIR PLUS
-            </Button>
-          </div>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="text-4xl font-black text-[#E0E0E0] mb-4 uppercase tracking-tight">
+              PRÊT À NOUS REJOINDRE ?
+            </h3>
+            <p className="font-mono text-sm text-[#E0E0E0]/70 mb-8 max-w-2xl mx-auto leading-relaxed">
+              Rejoignez la plus grande communauté francophone de fans de Korn. Inscription gratuite,
+              ambiance garantie. Pas de jugement, que de la passion pour le nu-metal.
+            </p>
+            <div className="flex items-center justify-center gap-4">
+              <Button variant="primary" size="md">
+                CRÉER UN COMPTE
+              </Button>
+              <Button variant="secondary" size="md">
+                EN SAVOIR PLUS
+              </Button>
+            </div>
+          </motion.div>
+        </HandDrawnBox>
       </div>
     </section>
   );

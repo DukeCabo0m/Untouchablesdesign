@@ -5,6 +5,8 @@ import { GlitchImage } from './GlitchImage';
 import { Play, Image as ImageIcon, Video } from 'lucide-react';
 import { COLORS } from '@/app/constants/colors';
 import { Button } from './Button';
+import { generatePlaceholder } from '@/app/utils/placeholder';
+import { HandDrawnBox } from './HandDrawnBox';
 
 const mediaItems = [
   {
@@ -12,7 +14,7 @@ const mediaItems = [
     type: 'video',
     title: 'FREAK ON A LEASH',
     subtitle: 'CLIP OFFICIEL • 1999',
-    image: 'https://images.unsplash.com/photo-1682343712259-d3f5fa95ee22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXJrJTIwY29uY2VydCUyMGNyb3dkfGVufDF8fHx8MTc2ODk5ODM4OXww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: generatePlaceholder(1080, 720, 'VIDEO'),
     views: '47M',
   },
   {
@@ -20,7 +22,7 @@ const mediaItems = [
     type: 'photo',
     title: 'STUDIO SESSION',
     subtitle: 'REQUIEM RECORDING • 2022',
-    image: 'https://images.unsplash.com/photo-1745848413113-4f39bdad5769?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXJrJTIwc3R1ZGlvJTIwZXF1aXBtZW50fGVufDF8fHx8MTc2ODk5ODM5MHww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: generatePlaceholder(1080, 720, 'STUDIO'),
     views: '892K',
   },
   {
@@ -28,7 +30,7 @@ const mediaItems = [
     type: 'audio',
     title: 'BLIND',
     subtitle: 'LIVE PARIS • 2019',
-    image: 'https://images.unsplash.com/photo-1727044113921-8d0a82502248?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZXRhbCUyMG11c2ljJTIwdmlueWx8ZW58MXx8fHwxNzY4OTk4Mzg5fDA&ixlib=rb-4.1.0&q=80&w=1080',
+    image: generatePlaceholder(1080, 720, 'LIVE'),
     views: '2.1M',
   },
   {
@@ -36,7 +38,7 @@ const mediaItems = [
     type: 'video',
     title: 'FALLING AWAY FROM ME',
     subtitle: 'REMASTERED • 2024',
-    image: 'https://images.unsplash.com/photo-1650207292995-7a2386769c55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGRhcmslMjB0ZXh0dXJlfGVufDF8fHx8MTc2ODkwODc4NXww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: generatePlaceholder(1080, 720, 'REMASTER'),
     views: '12M',
   },
   {
@@ -44,7 +46,7 @@ const mediaItems = [
     type: 'photo',
     title: 'BACKSTAGE',
     subtitle: 'HELLFEST • 2023',
-    image: 'https://images.unsplash.com/photo-1682343712259-d3f5fa95ee22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXJrJTIwY29uY2VydCUyMGNyb3dkfGVufDF8fHx8MTc2ODk5ODM4OXww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: generatePlaceholder(1080, 720, 'BACKSTAGE'),
     views: '456K',
   },
   {
@@ -52,7 +54,7 @@ const mediaItems = [
     type: 'video',
     title: 'ROTTING IN VAIN',
     subtitle: 'ACOUSTIC SESSION • 2026',
-    image: 'https://images.unsplash.com/photo-1745848413113-4f39bdad5769?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXJrJTIwc3R1ZGlvJTIwZXF1aXBtZW50fGVufDF8fHx8MTc2ODk5ODM5MHww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: generatePlaceholder(1080, 720, 'ACOUSTIC'),
     views: '3.8M',
   },
 ];
@@ -101,19 +103,20 @@ export function MediaSection() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group cursor-none relative"
+              className="group cursor-pointer relative"
             >
               {/* Media Container */}
-              <div className="relative overflow-hidden border-2 border-[#8B0000] aspect-video bg-[#0A0A0A]">
+              <HandDrawnBox
+                color="#8B0000"
+                strokeWidth={3}
+                roughness={2.5}
+                className="relative overflow-hidden aspect-video bg-[#0A0A0A]"
+              >
                 {/* Image with X-Ray treatment */}
                 <GlitchImage
                   src={item.image}
                   alt={item.title}
                   className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
-                  style={{
-                    filter: 'contrast(1.4) brightness(0.7) grayscale(0.8)',
-                    mixBlendMode: 'luminosity',
-                  }}
                 />
 
                 {/* Scanlines effect */}
@@ -139,12 +142,17 @@ export function MediaSection() {
                 </div>
 
                 {/* Views counter */}
-                <div className="absolute bottom-3 right-3 bg-[#0A0A0A]/90 px-3 py-1 border border-[#8B0000]">
+                <HandDrawnBox
+                  color="#8B0000"
+                  strokeWidth={2}
+                  roughness={2}
+                  className="absolute bottom-3 right-3 bg-[#0A0A0A]/90 px-3 py-1"
+                >
                   <span className="font-mono text-xs text-[#E0E0E0]">
                     {item.views}
                   </span>
-                </div>
-              </div>
+                </HandDrawnBox>
+              </HandDrawnBox>
 
               {/* Info */}
               <div className="mt-4">
@@ -166,18 +174,33 @@ export function MediaSection() {
           viewport={{ once: true }}
           className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6"
         >
-          <div className="border-2 border-[#8B0000] p-6 text-center">
+          <HandDrawnBox
+            color="#8B0000"
+            strokeWidth={3}
+            roughness={2.5}
+            className="p-6 text-center"
+          >
             <p className="text-4xl font-black text-[#E0E0E0] mb-2">847</p>
             <p className="font-mono text-xs text-[#8B0000] uppercase">VIDÉOS</p>
-          </div>
-          <div className="border-2 border-[#8B0000] p-6 text-center">
+          </HandDrawnBox>
+          <HandDrawnBox
+            color="#8B0000"
+            strokeWidth={3}
+            roughness={2.5}
+            className="p-6 text-center"
+          >
             <p className="text-4xl font-black text-[#E0E0E0] mb-2">2.3K</p>
             <p className="font-mono text-xs text-[#8B0000] uppercase">PHOTOS</p>
-          </div>
-          <div className="border-2 border-[#8B0000] p-6 text-center">
+          </HandDrawnBox>
+          <HandDrawnBox
+            color="#8B0000"
+            strokeWidth={3}
+            roughness={2.5}
+            className="p-6 text-center"
+          >
             <p className="text-4xl font-black text-[#E0E0E0] mb-2">1.1K</p>
             <p className="font-mono text-xs text-[#8B0000] uppercase">AUDIOS</p>
-          </div>
+          </HandDrawnBox>
         </motion.div>
 
         {/* CTA Button */}

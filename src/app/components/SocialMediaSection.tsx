@@ -4,6 +4,8 @@ import { GlitchText } from './GlitchText';
 import { SectionHeading } from './SectionHeading';
 import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'motion/react';
+import { Button } from './Button';
+import { HandDrawnBox } from './HandDrawnBox';
 
 // Mock data - à remplacer par de vraies données API
 const latestVideo = {
@@ -245,25 +247,31 @@ export function SocialMediaSection() {
                   <span className="text-[#8B0000]">//</span> DERNIÈRE VIDÉO
                 </h3>
               </div>
-              <a
+              <Button
+                variant="primary"
+                size="sm"
                 href={socialStats.youtube.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#8B0000] text-[#E0E0E0] font-mono text-[10px] uppercase hover:bg-[#8B0000]/80 transition-colors cursor-none"
+                external
               >
                 <UserPlus size={12} />
                 S'ABONNER
-                <span className="text-[#E0E0E0] ml-1">{socialStats.youtube.subscribers}</span>
-              </a>
+                <span className="ml-1">{socialStats.youtube.subscribers}</span>
+              </Button>
             </div>
 
             <a
               href={latestVideo.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group block cursor-none"
+              className="group block cursor-pointer"
             >
-              <div className="relative overflow-hidden border-2 border-[#E0E0E0]/20 group-hover:border-[#8B0000] transition-colors h-[360px]">
+              <HandDrawnBox
+                color="#E0E0E0"
+                strokeWidth={3}
+                roughness={2.5}
+                className="relative overflow-hidden h-[360px]"
+                hoverColor="#8B0000"
+              >
                 <img
                   src={latestVideo.thumbnail}
                   alt={latestVideo.title}
@@ -283,16 +291,23 @@ export function SocialMediaSection() {
 
                 {/* Play Button */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-20 h-20 bg-[#8B0000] flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Play size={32} className="text-[#E0E0E0] fill-[#E0E0E0]" />
-                  </div>
+                  <HandDrawnBox
+                    color="#8B0000"
+                    strokeWidth={3}
+                    roughness={2.5}
+                    className="w-20 h-20"
+                  >
+                    <div className="w-full h-full bg-[#8B0000] flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Play size={32} className="text-[#E0E0E0] fill-[#E0E0E0]" />
+                    </div>
+                  </HandDrawnBox>
                 </div>
 
                 {/* Duration Badge */}
                 <div className="absolute bottom-4 right-4 bg-black/90 px-2 py-1">
                   <span className="font-mono text-xs text-[#E0E0E0]">{latestVideo.duration}</span>
                 </div>
-              </div>
+              </HandDrawnBox>
 
               <div className="mt-4">
                 <h4 className="font-black text-2xl text-[#E0E0E0] uppercase mb-2 group-hover:text-[#8B0000] transition-colors leading-tight">
@@ -328,16 +343,16 @@ export function SocialMediaSection() {
                   <span className="text-[#8B0000]">//</span> SHORTS
                 </h3>
               </div>
-              <a
+              <Button
+                variant="primary"
+                size="sm"
                 href={socialStats.tiktok.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#8B0000] text-[#E0E0E0] font-mono text-[10px] uppercase hover:bg-[#8B0000]/80 transition-colors cursor-none"
+                external
               >
                 <UserPlus size={12} />
                 SUIVRE
-                <span className="text-[#E0E0E0] ml-1">{socialStats.tiktok.followers}</span>
-              </a>
+                <span className="ml-1">{socialStats.tiktok.followers}</span>
+              </Button>
             </div>
 
             <div 
@@ -347,11 +362,8 @@ export function SocialMediaSection() {
             >
               <AnimatePresence mode="popLayout" initial={false}>
                 {visibleShorts.map((short) => (
-                  <motion.a
+                  <motion.div
                     key={`${short.id}-${currentShortIndex}`}
-                    href={short.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     initial={{ opacity: 0, y: 100 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -100 }}
@@ -361,42 +373,55 @@ export function SocialMediaSection() {
                       layout: { duration: 0.5 }
                     }}
                     layout
-                    className="group flex gap-4 cursor-none"
+                    className="group cursor-pointer"
                   >
-                    <div className="relative w-36 h-52 flex-shrink-0 overflow-hidden border-2 border-[#E0E0E0]/20 group-hover:border-[#8B0000] transition-colors">
-                      <img
-                        src={short.thumbnail}
-                        alt={short.title}
-                        className="w-full h-full object-cover"
-                        style={{
-                          filter: 'contrast(1.4) brightness(0.7) saturate(0.8)',
-                        }}
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-12 h-12 bg-[#8B0000] flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Play size={20} className="text-[#E0E0E0] fill-[#E0E0E0]" />
+                    <a
+                      href={short.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex gap-4"
+                    >
+                      <HandDrawnBox
+                        color="#E0E0E0"
+                        strokeWidth={2}
+                        roughness={2}
+                        className="relative w-36 h-52 flex-shrink-0 overflow-hidden"
+                        hoverColor="#8B0000"
+                      >
+                        <img
+                          src={short.thumbnail}
+                          alt={short.title}
+                          className="w-full h-full object-cover"
+                          style={{
+                            filter: 'contrast(1.4) brightness(0.7) saturate(0.8)',
+                          }}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-12 h-12 bg-[#8B0000] flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <Play size={20} className="text-[#E0E0E0] fill-[#E0E0E0]" />
+                          </div>
+                        </div>
+                      </HandDrawnBox>
+
+                      <div className="flex-1 flex flex-col justify-center">
+                        <h4 className="font-mono text-sm text-[#E0E0E0] uppercase mb-2 line-clamp-2 group-hover:text-[#8B0000] transition-colors">
+                          {short.title}
+                        </h4>
+                        <div className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/60 mb-2">
+                          <span>{short.views} vues</span>
+                          <span className="text-[#8B0000]">•</span>
+                          <span>{new Date(short.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {short.hashtags.map((tag, idx) => (
+                            <span key={idx} className="font-mono text-xs text-[#8B0000] font-semibold">
+                              {tag}
+                            </span>
+                          ))}
                         </div>
                       </div>
-                    </div>
-
-                    <div className="flex-1 flex flex-col justify-center">
-                      <h4 className="font-mono text-sm text-[#E0E0E0] uppercase mb-2 line-clamp-2 group-hover:text-[#8B0000] transition-colors">
-                        {short.title}
-                      </h4>
-                      <div className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]/60 mb-2">
-                        <span>{short.views} vues</span>
-                        <span className="text-[#8B0000]">•</span>
-                        <span>{new Date(short.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {short.hashtags.map((tag, idx) => (
-                          <span key={idx} className="font-mono text-xs text-[#8B0000] font-semibold">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.a>
+                    </a>
+                  </motion.div>
                 ))}
               </AnimatePresence>
             </div>
@@ -421,16 +446,16 @@ export function SocialMediaSection() {
                 <span className="text-[#8B0000]">//</span> INSTAGRAM
               </h3>
             </div>
-            <a
+            <Button
+              variant="primary"
+              size="sm"
               href={socialStats.instagram.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#8B0000] text-[#E0E0E0] font-mono text-[10px] uppercase hover:bg-[#8B0000]/80 transition-colors cursor-none"
+              external
             >
               <UserPlus size={12} />
               SUIVRE
-              <span className="text-[#E0E0E0] ml-1">{socialStats.instagram.followers}</span>
-            </a>
+              <span className="ml-1">{socialStats.instagram.followers}</span>
+            </Button>
           </div>
 
           {/* Instagram Carousel */}
@@ -442,11 +467,8 @@ export function SocialMediaSection() {
             <div className="flex gap-4">
               <AnimatePresence mode="popLayout" initial={false}>
                 {visibleInstaPosts.map((post, index) => (
-                  <motion.a
+                  <motion.div
                     key={`${post.id}-${currentInstaIndex}-${index}`}
-                    href={post.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     initial={{ opacity: 0, x: 300 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -300 }}
@@ -456,37 +478,52 @@ export function SocialMediaSection() {
                       delay: index * 0.05
                     }}
                     layout
-                    className="group relative flex-1 aspect-square overflow-hidden border-2 border-[#E0E0E0]/20 hover:border-[#8B0000] transition-colors cursor-none"
+                    className="group flex-1 cursor-pointer"
                   >
-                    <img
-                      src={post.image}
-                      alt={`Instagram post`}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      style={{
-                        filter: 'contrast(1.4) brightness(0.7) saturate(0.8)',
-                      }}
-                    />
+                    <HandDrawnBox
+                      color="#E0E0E0"
+                      strokeWidth={2}
+                      roughness={2}
+                      className="relative aspect-square overflow-hidden"
+                      hoverColor="#8B0000"
+                    >
+                      <a
+                        href={post.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full h-full"
+                      >
+                        <img
+                          src={post.image}
+                          alt={`Instagram post`}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          style={{
+                            filter: 'contrast(1.4) brightness(0.7) saturate(0.8)',
+                          }}
+                        />
 
-                    {/* Scanlines overlay */}
-                    <div
-                      className="absolute inset-0 pointer-events-none opacity-20"
-                      style={{
-                        background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 0, 0, 0.15) 2px, rgba(139, 0, 0, 0.15) 4px)',
-                      }}
-                    />
+                        {/* Scanlines overlay */}
+                        <div
+                          className="absolute inset-0 pointer-events-none opacity-20"
+                          style={{
+                            background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 0, 0, 0.15) 2px, rgba(139, 0, 0, 0.15) 4px)',
+                          }}
+                        />
 
-                    {/* Hover Stats */}
-                    <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
-                      <div className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]">
-                        <Heart size={14} className="text-[#8B0000]" />
-                        <span>{(post.likes / 1000).toFixed(1)}K</span>
-                      </div>
-                      <div className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]">
-                        <MessageCircle size={14} className="text-[#8B0000]" />
-                        <span>{post.comments}</span>
-                      </div>
-                    </div>
-                  </motion.a>
+                        {/* Hover Stats */}
+                        <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+                          <div className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]">
+                            <Heart size={14} className="text-[#8B0000]" />
+                            <span>{(post.likes / 1000).toFixed(1)}K</span>
+                          </div>
+                          <div className="flex items-center gap-2 font-mono text-xs text-[#E0E0E0]">
+                            <MessageCircle size={14} className="text-[#8B0000]" />
+                            <span>{post.comments}</span>
+                          </div>
+                        </div>
+                      </a>
+                    </HandDrawnBox>
+                  </motion.div>
                 ))}
               </AnimatePresence>
             </div>

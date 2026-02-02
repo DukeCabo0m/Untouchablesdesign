@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { GlitchText } from './GlitchText';
 import { Link } from 'react-router';
 import { COLORS } from '@/app/constants/colors';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 
 const menuItems = [
   { label: 'ACCUEIL', href: '/' },
@@ -22,7 +25,7 @@ export function DestructuredMenu() {
       {/* Menu trigger */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-8 right-8 z-[100] text-[#FFFFFF] transition-colors cursor-none"
+        className="fixed top-8 right-8 z-[100] text-[#FFFFFF] transition-colors"
         style={{ 
           color: '#FFFFFF',
         }}
@@ -40,11 +43,11 @@ export function DestructuredMenu() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-[#0A0A0A] z-[999] flex items-center justify-center cursor-none"
+            className="fixed inset-0 bg-[#0A0A0A] z-[999] flex items-center justify-center"
           >
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-8 right-8 text-[#FFFFFF] transition-colors cursor-none"
+              className="absolute top-8 right-8 text-[#FFFFFF] transition-colors"
               style={{ 
                 color: '#FFFFFF',
               }}
@@ -65,7 +68,7 @@ export function DestructuredMenu() {
                   <Link
                     to={item.href}
                     onClick={() => setIsOpen(false)}
-                    className="block text-6xl font-black text-[#FFFFFF] transition-colors tracking-tighter uppercase cursor-none"
+                    className="block text-6xl font-black text-[#FFFFFF] transition-colors tracking-tighter uppercase"
                     style={{ fontFamily: 'Arial Black, sans-serif', letterSpacing: '-0.05em' }}
                     onMouseEnter={(e) => e.currentTarget.style.color = COLORS.red.pure}
                     onMouseLeave={(e) => e.currentTarget.style.color = '#FFFFFF'}

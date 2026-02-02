@@ -5,6 +5,9 @@ import { GlitchText } from './GlitchText';
 import { GlitchImage } from './GlitchImage';
 import { ChevronRight, Calendar, User } from 'lucide-react';
 import { Button } from './Button';
+import { generatePlaceholder } from '@/app/utils/placeholder';
+import { COLORS } from '@/app/constants/colors';
+import { HandDrawnBox } from './HandDrawnBox';
 
 const newsItems = [
   {
@@ -14,7 +17,7 @@ const newsItems = [
     category: 'TOURNÉE',
     title: 'KORN ANNONCE UNE DATE EXCLUSIVE EN FRANCE',
     excerpt: 'Le groupe légendaire revient à Paris pour un concert exceptionnel en juin 2026. Les préventes débutent dans 48h.',
-    image: 'https://images.unsplash.com/photo-1682343712259-d3f5fa95ee22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXJrJTIwY29uY2VydCUyMGNyb3dkfGVufDF8fHx8MTc2ODk5ODM4OXww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: generatePlaceholder(1080, 720, 'CONCERT'),
   },
   {
     id: 2,
@@ -23,7 +26,7 @@ const newsItems = [
     category: 'ALBUM',
     title: 'NOUVEAU SINGLE : "ROTTING IN VAIN" RÉENREGISTRÉ',
     excerpt: 'Une version acoustique surprise qui divise déjà la communauté. Écoute disponible sur toutes les plateformes.',
-    image: 'https://images.unsplash.com/photo-1727044113921-8d0a82502248?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZXRhbCUyMG11c2ljJTIwdmlueWx8ZW58MXx8fHwxNzY4OTk4Mzg5fDA&ixlib=rb-4.1.0&q=80&w=1080',
+    image: generatePlaceholder(1080, 720, 'VINYL'),
   },
   {
     id: 3,
@@ -32,7 +35,7 @@ const newsItems = [
     category: 'COMMUNAUTÉ',
     title: 'CONCOURS DESIGN : CRÉEZ LE VISUEL OFFICIEL',
     excerpt: 'Untouchables lance un concours ouvert à tous les créatifs. Le gagnant verra son design sur notre merchandise.',
-    image: 'https://images.unsplash.com/photo-1650207292995-7a2386769c55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGRhcmslMjB0ZXh0dXJlfGVufDF8fHx8MTc2ODkwODc4NXww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: generatePlaceholder(1080, 720, 'DESIGN'),
   },
 ];
 
@@ -67,18 +70,19 @@ export function NewsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
-              className="group cursor-none"
+              className="group cursor-pointer"
             >
               {/* Image with X-Ray treatment */}
-              <div className="relative overflow-hidden mb-6 border-2 aspect-[4/3]" style={{ borderColor: COLORS.red.pure }}>
+              <HandDrawnBox
+                color={COLORS.red.pure}
+                strokeWidth={3}
+                roughness={2.5}
+                className="relative overflow-hidden mb-6 aspect-[4/3]"
+              >
                 <GlitchImage
                   src={item.image}
                   alt={item.title}
                   className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                  style={{
-                    filter: 'contrast(1.3) brightness(0.8) grayscale(0.6)',
-                    mixBlendMode: 'luminosity',
-                  }}
                 />
                 <div
                   className="absolute inset-0 pointer-events-none transition-opacity duration-500 group-hover:opacity-80"
@@ -86,7 +90,7 @@ export function NewsSection() {
                     background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 0, 0, 0.1) 2px, rgba(139, 0, 0, 0.1) 4px)',
                   }}
                 />
-              </div>
+              </HandDrawnBox>
 
               {/* Meta */}
               <div className="flex items-center gap-4 mb-3 font-mono text-xs uppercase" style={{ color: COLORS.red.pure }}>

@@ -2,7 +2,8 @@ import { motion } from 'motion/react';
 import { GlitchText } from './GlitchText';
 import { SectionHeading } from './SectionHeading';
 import { Link } from 'react-router';
-import { Heart, MessageCircle, ArrowRight } from 'lucide-react';
+import { Heart, MessageCircle, ArrowRight, Instagram } from 'lucide-react';
+import { Button } from './Button';
 
 // Mock data - contributions des fans
 const fanContributions = [
@@ -46,16 +47,14 @@ const fanContributions = [
 
 export function FanContributionsSection() {
   return (
-    <section className="py-12 relative">
-      {/* Background texture - TEMPORARILY DISABLED */}
-      {/* <div 
-        className="absolute inset-0 opacity-5"
-        style={{
-          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #8B0000 2px, #8B0000 4px)',
-        }}
+    <section className="bg-[#0A0A0A] py-12 px-0 pb-4">
+      {/* Animated gradient background */}
+      {/* <AnimatedGradientBackground 
+        colors={['#0A0A0A', '#1A0000', '#0A0A0A']} 
+        opacity={0.3}
       /> */}
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="relative z-10">
         {/* Section Header */}
         <div className="flex items-start justify-between mb-16">
           <SectionHeading 
@@ -77,13 +76,13 @@ export function FanContributionsSection() {
             transition={{ delay: 2.6 }}
             className="mt-4"
           >
-            <Link
-              to="/gallery"
-              className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#8B0000] text-[#E0E0E0] font-mono text-xs uppercase hover:bg-[#8B0000] transition-colors cursor-none"
+            <Button
+              href="/gallery"
+              variant="primary"
             >
               VISITEZ LA GALERIE
               <ArrowRight size={14} />
-            </Link>
+            </Button>
           </motion.div>
         </div>
 
@@ -96,7 +95,7 @@ export function FanContributionsSection() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.05 }}
-              className="group relative aspect-square overflow-hidden border-2 border-[#E0E0E0]/20 hover:border-[#8B0000] transition-all duration-300 cursor-none"
+              className="group relative aspect-square overflow-hidden border-2 border-[#E0E0E0]/20 hover:border-[#8B0000] transition-all duration-300 cursor-pointer"
             >
               {/* Image */}
               <img
@@ -109,7 +108,7 @@ export function FanContributionsSection() {
               />
 
               {/* Type badge - top left */}
-              <div className="absolute top-2 left-2 bg-[#8B0000] px-2 py-1 font-mono text-[10px] text-[#E0E0E0] uppercase z-10">
+              <div className="absolute top-2 left-2 bg-[#8B0000] px-2 py-1 font-mono text-[#E0E0E0] uppercase z-10">
                 {contribution.type}
               </div>
 
@@ -138,22 +137,22 @@ export function FanContributionsSection() {
               </h3>
               
               {/* Text */}
-              <p className="font-mono text-xs text-[#E0E0E0]/70 leading-relaxed flex-1 mr-8">
+              <p className="font-mono text-sm text-[#E0E0E0]/70 leading-relaxed flex-1 mr-8">
                 Partage tes créations, ta collection ou tes tatouages Korn avec la communauté.<br />
                 Ajoute simplement <span className="text-[#8B0000] font-black">#UntouchablesFR</span> à tes posts Instagram !
               </p>
               
               {/* Button */}
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#8B0000] text-[#E0E0E0] font-mono text-xs uppercase hover:bg-transparent hover:border-2 hover:border-[#8B0000] transition-all cursor-none whitespace-nowrap flex-shrink-0"
+              <Button
+                as="a"
+                href="https://www.instagram.com/untouchables.fr/"
+                external
+                variant="primary"
+                size="md"
               >
-                <Heart size={14} />
+                <Instagram size={14} />
                 INSTAGRAM
-                <ArrowRight size={14} />
-              </a>
+              </Button>
             </div>
           </div>
         </motion.div>

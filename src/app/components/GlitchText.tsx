@@ -86,9 +86,14 @@ export function GlitchText({ children, className = '', glitchIntensity = 'medium
     <motion.span
       className={`relative inline-block font-heading ${className}`}
       style={{
+        fontFamily: "'Martian Mono'",
+        fontWeight: 600,
         WebkitFontSmoothing: 'antialiased',
         MozOsxFontSmoothing: 'grayscale',
         textRendering: 'optimizeLegibility',
+        paddingTop: '0.15em',
+        paddingBottom: '0.15em',
+        lineHeight: 1.3,
       }}
       animate={isGlitching ? glitchAnimation : {}}
       transition={{ duration: 0.15, ease: 'easeInOut' }}

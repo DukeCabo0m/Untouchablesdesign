@@ -5,6 +5,9 @@ import { concerts } from '@/app/data/concerts';
 import { FlagIcon } from '@/app/components/FlagIcon';
 import { GlitchText } from './GlitchText';
 import { SectionHeading } from './SectionHeading';
+import { Button } from './Button';
+import { HandDrawnBox } from './HandDrawnBox';
+import { COLORS } from '@/app/constants/colors';
 
 export function UpcomingToursSection() {
   // Get next 4 upcoming concerts
@@ -13,8 +16,8 @@ export function UpcomingToursSection() {
     .slice(0, 4);
 
   return (
-    <section className="bg-[#0A0A0A] py-12 px-4">
-      <div className="max-w-7xl mx-auto">
+    <section className="bg-[#0A0A0A] py-12 px-0">
+      <div>
         {/* Section Header */}
         <div className="flex items-start justify-between mb-16">
           <SectionHeading 
@@ -36,13 +39,13 @@ export function UpcomingToursSection() {
             transition={{ delay: 2.6 }}
             className="mt-4"
           >
-            <Link
-              to="/tour"
-              className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#8B0000] text-[#E0E0E0] font-mono text-xs uppercase hover:bg-[#8B0000] transition-colors cursor-none"
+            <Button
+              href="/tour"
+              variant="primary"
             >
               TOUTES LES DATES
               <ArrowRight size={14} />
-            </Link>
+            </Button>
           </motion.div>
         </div>
 
@@ -55,55 +58,72 @@ export function UpcomingToursSection() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.1 * index }}
-              className="bg-[#1A1A1A] border-2 border-[#8B0000]/30 hover:border-[#8B0000] transition-all duration-300 group cursor-none"
+              className="group cursor-pointer"
             >
-              <div className="flex items-center justify-between gap-6 px-5 py-4">
-                {/* Date */}
-                <div className="bg-[#8B0000] px-4 py-2 min-w-[120px] shrink-0">
-                  <p className="font-mono text-xs text-[#E0E0E0] uppercase">
-                    {new Date(concert.date).toLocaleDateString('fr-FR', {
-                      day: '2-digit',
-                      month: 'short',
-                      year: 'numeric'
-                    })}
-                  </p>
-                </div>
+              <HandDrawnBox
+                color="#8B00004D"
+                strokeWidth={3}
+                roughness={2.5}
+                padding="0"
+                hoverColor="#8B0000"
+              >
+                <div className="bg-[#1A1A1A] flex items-center justify-between gap-6 px-5 py-4">
+                  {/* Date */}
+                  <div className="bg-[#8B0000] px-4 py-2 min-w-[120px] shrink-0">
+                    <p className="font-mono text-sm text-[#E0E0E0] uppercase">
+                      {new Date(concert.date).toLocaleDateString('fr-FR', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                      })}
+                    </p>
+                  </div>
 
-                {/* Ville & Pays + Salle + Support - Tout sur une ligne */}
-                <div className="flex-1 min-w-0">
-                  <Link to={`/tour/concert/${concert.slug}`}>
-                    <div className="flex items-center gap-3">
-                      <FlagIcon country={concert.country} size={18} />
-                      <h3 className="text-lg font-black text-[#FFFFFF] uppercase group-hover:text-[#8B0000] transition-colors">
-                        {concert.city}, {concert.country}
-                      </h3>
-                      <span className="text-[#a8a8a8] font-mono text-sm">• {concert.venue}</span>
-                      {concert.support && (
-                        <span className="text-[#8B0000] font-mono text-sm font-bold">• Support : {concert.support}</span>
-                      )}
-                    </div>
-                  </Link>
-                </div>
+                  {/* Ville & Pays + Salle + Support - Tout sur une ligne */}
+                  <div className="flex-1 min-w-0">
+                    <Link to={`/tour/concert/${concert.slug}`}>
+                      <div className="flex items-center gap-3">
+                        <FlagIcon country={concert.country} size={18} />
+                        <h3 className="text-lg font-black text-[#FFFFFF] uppercase group-hover:text-[#8B0000] transition-colors">
+                          {concert.city}, {concert.country}
+                        </h3>
+                        <span className="text-[#a8a8a8] font-mono text-sm">• {concert.venue}</span>
+                        {concert.support && (
+                          <span className="text-[#8B0000] font-mono text-sm font-bold">• Support : {concert.support}</span>
+                        )}
+                      </div>
+                    </Link>
+                  </div>
 
-                {/* Bouton */}
-                <div className="shrink-0">
-                  <a
-                    href={concert.ticketsUrl || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`inline-flex items-center justify-center gap-3 px-6 py-3 font-black text-sm uppercase tracking-wider transition-all duration-300 cursor-none border-2 whitespace-nowrap w-[180px] ${
-                      concert.status === 'upcoming'
-                        ? 'bg-[#8B0000] text-[#FFFFFF] border-[#8B0000] hover:bg-transparent hover:border-[#FFFFFF]'
-                        : concert.status === 'sold-out'
-                        ? 'bg-transparent text-[#8B0000] border-[#8B0000]/50 cursor-not-allowed opacity-70'
-                        : 'bg-transparent text-[#8B0000] border-[#8B0000]/50 cursor-not-allowed opacity-50'
-                    }`}
-                  >
-                    <Ticket size={16} />
-                    {concert.status === 'upcoming' ? 'BILLETERIE' : 'COMPLET'}
-                  </a>
+                  {/* Bouton */}
+                  <div className="shrink-0">
+                    {concert.status === 'upcoming' ? (
+                      <Button
+                        as="a"
+                        href={concert.ticketsUrl || '#'}
+                        external
+                        variant="primary"
+                        size="md"
+                        className="w-[180px]"
+                      >
+                        <Ticket size={16} />
+                        BILLETERIE
+                      </Button>
+                    ) : (
+                      <Button
+                        as="button"
+                        disabled
+                        variant="secondary"
+                        size="md"
+                        className="w-[180px] opacity-70 cursor-not-allowed"
+                      >
+                        <Ticket size={16} />
+                        COMPLET
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </HandDrawnBox>
             </motion.div>
           ))}
         </div>
@@ -115,7 +135,7 @@ export function UpcomingToursSection() {
           viewport={{ once: true }}
           className="mt-8 bg-[#8B0000]/10 border-l-4 border-[#8B0000] p-6"
         >
-          <p className="font-mono text-xs text-[#E0E0E0]/70 leading-relaxed">
+          <p className="font-mono text-sm text-[#E0E0E0]/70 leading-relaxed">
             <span className="text-[#8B0000] font-bold">INFO :</span> Les dates et horaires sont susceptibles de changer. 
             Vérifiez toujours auprès des organisateurs avant d'acheter vos billets.
           </p>

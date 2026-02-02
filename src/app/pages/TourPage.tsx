@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { PageHeader } from '@/app/components/PageHeader';
 import { motion } from 'motion/react';
 import { Calendar, MapPin, Clock, Ticket, ExternalLink, UserCheck, Archive, ArrowRight } from 'lucide-react';
+import { Button } from '@/app/components/Button';
 
 // Données - Concerts à venir 2026
 const upcomingConcerts = [
@@ -225,12 +226,13 @@ export function TourPage() {
                       </a>
                       
                       {/* Bouton J'y serai */}
-                      <button
-                        className="inline-flex items-center justify-center gap-2 px-6 py-3 font-black text-sm uppercase tracking-wider transition-all duration-300 cursor-none border-2 bg-transparent text-[#E0E0E0] border-[#E0E0E0]/30 hover:bg-[#E0E0E0] hover:text-[#0A0A0A] hover:border-[#E0E0E0]"
+                      <Button
+                        variant="secondary"
+                        size="md"
                       >
                         <UserCheck size={16} />
                         J'Y SERAI
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </motion.div>

@@ -5,7 +5,7 @@ export function ScanLines() {
     <motion.div
       className="fixed inset-0 pointer-events-none z-[150] opacity-[0.025]"
       style={{
-        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #E0E0E0 2px, #E0E0E0 4px)',
+        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #F0F0F0 2px, #F0F0F0 4px)',
         backgroundSize: '100% 4px',
       }}
       animate={{

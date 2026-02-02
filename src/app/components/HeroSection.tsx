@@ -16,36 +16,27 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background video YouTube */}
-      <div className="absolute inset-0">
+      {/* Background video - YouTube embed in full cover mode */}
+      <div className="absolute inset-0 overflow-hidden">
         <iframe
-          className="absolute"
+          src="https://www.youtube.com/embed/pr3x7tS__dE?autoplay=1&mute=1&loop=1&playlist=pr3x7tS__dE&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
+          title="Korn Live Background"
+          allow="autoplay; encrypted-media"
           style={{
-            width: '300vw',
-            height: '300vh',
+            filter: 'grayscale(100%)',
             position: 'absolute',
             top: '50%',
             left: '50%',
+            width: '300vw',
+            height: '300vh',
             transform: 'translate(-50%, -50%)',
             pointerEvents: 'none',
+            border: 'none',
           }}
-          src="https://www.youtube.com/embed/pr3x7tS__dE?autoplay=1&mute=1&loop=1&playlist=pr3x7tS__dE&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
-          allow="autoplay; fullscreen"
-          title="Korn Live Background"
         />
       </div>
 
-      {/* Grayscale overlay effect */}
-      <div 
-        className="absolute inset-0" 
-        style={{
-          backgroundColor: '#0A0A0A',
-          mixBlendMode: 'color',
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Dark overlay */}
+      {/* Dark overlay pour améliorer la lisibilité */}
       <div className="absolute inset-0 bg-[#0A0A0A] opacity-70" />
 
       {/* Content */}
@@ -105,7 +96,7 @@ export function HeroSection() {
 
         {/* Content - ABOVE textures */}
         <motion.div
-          className="flex whitespace-nowrap text-[#E0E0E0] text-xs tracking-widest relative z-10 font-mono"
+          className="flex whitespace-nowrap text-[#E0E0E0] text-sm tracking-widest relative z-10 font-mono"
           animate={{ x: [0, -1000] }}
           transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
         >

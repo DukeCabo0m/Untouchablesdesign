@@ -19,8 +19,8 @@ export const newsArticles: NewsArticle[] = [
     title: 'KORN ANNONCE UN NOUVEL ALBUM POUR L\'ÉTÉ 2026',
     category: 'album',
     date: '2026-01-15',
-    author: 'Marc "Maggot" Dubois',
-    excerpt: 'Le groupe vient de confirmer officiellement l\'enregistrement d\'un 15e album studio, prévu pour juin 2026. Retour aux sources promis avec le producteur Ross Robinson.',
+    author: 'Mr. Fox',
+    excerpt: 'Le groupe vient de confirmer officiellement l\'enregistrement d\'un 15e album studio, prévu pour juin 2026. Retour aux sources promis avec le producteur Ross Robinson. Les sessions d\'enregistrement ont débuté à l\'Indigo Ranch Studios de Malibu, le studio mythique qui a vu naître les deux premiers albums du groupe.',
     content: `## BREAKING NEWS : KORN REVIENT AVEC ROSS ROBINSON
 
 Jonathan Davis l'a annoncé ce matin sur Instagram : **Korn est en studio avec Ross Robinson**, le producteur légendaire des deux premiers albums (Korn, 1994 et Life Is Peachy, 1996).
@@ -67,7 +67,7 @@ Les préventes s'ouvriront fin février sur le site officiel.
     title: 'INTERVIEW EXCLUSIVE : JONATHAN DAVIS SE CONFIE SUR 30 ANS DE KORN',
     category: 'interview',
     date: '2026-01-10',
-    author: 'Sophie "Freak" Martin',
+    author: 'Mr. Fox',
     excerpt: 'À l\'occasion des 32 ans du premier album, Jonathan Davis revient sur trois décennies de traumatismes, de catharsis et de révolution musicale.',
     content: `## JONATHAN DAVIS : "KORN M'A SAUVÉ LA VIE"
 
@@ -108,7 +108,7 @@ Les préventes s'ouvriront fin février sur le site officiel.
     title: 'MEETUP UNTOUCHABLES PARIS // 15 MARS 2026',
     category: 'communauté',
     date: '2026-01-08',
-    author: 'Admin Untouchables',
+    author: 'Mr. Fox',
     excerpt: 'La communauté francophone se réunit pour un premier meetup officiel ! Concert privé, exposition, DJ set et surprises.',
     content: `## PREMIER MEETUP OFFICIEL UNTOUCHABLES // PARIS
 
@@ -164,7 +164,7 @@ DJ Scarecrow (membre fondateur de la communauté)
     title: 'DÉBAT : NOTRE TOP 10 DES ALBUMS KORN (2026)',
     category: 'actualité',
     date: '2026-01-05',
-    author: 'Rédaction Untouchables',
+    author: 'Mr. Fox',
     excerpt: 'La rédaction classe les 14 albums studio de Korn. Follow the Leader en tête ? Issues sous-estimé ? Débat ouvert dans les commentaires !',
     content: `## LE CLASSEMENT DÉFINITIF (OU PRESQUE)
 
@@ -224,10 +224,10 @@ On fera un classement communautaire en février !
   {
     id: '5',
     slug: 'head-munky-interview-guitares-2026',
-    title: 'HEAD & MUNKY : "NOS GUITARES SONT DES ARMES"',
+    title: 'HEAD & MUNKY : \"NOS GUITARES SONT DES ARMES\"',
     category: 'interview',
     date: '2025-12-28',
-    author: 'Pierre "Riff" Lemoine',
+    author: 'Mr. Fox',
     excerpt: 'Les deux guitaristes légendaires de Korn décryptent leur approche unique : accordages graves, Ibanez 7 cordes, et le secret du son qui a tout changé.',
     content: `## L'INTERVIEW GEAR ULTIME
 
@@ -276,7 +276,7 @@ On fera un classement communautaire en février !
     title: 'TOURNÉE EUROPÉENNE CONFIRMÉE // PRINTEMPS 2026',
     category: 'tournée',
     date: '2026-01-20',
-    author: 'Marc \"Maggot\" Dubois',
+    author: 'Mr. Fox',
     excerpt: 'Korn annonce 15 dates européennes entre avril et mai 2026, dont 3 dates françaises. Préventes exclusives pour les membres Untouchables dès le 25 janvier.',
     content: `## KORN REVIENT EN EUROPE AU PRINTEMPS 2026
 
@@ -309,7 +309,7 @@ Les membres de la communauté Untouchables bénéficient de 48h de préventes ex
     title: 'FANZINE UNTOUCHABLES #01 // PREVIEW EXCLUSIVE',
     category: 'communauté',
     date: '2026-01-18',
-    author: 'Sophie \"Freak\" Martin',
+    author: 'Mr. Fox',
     excerpt: 'Découvrez en avant-première le contenu du premier numéro de notre fanzine mensuel qui sortira en avril 2026. Abonnements trimestriels ouverts !',
     content: `## PREMIER NUMÉRO DU FANZINE UNTOUCHABLES
 
@@ -345,7 +345,7 @@ Après des mois de préparation, le fanzine physique **UNTOUCHABLES** sortira so
     title: 'FIELDY DE RETOUR DANS KORN APRÈS 3 ANS D\'ABSENCE',
     category: 'actualité',
     date: '2026-01-12',
-    author: 'Pierre \"Riff\" Lemoine',
+    author: 'Mr. Fox',
     excerpt: 'Le bassiste légendaire Reginald \"Fieldy\" Arvizu confirme son retour officiel dans Korn après une pause pour raisons personnelles. Émotion et soulagement dans la communauté.',
     content: `## FIELDY IS BACK
 

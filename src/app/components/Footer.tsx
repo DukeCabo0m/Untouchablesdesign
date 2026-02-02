@@ -2,8 +2,13 @@ import { Link } from 'react-router';
 import { motion } from 'motion/react';
 import { GlitchImage } from './GlitchImage';
 import { LogoText } from './LogoText';
-import { Instagram, Facebook, Youtube, Twitter, Mail, Send } from 'lucide-react';
+import { COLORS } from '@/app/constants/colors';
+import { Youtube, Facebook, Instagram, Mail, ExternalLink, Send } from 'lucide-react';
 import { useState } from 'react';
+import { Button } from './Button';
+import { HandDrawnLine } from './HandDrawnLine';
+import { HandDrawnVerticalLine } from './HandDrawnVerticalLine';
+import { TikTokIcon } from './TikTokIcon';
 
 export function Footer() {
   const [email, setEmail] = useState('');
@@ -20,14 +25,24 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative bg-[#000000] border-t-2 border-[#8B0000] mt-16 pt-16">
+    <footer className="relative bg-[#000000] mt-16 pt-16">
+      {/* Bordure dessinée à la main en haut */}
+      <div className="absolute top-0 left-0 right-0 h-1">
+        <HandDrawnLine 
+          color="#8B0000" 
+          strokeWidth={3} 
+          roughness={3} 
+          passes={2}
+        />
+      </div>
+      
       {/* Main Footer */}
-      <div className="px-4 relative pb-12">
+      <div className="px-0 relative pb-12">
         {/* Overlay ultra-sombre pour le background */}
         <div className="absolute inset-0 bg-black opacity-95 z-0" />
         <div className="absolute inset-0 bg-black/90 z-[1]" style={{ boxShadow: 'inset 0 0 200px 100px rgba(0, 0, 0, 1)' }} />
         
-        <div className="max-w-7xl mx-auto relative z-10 pt-0">
+        <div className="max-w-[1920px] mx-auto px-4 relative z-10 pt-0">
           {/* Main Footer Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12 mt-0 pt-0">
             {/* Column 1 - About */}
@@ -38,15 +53,15 @@ export function Footer() {
               transition={{ duration: 0.6 }}
             >
               <div className="mb-6">
-                <Link to="/" className="block cursor-none hover:opacity-80 transition-opacity">
+                <Link to="/" className="block cursor-pointer hover:opacity-80 transition-opacity">
                   <LogoText className="h-10 max-w-[180px]" />
                 </Link>
                 <div className="w-16 h-1 bg-[#8B0000] mt-2" />
               </div>
-              <p className="font-mono text-xs text-[#E0E0E0] leading-relaxed mb-6">
+              <p className="font-mono text-[#F0F0F0] leading-relaxed mb-6">
                 Communauté francophone de fans de Korn. Actualités, discographie, concerts, et bien plus.
               </p>
-              <div className="font-mono text-[10px] text-[#8B0000] uppercase tracking-wider">
+              <div className="font-mono text-[#8B0000] uppercase tracking-wider">
                 EST. 2026 // V.1.0
               </div>
             </motion.div>
@@ -66,37 +81,37 @@ export function Footer() {
               <nav className="space-y-3">
                 <Link 
                   to="/news" 
-                  className="block font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none uppercase"
+                  className="block font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer uppercase"
                 >
                   Actualités
                 </Link>
                 <Link 
                   to="/tour" 
-                  className="block font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none uppercase"
+                  className="block font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer uppercase"
                 >
                   Tournée
                 </Link>
                 <Link 
                   to="/band" 
-                  className="block font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none uppercase"
+                  className="block font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer uppercase"
                 >
                   Le Groupe
                 </Link>
                 <Link 
                   to="/discography" 
-                  className="block font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none uppercase"
+                  className="block font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer uppercase"
                 >
                   Discographie
                 </Link>
                 <Link 
                   to="/fanzine" 
-                  className="block font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none uppercase"
+                  className="block font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer uppercase"
                 >
                   Fanzine
                 </Link>
                 <Link 
                   to="/contact" 
-                  className="block font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none uppercase"
+                  className="block font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer uppercase"
                 >
                   Contact
                 </Link>
@@ -117,40 +132,40 @@ export function Footer() {
               </div>
               <div className="space-y-4">
                 <a 
-                  href="https://youtube.com" 
+                  href="https://www.youtube.com/@UntouchablesFR?sub_confirmation=1" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none group"
+                  className="flex items-center gap-3 font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer group"
                 >
                   <Youtube size={16} className="group-hover:scale-110 transition-transform" />
                   <span className="uppercase">YouTube</span>
                 </a>
                 <a 
-                  href="https://facebook.com" 
+                  href="https://www.facebook.com/untouchablesfr" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none group"
+                  className="flex items-center gap-3 font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer group"
                 >
                   <Facebook size={16} className="group-hover:scale-110 transition-transform" />
                   <span className="uppercase">Facebook</span>
                 </a>
                 <a 
-                  href="https://instagram.com" 
+                  href="https://www.instagram.com/untouchables.fr/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none group"
+                  className="flex items-center gap-3 font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer group"
                 >
                   <Instagram size={16} className="group-hover:scale-110 transition-transform" />
                   <span className="uppercase">Instagram</span>
                 </a>
                 <a 
-                  href="https://twitter.com" 
+                  href="https://www.tiktok.com/@untouchables.fr" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none group"
+                  className="flex items-center gap-3 font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer group"
                 >
-                  <Twitter size={16} className="group-hover:scale-110 transition-transform" />
-                  <span className="uppercase">Twitter</span>
+                  <TikTokIcon size={16} className="group-hover:scale-110 transition-transform" />
+                  <span className="uppercase">TikTok</span>
                 </a>
               </div>
             </motion.div>
@@ -170,31 +185,31 @@ export function Footer() {
               <nav className="space-y-3">
                 <Link 
                   to="/statuts" 
-                  className="block font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none uppercase"
+                  className="block font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer uppercase"
                 >
                   Statuts de l'association
                 </Link>
                 <Link 
                   to="/legal" 
-                  className="block font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none uppercase"
+                  className="block font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer uppercase"
                 >
                   Mentions légales
                 </Link>
                 <Link 
                   to="/privacy" 
-                  className="block font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none uppercase"
+                  className="block font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer uppercase"
                 >
                   Confidentialité
                 </Link>
                 <Link 
                   to="/cookies" 
-                  className="block font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none uppercase"
+                  className="block font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer uppercase"
                 >
                   Cookies
                 </Link>
                 <Link 
                   to="/terms" 
-                  className="block font-mono text-xs text-[#E0E0E0] hover:text-[#8B0000] transition-colors cursor-none uppercase"
+                  className="block font-mono text-[#F0F0F0] hover:text-[#8B0000] transition-colors cursor-pointer uppercase"
                 >
                   CGU
                 </Link>
@@ -216,7 +231,7 @@ export function Footer() {
               
               {!isSubmitted ? (
                 <form onSubmit={handleNewsletterSubmit} className="space-y-3">
-                  <p className="font-mono text-[10px] text-[#E0E0E0] mb-3">
+                  <p className="font-mono text-[#E0E0E0] mb-3">
                     Reçois les dernières actus du groupe, les dates de concerts et nos contenus exclusifs.
                   </p>
                   <div className="relative">
@@ -226,20 +241,23 @@ export function Footer() {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="EMAIL"
                       required
-                      className="w-full px-3 py-2 bg-[#000000] border border-[#E0E0E0] text-[#E0E0E0] font-mono text-[10px] uppercase placeholder:text-[#E0E0E0] focus:border-[#8B0000] focus:outline-none transition-colors cursor-none"
+                      className="w-full px-3 py-2 bg-[#000000] border border-[#E0E0E0] text-[#E0E0E0] font-mono uppercase placeholder:text-[#E0E0E0] focus:border-[#8B0000] focus:outline-none transition-colors cursor-none"
                     />
                   </div>
-                  <button
-                    type="submit"
-                    className="w-full px-3 py-2 bg-[#8B0000] text-[#E0E0E0] font-black text-[10px] uppercase hover:bg-transparent hover:border hover:border-[#8B0000] transition-all cursor-none flex items-center justify-center gap-2"
-                  >
-                    <Send size={12} />
-                    S'INSCRIRE
-                  </button>
+                  <div className="w-fit">
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      size="sm"
+                    >
+                      <Send size={12} />
+                      S'INSCRIRE
+                    </Button>
+                  </div>
                 </form>
               ) : (
                 <div className="bg-[#8B0000]/20 border border-[#8B0000] p-3">
-                  <p className="font-mono text-[10px] text-[#E0E0E0] text-center">
+                  <p className="font-mono text-[#F0F0F0] text-center">
                     ✓ CONFIRMÉ
                   </p>
                 </div>
@@ -249,7 +267,12 @@ export function Footer() {
 
           {/* Divider */}
           <div className="relative mb-12">
-            <div className="h-[2px] bg-[#8B0000]/30" />
+            <HandDrawnLine 
+              color="#8B0000" 
+              strokeWidth={2} 
+              roughness={2.5} 
+              passes={2}
+            />
             <motion.div 
               className="absolute top-0 left-0 h-[1px] bg-[#8B0000]"
               initial={{ width: 0 }}
@@ -268,8 +291,17 @@ export function Footer() {
             className="space-y-6"
           >
             {/* Disclaimer */}
-            <div className="border-l-4 border-[#8B0000] pl-6 pr-6 py-4 bg-[#8B0000]/5">
-              <p className="font-mono text-[10px] text-[#E0E0E0] leading-relaxed">
+            <div className="relative pl-6 pr-6 py-4 bg-[#8B0000]/5">
+              <div className="absolute left-0 top-0 bottom-0">
+                <HandDrawnVerticalLine 
+                  color="#8B0000" 
+                  strokeWidth={4} 
+                  roughness={2.5} 
+                  passes={3}
+                  opacity={0.6}
+                />
+              </div>
+              <p className="font-mono text-[#F0F0F0] leading-relaxed">
                 <span className="text-[#8B0000] font-black">DISCLAIMER :</span> UNTOUCHABLES est un site de fans non officiel dédié au groupe Korn. 
                 Nous ne sommes pas affiliés au groupe, à leur management ou à leur label. Toutes les marques, logos, noms commerciaux et images appartiennent à leurs propriétaires respectifs et sont utilisés à des fins informatives uniquement.
               </p>
@@ -277,11 +309,11 @@ export function Footer() {
 
             {/* Copyright & Credits */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="font-mono text-[10px] text-[#E0E0E0] uppercase tracking-wider text-center md:text-left">
+              <div className="font-mono text-[#F0F0F0] uppercase tracking-wider text-center md:text-left">
                 © 2026 UNTOUCHABLES // Communauté francophone de fans // Tous droits réservés.
               </div>
               
-              <div className="font-mono text-[10px] text-[#8B0000] uppercase tracking-wider text-center md:text-right">
+              <div className="font-mono text-[#8B0000] uppercase tracking-wider text-center md:text-right">
                 CONCEPTION ET DESIGN : Fantastic Mr. Fox
               </div>
             </div>

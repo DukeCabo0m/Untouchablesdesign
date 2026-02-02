@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { generatePlaceholder } from '@/app/utils/placeholder';
 
 export function XRaySection() {
   return (
@@ -26,7 +27,7 @@ export function XRaySection() {
           >
             <div className="relative aspect-square">
               <img
-                src="https://images.unsplash.com/photo-1662558066589-e452d46b9ff9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxYLXJheSUyMHNrZWxldG9ufGVufDF8fHx8MTc2ODk5NDMyN3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                src={generatePlaceholder(1080, 1080, 'X-RAY')}
                 alt="X-ray style"
                 className="w-full h-full object-cover mix-blend-screen"
                 style={{
@@ -60,7 +61,7 @@ export function XRaySection() {
           >
             <div className="relative aspect-square">
               <img
-                src="https://images.unsplash.com/photo-1629229002497-fe93b56ecd17?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxydXN0JTIwbWV0YWwlMjB0ZXh0dXJlfGVufDF8fHx8MTc2ODk5NDMyNnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                src={generatePlaceholder(1080, 1080, 'RUST')}
                 alt="Rust texture"
                 className="w-full h-full object-cover"
                 style={{
@@ -99,7 +100,7 @@ export function XRaySection() {
           >
             <div className="relative aspect-square">
               <img
-                src="https://images.unsplash.com/photo-1647971149742-6c00b44c63ce?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0b3JuJTIwZmFicmljJTIwdGV4dHVyZXxlbnwxfHx8fDE3Njg5OTQzMjd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                src={generatePlaceholder(1080, 1080, 'TORN')}
                 alt="Torn fabric"
                 className="w-full h-full object-cover"
                 style={{

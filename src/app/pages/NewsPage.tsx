@@ -4,6 +4,7 @@ import { PageHeader } from '@/app/components/PageHeader';
 import { getLatestArticles } from '@/app/data/news';
 import { Calendar, User, Tag, Layers, TrendingUp, ArrowRight, Search } from 'lucide-react';
 import { useState } from 'react';
+import { Button } from '@/app/components/Button';
 
 export function NewsPage() {
   const articles = getLatestArticles();
@@ -123,10 +124,10 @@ export function NewsPage() {
 
                               {/* Read more button - Bottom Right */}
                               <div className="flex justify-end">
-                                <button className="px-5 py-2.5 bg-[#8B0000] border-2 border-[#8B0000] text-[#FFFFFF] font-mono text-xs uppercase font-black transition-all duration-300 hover:bg-[#FFFFFF] hover:text-[#8B0000] hover:border-[#FFFFFF] flex items-center gap-2">
+                                <Button variant="primary" size="sm">
                                   <span>LIRE L'ARTICLE</span>
-                                  <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
-                                </button>
+                                  <ArrowRight size={12} />
+                                </Button>
                               </div>
                             </div>
                           </div>

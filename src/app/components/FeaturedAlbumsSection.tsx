@@ -4,6 +4,7 @@ import { Disc, ArrowRight, Star } from 'lucide-react';
 import { albums } from '@/app/data/albums';
 import { GlitchText } from './GlitchText';
 import { SectionHeading } from './SectionHeading';
+import { Button } from './Button';
 
 export function FeaturedAlbumsSection() {
   // Featured albums - les 4 plus aimés par la communauté
@@ -12,16 +13,14 @@ export function FeaturedAlbumsSection() {
   ).slice(0, 4);
 
   return (
-    <section className="py-12 relative">
-      {/* Background texture - TEMPORARILY DISABLED */}
-      {/* <div 
-        className="absolute inset-0 opacity-5"
-        style={{
-          backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 35px, #8B0000 35px, #8B0000 37px)',
-        }}
+    <section className="bg-[#0A0A0A] py-12 px-0 pb-4">
+      {/* Animated gradient background */}
+      {/* <AnimatedGradientBackground 
+        colors={['#0A0A0A', '#1A0000', '#0A0A0A']} 
+        opacity={0.3}
       /> */}
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="relative z-10">
         {/* Section Header */}
         <div className="flex items-start justify-between mb-16">
           <SectionHeading 
@@ -43,13 +42,13 @@ export function FeaturedAlbumsSection() {
             transition={{ delay: 2.6 }}
             className="mt-4"
           >
-            <Link
-              to="/discography/studio"
-              className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#8B0000] text-[#E0E0E0] font-mono text-xs uppercase hover:bg-[#8B0000] transition-colors cursor-none"
+            <Button
+              href="/discography/studio"
+              variant="primary"
             >
               EXPLORER LA DISCOGRAPHIE
               <ArrowRight size={14} />
-            </Link>
+            </Button>
           </motion.div>
         </div>
 
@@ -62,7 +61,7 @@ export function FeaturedAlbumsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.15 }}
-              className="group cursor-none"
+              className="group cursor-pointer"
             >
               <Link to={`/discography/${album.slug}`}>
                 {/* Card Container */}
@@ -88,7 +87,7 @@ export function FeaturedAlbumsSection() {
                     <div className="absolute inset-0 bg-[#8B0000]/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <div className="text-center">
                         <Disc size={48} className="text-[#E0E0E0] mb-4 mx-auto animate-spin" style={{ animationDuration: '3s' }} />
-                        <p className="font-mono text-xs text-[#E0E0E0] uppercase">EXPLORER L'ALBUM</p>
+                        <p className="font-mono text-sm text-[#E0E0E0] uppercase">EXPLORER L'ALBUM</p>
                       </div>
                     </div>
 
@@ -114,7 +113,7 @@ export function FeaturedAlbumsSection() {
                       {album.title}
                     </h3>
 
-                    <div className="space-y-2 font-mono text-xs text-[#E0E0E0]/70 mb-4">
+                    <div className="space-y-2 font-mono text-sm text-[#E0E0E0]/70 mb-4">
                       <div>
                         <span className="text-[#8B0000] uppercase">Label : </span>
                         {album.label}
@@ -123,27 +122,15 @@ export function FeaturedAlbumsSection() {
                         <span className="text-[#8B0000] uppercase">Pistes : </span>
                         {album.tracks.length}
                       </div>
-                      {album.certifications && (
-                        <div className="flex flex-wrap gap-2 mt-3">
-                          {album.certifications.slice(0, 2).map((cert, i) => (
-                            <span
-                              key={i}
-                              className="bg-[#8B0000]/20 border border-[#8B0000] px-2 py-1 text-[10px] uppercase"
-                            >
-                              {cert}
-                            </span>
-                          ))}
-                        </div>
-                      )}
                     </div>
 
                     {/* Excerpt */}
-                    <p className="font-mono text-xs text-[#E0E0E0]/60 leading-relaxed line-clamp-3 mb-4 flex-1">
+                    <p className="font-mono text-sm text-[#E0E0E0]/60 leading-relaxed line-clamp-3 mb-4 flex-1">
                       {album.description.split('\n')[0]}
                     </p>
 
                     {/* CTA */}
-                    <div className="inline-flex items-center gap-2 text-[#8B0000] font-mono text-xs uppercase group-hover:gap-4 transition-all">
+                    <div className="inline-flex items-center gap-2 text-[#8B0000] font-mono text-sm uppercase group-hover:gap-4 transition-all">
                       VOIR L'ALBUM
                       <ArrowRight size={12} />
                     </div>
