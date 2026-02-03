@@ -1,8 +1,8 @@
 import { motion } from 'motion/react';
 import { GlitchText } from './GlitchText';
+import { BookOpen, Download, ArrowRight, Edit3, FileText, Palette, Music } from 'lucide-react';
 import { SectionHeading } from './SectionHeading';
 import { Link } from 'react-router';
-import { BookOpen, Download, ArrowRight, Edit3 } from 'lucide-react';
 import { Button } from './Button';
 
 // Mock data - premier numéro du fanzine
@@ -29,13 +29,13 @@ export function FanzineSection() {
         {/* Section Header */}
         <div className="flex items-start justify-between mb-16">
           <SectionHeading 
-            title="LE_FANZINE" 
+            title="L'Édition Papier" 
             glitchIntensity="low"
             maxWidth="max-w-3xl"
             description={
               <>
-                Marre de scroller ? Tenez un vrai truc entre vos mains. Un rendez-vous mensuel physique, livré directement dans votre boîte aux lettres.{' '}
-                <span className="text-[#8B0000] font-black">12 pages A4 couleur + Poster A3 + Stickers</span>
+                Marre des écrans ? Recevez chaque mois un véritable objet de collection dans votre boîte aux lettres.{' '}
+                <span className="text-[#8B0000] font-black">12 pages d'analyses exclusives, poster A3 et stickers pour les puristes.</span>
               </>
             }
           />
@@ -51,7 +51,7 @@ export function FanzineSection() {
               href="/fanzine"
               variant="primary"
             >
-              DÉCOUVRIR LE FANZINE
+              S'abonner au Fanzine
               <ArrowRight size={14} />
             </Button>
           </motion.div>
@@ -88,8 +88,8 @@ export function FanzineSection() {
                   />
 
                   {/* Issue Number Badge */}
-                  <div className="absolute top-4 right-4 bg-[#8B0000] w-10 h-10 flex items-center justify-center">
-                    <span className="font-black text-lg text-[#E0E0E0]">#{firstIssue.number}</span>
+                  <div className="absolute top-4 left-4 bg-[#8B0000] py-2 px-4 flex items-center justify-start">
+                    <span className="font-black text-sm text-[#E0E0E0]">NUMÉRO #1 • AVRIL 2026</span>
                   </div>
 
                   {/* Coming Soon Badge */}
@@ -110,7 +110,7 @@ export function FanzineSection() {
               >
                 <div>
                   <h3 className="font-black text-3xl text-[#E0E0E0] uppercase mb-4">
-                    {firstIssue.title}
+                    Dossier : Korn et le Retour de l'Analogique
                   </h3>
                   
                   <p className="font-mono text-sm text-[#E0E0E0]/70 leading-relaxed mb-6">
@@ -147,21 +147,20 @@ export function FanzineSection() {
 
                 <div className="bg-[#8B0000]/10 border-l-4 border-[#8B0000] p-6">
                   <h4 className="font-black text-sm text-[#8B0000] uppercase mb-3">
-                    Abonnement par pack de 3 mois
+                    Abonnement Trimestriel (Pack 3 mois)
                   </h4>
                   <p className="font-mono text-sm text-[#E0E0E0]/70 mb-4">
-                    Prix libre avec minimum : <span className="text-[#8B0000] font-black">22,50 €</span> (France métropolitaine) / <span className="text-[#8B0000] font-black">30,00 €</span> (Belgique-Suisse)
+                    Prix libre dès 22,50€ (Frais de port inclus)
                   </p>
                   <p className="font-mono text-sm text-[#E0E0E0]/50 italic">
-                    Quasi à prix coûtant pour couvrir l'impression et l'envoi.<br />
-                    Votre soutien finance l'hébergement du site.
+                    Prix coûtant (impression + envoi). Votre soutien finance directement les serveurs du site.
                   </p>
                 </div>
               </motion.div>
             </div>
           </div>
 
-          {/* FAMILY VALUES - 1/3 */}
+          {/* Bloc Contribution - 1/3 */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -169,52 +168,48 @@ export function FanzineSection() {
             className="bg-[#8B0000]/5 border-2 border-[#8B0000]/30 p-6 flex flex-col"
           >
             <h3 className="font-black text-xl text-[#E0E0E0] uppercase mb-4">
-              <span className="text-[#8B0000]">//</span> FAMILY VALUES
+              Devenez Rédacteur pour Untouchables
             </h3>
             <p className="font-mono text-sm text-[#E0E0E0]/70 leading-relaxed mb-6">
-              Le fanzine Untouchables, c'est aussi votre truc. Participez en partageant vos créations.
+              Ce fanzine est le vôtre. Votre plume ou votre art méritent d'être imprimés sur papier glacé. Proposez vos contenus avant le 15 du mois.
             </p>
             
             <div className="space-y-4 mb-6 flex-1">
               <div className="flex items-start gap-2">
-                <Edit3 size={16} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
+                <FileText size={16} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
                 <div>
                   <h4 className="font-black text-[#E0E0E0] uppercase mb-1">
-                    Articles & Chroniques
+                    Chroniques
                   </h4>
                   <p className="font-mono text-[#E0E0E0]/60">
-                    Analyses, ressentis, souvenirs
+                    Analyses & Souvenirs de concerts
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-2">
-                <Edit3 size={16} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
+                <Palette size={16} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
                 <div>
                   <h4 className="font-black text-[#E0E0E0] uppercase mb-1">
-                    Fanarts & Photos
+                    Fan-Arts
                   </h4>
                   <p className="font-mono text-[#E0E0E0]/60">
-                    Illustrations, photos de concerts
+                    Illustrations & Photographie
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-2">
-                <Edit3 size={16} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
+                <Music size={16} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
                 <div>
                   <h4 className="font-black text-[#E0E0E0] uppercase mb-1">
-                    Tattoos & Collections
+                    Collections
                   </h4>
                   <p className="font-mono text-[#E0E0E0]/60">
-                    Votre collection, vos merch rares
+                    Merch rare & Tatouages
                   </p>
                 </div>
               </div>
-
-              <p className="font-mono text-[#E0E0E0]/50 italic mt-4">
-                Délai : avant le 15 du mois pour le numéro suivant
-              </p>
             </div>
 
             <div className="w-fit ml-auto">
@@ -223,8 +218,8 @@ export function FanzineSection() {
                 variant="primary"
                 size="md"
               >
-                <BookOpen size={16} />
-                PROPOSER UN CONTENU
+                <Edit3 size={16} />
+                Envoyer ma contribution
               </Button>
             </div>
           </motion.div>

@@ -21,15 +21,10 @@ export function UpcomingToursSection() {
         {/* Section Header */}
         <div className="flex items-start justify-between mb-16">
           <SectionHeading 
-            title="ON_THE_ROAD" 
+            title="Tournée 2026" 
             glitchIntensity="low"
             maxWidth="max-w-3xl"
-            description={
-              <>
-                Retrouvez toutes les dates de concerts de Korn à travers le monde.<br />
-                Réservez vos places dès maintenant pour ne rien manquer de la tournée 2026.
-              </>
-            }
+            description="Paris, Berlin, Londres... Retrouvez toutes les dates confirmées, les premières parties exceptionnelles et les liens officiels pour garantir votre place dans la fosse."
           />
           
           <motion.div
@@ -43,7 +38,7 @@ export function UpcomingToursSection() {
               href="/tour"
               variant="primary"
             >
-              TOUTES LES DATES
+              Voir le calendrier complet
               <ArrowRight size={14} />
             </Button>
           </motion.div>
@@ -87,6 +82,11 @@ export function UpcomingToursSection() {
                         <h3 className="text-lg font-black text-[#FFFFFF] uppercase group-hover:text-[#8B0000] transition-colors">
                           {concert.city}, {concert.country}
                         </h3>
+                        {concert.status === 'sold-out' && (
+                          <span className="bg-[#FFFFFF] text-[#000000] px-3 py-1 text-xs font-mono font-bold uppercase">
+                            COMPLET
+                          </span>
+                        )}
                         <span className="text-[#a8a8a8] font-mono text-sm">• {concert.venue}</span>
                         {concert.support && (
                           <span className="text-[#8B0000] font-mono text-sm font-bold">• Support : {concert.support}</span>
@@ -104,21 +104,20 @@ export function UpcomingToursSection() {
                         external
                         variant="primary"
                         size="md"
-                        className="w-[180px]"
+                        className="w-[340px]"
                       >
-                        <Ticket size={16} />
-                        BILLETERIE
+                        Réserver ma place à {concert.city}
                       </Button>
                     ) : (
                       <Button
-                        as="button"
-                        disabled
+                        as="a"
+                        href="https://www.ticketswap.fr"
+                        external
                         variant="secondary"
                         size="md"
-                        className="w-[180px] opacity-70 cursor-not-allowed"
+                        className="w-[340px]"
                       >
-                        <Ticket size={16} />
-                        COMPLET
+                        Chercher une revente officielle
                       </Button>
                     )}
                   </div>
@@ -136,8 +135,7 @@ export function UpcomingToursSection() {
           className="mt-8 bg-[#8B0000]/10 border-l-4 border-[#8B0000] p-6"
         >
           <p className="font-mono text-sm text-[#E0E0E0]/70 leading-relaxed">
-            <span className="text-[#8B0000] font-bold">INFO :</span> Les dates et horaires sont susceptibles de changer. 
-            Vérifiez toujours auprès des organisateurs avant d'acheter vos billets.
+            <span className="text-[#8B0000] font-bold">Info fans :</span> Les horaires et programmations peuvent évoluer. Nous vérifions les liens, mais privilégiez toujours les billetteries officielles.
           </p>
         </motion.div>
       </div>

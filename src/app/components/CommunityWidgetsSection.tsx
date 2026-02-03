@@ -9,13 +9,12 @@ export function CommunityWidgetsSection() {
       <div className="max-w-7xl mx-auto">
         {/* Section Title */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-12"
         >
-          <SectionTitle title="COMMUNAUTÉ" />
+          <SectionTitle title="Galerie Family Values" />
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

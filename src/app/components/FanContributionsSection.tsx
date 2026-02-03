@@ -15,6 +15,8 @@ const fanContributions = [
     likes: 342,
     comments: 28,
     caption: 'Mon nouveau tattoo Korn #UntouchablesFR',
+    legend: 'Encre & Peau',
+    subtitle: 'Les plus beaux tatouages Korn.',
   },
   {
     id: 'fan-2',
@@ -24,6 +26,8 @@ const fanContributions = [
     likes: 589,
     comments: 45,
     caption: 'Fan art Jonathan Davis #UntouchablesFR',
+    legend: 'Fan-Arts',
+    subtitle: 'Dessins et créations numériques.',
   },
   {
     id: 'fan-3',
@@ -33,6 +37,8 @@ const fanContributions = [
     likes: 234,
     comments: 19,
     caption: 'Ma collection Korn complète #UntouchablesFR',
+    legend: 'Collectors',
+    subtitle: 'Vinyles rares et éditions limitées.',
   },
   {
     id: 'fan-4',
@@ -42,6 +48,8 @@ const fanContributions = [
     likes: 412,
     comments: 31,
     caption: 'Souvenirs du concert Paris 2024 #UntouchablesFR',
+    legend: 'Souvenirs Live',
+    subtitle: 'Setlists, mediator et photos de fosse.',
   },
 ];
 
@@ -58,15 +66,10 @@ export function FanContributionsSection() {
         {/* Section Header */}
         <div className="flex items-start justify-between mb-16">
           <SectionHeading 
-            title="FAMILY_VALUES" 
+            title="Galerie Family Values" 
             glitchIntensity="low"
             maxWidth="max-w-3xl"
-            description={
-              <>
-                Partagez vos fanarts, tatouages, collections et souvenirs avec la communauté.<br />
-                Utilisez le hashtag <span className="text-[#8B0000] font-black">#UntouchablesFR</span> sur Instagram pour apparaître ici.
-              </>
-            }
+            description="Tatouages, fan-arts, vinyles rares et souvenirs de concerts : plongez dans la créativité débordante des Korn Kids et découvrez les trésors de la communauté."
           />
 
           <motion.div
@@ -80,7 +83,7 @@ export function FanContributionsSection() {
               href="/gallery"
               variant="primary"
             >
-              VISITEZ LA GALERIE
+              Voir toute la galerie
               <ArrowRight size={14} />
             </Button>
           </motion.div>
@@ -95,30 +98,43 @@ export function FanContributionsSection() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.05 }}
-              className="group relative aspect-square overflow-hidden border-2 border-[#E0E0E0]/20 hover:border-[#8B0000] transition-all duration-300 cursor-pointer"
+              className="group"
             >
-              {/* Image */}
-              <img
-                src={contribution.image}
-                alt={contribution.caption}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                style={{
-                  filter: 'contrast(1.4) brightness(0.7) saturate(0.8)',
-                }}
-              />
+              {/* Image container */}
+              <div className="relative aspect-square overflow-hidden border-2 border-[#E0E0E0]/20 group-hover:border-[#8B0000] transition-all duration-300 cursor-pointer mb-3">
+                {/* Image */}
+                <img
+                  src={contribution.image}
+                  alt={contribution.caption}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  style={{
+                    filter: 'contrast(1.4) brightness(0.7) saturate(0.8)',
+                  }}
+                />
 
-              {/* Type badge - top left */}
-              <div className="absolute top-2 left-2 bg-[#8B0000] px-2 py-1 font-mono text-[#E0E0E0] uppercase z-10">
-                {contribution.type}
+                {/* Type badge - top left */}
+                <div className="absolute top-2 left-2 bg-[#8B0000] px-2 py-1 font-mono text-[#E0E0E0] uppercase z-10 text-xs">
+                  {contribution.type}
+                </div>
+
+                {/* Scanlines overlay */}
+                <div
+                  className="absolute inset-0 pointer-events-none opacity-20"
+                  style={{
+                    background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 0, 0, 0.15) 2px, rgba(139, 0, 0, 0.15) 4px)',
+                  }}
+                />
               </div>
 
-              {/* Scanlines overlay */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-20"
-                style={{
-                  background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 0, 0, 0.15) 2px, rgba(139, 0, 0, 0.15) 4px)',
-                }}
-              />
+              {/* Legend below image */}
+              <div className="space-y-1">
+                <h4 className="font-heading text-[#E0E0E0] text-lg font-bold uppercase tracking-tight">
+                  {contribution.legend}
+                </h4>
+                <p className="font-mono text-[#E0E0E0]/60 text-sm leading-snug">
+                  {contribution.subtitle}
+                </p>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -131,15 +147,14 @@ export function FanContributionsSection() {
         >
           <div className="bg-[#8B0000]/10 border-2 border-[#8B0000] p-6">
             <div className="flex items-center gap-12">
-              {/* Title */}
-              <h3 className="font-black text-2xl text-[#E0E0E0] uppercase whitespace-nowrap">
-                <span className="text-[#8B0000]">#</span> <GlitchText glitchIntensity="low">REJOINS LA GALERIE</GlitchText>
+              {/* Call to Action Title */}
+              <h3 className="font-black text-xl text-[#E0E0E0] whitespace-nowrap uppercase">
+                <span className="text-[#8B0000]">#</span> Rejoins le mur des fans
               </h3>
               
               {/* Text */}
               <p className="font-mono text-sm text-[#E0E0E0]/70 leading-relaxed flex-1 mr-8">
-                Partage tes créations, ta collection ou tes tatouages Korn avec la communauté.<br />
-                Ajoute simplement <span className="text-[#8B0000] font-black">#UntouchablesFR</span> à tes posts Instagram !
+                Toi aussi, affiche ta passion. Partage tes créations ou ta collection sur Instagram et apparais ici automatiquement. <span className="text-[#8B0000] font-black">Utilise le tag #UntouchablesFR</span>
               </p>
               
               {/* Button */}
@@ -151,7 +166,7 @@ export function FanContributionsSection() {
                 size="md"
               >
                 <Instagram size={14} />
-                INSTAGRAM
+                Poster sur Instagram
               </Button>
             </div>
           </div>

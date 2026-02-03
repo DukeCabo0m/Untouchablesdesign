@@ -6,6 +6,7 @@ import { COLORS } from '@/app/constants/colors';
 import { Button } from './Button';
 import { HandDrawnBox } from './HandDrawnBox';
 import { HandDrawnLine } from './HandDrawnLine';
+import { SectionTitle } from './SectionTitle';
 
 const communityStats = [
   {
@@ -67,20 +68,7 @@ export function CommunitySection() {
       <div className="max-w-7xl mx-auto">
         {/* Section Title */}
         <div className="mb-20">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2
-              className="text-7xl font-black text-[#E0E0E0] tracking-tighter uppercase mb-4"
-              style={{ fontFamily: 'Arial Black, sans-serif', letterSpacing: '-0.05em' }}
-            >
-              <GlitchText glitchIntensity="high">COMMUNAUTÉ</GlitchText>
-            </h2>
-            <div className="h-[2px] w-32 bg-[#8B0000]" />
-          </motion.div>
+          <SectionTitle title="Galerie Family Values" glitchIntensity="high" />
         </div>
 
         {/* Community Stats Grid */}

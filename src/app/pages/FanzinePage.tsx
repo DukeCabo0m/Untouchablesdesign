@@ -24,7 +24,7 @@ export function FanzinePage() {
     <div className="min-h-screen">
       {/* Page Header */}
       <PageHeader
-        title="LE_FANZINE"
+        title="L'Édition Papier"
         description="Marre de scroller ? Tiens un vrai truc entre tes mains.<br />Un rendez-vous mensuel physique, livré directement dans ta boîte aux lettres."
         backgroundImage="https://images.unsplash.com/photo-1617217139408-a7edcce70e3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWdhemluZSUyMHByaW50JTIwZmFuemluZSUyMGRhcmt8ZW58MXx8fHwxNzY5MTkzMDUyfDA&ixlib=rb-4.1.0&q=80&w=1080"
         breadcrumbs={[
