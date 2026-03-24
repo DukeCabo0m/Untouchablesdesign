@@ -4,6 +4,7 @@ import { Alert, AlertType } from '@/app/components/AlertMessage';
 interface AlertContextType {
   alerts: Alert[];
   addAlert: (type: AlertType, message: string) => void;
+  showAlert: (message: string, type: AlertType) => void; // Alias with swapped params
   removeAlert: (id: string) => void;
 }
 
@@ -28,8 +29,13 @@ export function AlertProvider({ children }: { children: ReactNode }) {
     setAlerts((prev) => prev.filter((alert) => alert.id !== id));
   }, []);
 
+  // Alias with swapped parameter order
+  const showAlert = useCallback((message: string, type: AlertType) => {
+    addAlert(type, message);
+  }, [addAlert]);
+
   return (
-    <AlertContext.Provider value={{ alerts, addAlert, removeAlert }}>
+    <AlertContext.Provider value={{ alerts, addAlert, showAlert, removeAlert }}>
       {children}
     </AlertContext.Provider>
   );

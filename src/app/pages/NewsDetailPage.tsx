@@ -2,39 +2,120 @@ import { useParams, Link } from 'react-router';
 import { motion } from 'motion/react';
 import { GlitchText } from '@/app/components/GlitchText';
 import { CommentSection } from '@/app/components/CommentSection';
+import { LikeButton } from '@/app/components/LikeButton';
 import { ArrowLeft, Clock, User, Calendar, Tag } from 'lucide-react';
-import { getNewsArticleBySlug } from '@/app/data/news';
+import { useState, useEffect } from 'react';
+import { articlesApi, usersApi, commentsApi } from '@/app/utils/api';
+import { useAuth } from '@/app/contexts/AuthContext';
+import { useAlert } from '@/app/contexts/AlertContext';
 
 export function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const article = slug ? getNewsArticleBySlug(slug) : undefined;
+  const { userId, isAuthenticated } = useAuth();
+  const { showAlert } = useAlert();
+  const [article, setArticle] = useState<any>(null);
+  const [author, setAuthor] = useState<any>(null);
+  const [comments, setComments] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock comments data
-  const newsComments = [
-    {
-      id: 1,
-      user: 'KornArmy666',
-      avatar: 'https://i.pravatar.cc/150?img=33',
-      date: '2026-01-20',
-      text: 'Excellent article ! Korn reste le meilleur groupe de nu-metal de tous les temps. Hâte de voir ce que l\'avenir nous réserve.'
-    },
-    {
-      id: 2,
-      user: 'MetalFan92',
-      avatar: 'https://i.pravatar.cc/150?img=12',
-      date: '2026-01-19',
-      text: 'Merci pour ces infos ! J\'ai découvert Korn avec Follow The Leader en 1998 et je ne m\'en suis jamais lassé.'
-    },
-    {
-      id: 3,
-      user: 'JonathanD_Fan',
-      avatar: 'https://i.pravatar.cc/150?img=45',
-      date: '2026-01-18',
-      text: 'Article très complet. La plume est bonne et l\'analyse pertinente. Continuez comme ça !'
+  // Load article, author, and comments from backend
+  useEffect(() => {
+    async function loadArticle() {
+      if (!slug) return;
+      
+      try {
+        setIsLoading(true);
+        console.log('[NewsDetailPage] Loading article:', slug);
+        
+        // Get all articles and find by slug
+        const articles = await articlesApi.getAll();
+        const foundArticle = articles.find((a: any) => a.slug === slug);
+        
+        if (!foundArticle) {
+          setError('Article non trouvé');
+          setIsLoading(false);
+          return;
+        }
+        
+        console.log('[NewsDetailPage] Found article:', foundArticle);
+        
+        // Load author, users, and comments in parallel
+        const [users, commentsData] = await Promise.all([
+          usersApi.getAll().catch(() => []),
+          commentsApi.getByEntity('article', foundArticle.id).catch(() => [])
+        ]);
+        
+        const articleAuthor = users.find((u: any) => u.id === foundArticle.authorId);
+        
+        // Enrich comments with user data
+        const enrichedComments = commentsData
+          .filter((c: any) => c.isApproved)
+          .map((comment: any) => {
+            const commentUser = users.find((u: any) => u.id === comment.userId);
+            return {
+              ...comment,
+              username: commentUser?.username || 'Anonymous',
+              avatar: commentUser?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop'
+            };
+          });
+        
+        setArticle(foundArticle);
+        setAuthor(articleAuthor);
+        setComments(enrichedComments);
+        setError(null);
+      } catch (err) {
+        console.error('[NewsDetailPage] Failed to load article:', err);
+        setError('Impossible de charger l\'article');
+      } finally {
+        setIsLoading(false);
+      }
     }
-  ];
+    loadArticle();
+  }, [slug]);
 
-  if (!article) {
+  // Add comment handler
+  const handleAddComment = async (text: string) => {
+    if (!isAuthenticated || !userId) {
+      showAlert('Vous devez être connecté pour commenter', 'error');
+      throw new Error('Not authenticated');
+    }
+
+    if (!article) {
+      showAlert('Article non trouvé', 'error');
+      throw new Error('Article not found');
+    }
+
+    try {
+      console.log('[NewsDetailPage] Creating comment:', { text, userId, articleId: article.id });
+      
+      await commentsApi.create({
+        content: text,
+        userId: userId,
+        entityType: 'article',
+        entityId: article.id,
+        isApproved: false // Will be moderated
+      });
+
+      console.log('[NewsDetailPage] Comment created and pending moderation');
+      // Don't add to local state - comment needs approval first
+    } catch (error) {
+      console.error('[NewsDetailPage] Failed to create comment:', error);
+      throw error;
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="font-mono text-[#8B0000] text-lg animate-pulse">
+          Chargement de l'article...
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !article) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -48,15 +129,15 @@ export function NewsDetailPage() {
   }
 
   return (
-    <div className="min-h-screen py-32 px-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen py-20 md:py-24 lg:py-32 px-4 md:px-6 lg:px-8">
+      <div className="max-w-[1920px] mx-auto">
         {/* Back Button */}
         <Link 
           to="/news" 
-          className="inline-flex items-center gap-2 text-[#8B0000] font-mono text-xs uppercase mb-12 hover:text-[#E0E0E0] transition-colors cursor-none"
+          className="inline-flex items-center gap-2 mb-6 md:mb-8 lg:mb-12 text-[#8B0000] hover:text-[#FFFFFF] transition-colors font-mono text-xs md:text-sm uppercase"
         >
-          <ArrowLeft size={16} />
-          RETOUR AUX ACTUALITÉS
+          <ArrowLeft size={14} className="md:w-4 md:h-4" />
+          Retour aux actualités
         </Link>
 
         {/* Article Header */}
@@ -67,11 +148,14 @@ export function NewsDetailPage() {
           className="mb-12"
         >
           {/* Category Badge */}
-          <div className="inline-block bg-[#8B0000] px-4 py-2 mb-6">
+          <Link 
+            to={`/category/${article.category}`}
+            className="inline-block bg-[#8B0000] hover:bg-[#6B0000] px-4 py-2 mb-6 transition-colors"
+          >
             <span className="font-black text-sm text-[#E0E0E0] uppercase tracking-wider">
               {article.category}
             </span>
-          </div>
+          </Link>
 
           {/* Title */}
           <h1
@@ -85,11 +169,20 @@ export function NewsDetailPage() {
           <div className="flex flex-wrap items-center gap-6 font-mono text-xs text-[#E0E0E0]/70 uppercase mb-8">
             <div className="flex items-center gap-2">
               <Calendar size={14} className="text-[#8B0000]" />
-              <span>{new Date(article.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
+              <span>{new Date(article.publishedAt || article.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
             </div>
             <div className="flex items-center gap-2">
               <User size={14} className="text-[#8B0000]" />
-              <span>{article.author}</span>
+              <span>{author?.username || 'Untouchables Team'}</span>
+            </div>
+            {/* Like Button */}
+            <div className="ml-auto">
+              <LikeButton 
+                targetType="article" 
+                targetId={article.id} 
+                size="medium"
+                showCount={true}
+              />
             </div>
           </div>
 
@@ -108,7 +201,7 @@ export function NewsDetailPage() {
         >
           <div className="relative overflow-hidden border-4 border-[#8B0000] aspect-video">
             <img
-              src={article.image}
+              src={article.coverImage || article.image}
               alt={article.title}
               className="w-full h-full object-cover"
               style={{
@@ -157,24 +250,27 @@ export function NewsDetailPage() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="mb-16 pb-16 border-b border-[#E0E0E0]/20"
         >
-          <div className="flex items-center gap-2 flex-wrap">
-            <Tag size={16} className="text-[#8B0000]" />
-            <span className="font-mono text-xs text-[#8B0000] uppercase mr-4">Tags:</span>
-            <div className="flex gap-2 flex-wrap">
-              {['KORN', article.category, '2026', 'UNTOUCHABLES'].map((tag) => (
-                <span 
-                  key={tag}
-                  className="px-3 py-1 border border-[#E0E0E0]/20 font-mono text-xs text-[#E0E0E0] hover:border-[#8B0000] hover:text-[#8B0000] transition-colors cursor-none"
-                >
-                  {tag}
-                </span>
-              ))}
+          {article.tags && article.tags.length > 0 ? (
+            <div className="flex items-center gap-2 flex-wrap">
+              <Tag size={16} className="text-[#8B0000]" />
+              <span className="font-mono text-xs text-[#8B0000] uppercase mr-4">Tags:</span>
+              <div className="flex gap-2 flex-wrap">
+                {article.tags.map((tag: string) => (
+                  <Link 
+                    key={tag}
+                    to={`/tag/${tag}`}
+                    className="px-3 py-1 border border-[#E0E0E0]/20 font-mono text-xs text-[#E0E0E0] hover:border-[#8B0000] hover:bg-[#8B0000]/20 hover:text-[#FFFFFF] transition-colors uppercase"
+                  >
+                    #{tag}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          ) : null}
         </motion.div>
 
         {/* Comment Section */}
-        <CommentSection comments={newsComments} />
+        <CommentSection comments={comments} onAddComment={handleAddComment} />
       </div>
     </div>
   );

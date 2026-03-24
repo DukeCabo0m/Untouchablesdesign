@@ -2,16 +2,20 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { generateAvatar } from '@/app/utils/placeholder';
 
 interface User {
+  id: string;
   username: string;
   email: string;
   avatar: string;
+  role?: 'user' | 'admin' | 'moderator';
 }
 
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (username: string, email: string) => void;
+  userId: string | null;
+  login: (userId: string, username: string, email: string, avatar?: string, role?: 'user' | 'admin' | 'moderator') => void;
   logout: () => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,6 +24,7 @@ const STORAGE_KEY = 'untouchables_auth_user';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Charger l'utilisateur depuis localStorage au montage
   useEffect(() => {
@@ -32,13 +37,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem(STORAGE_KEY);
       }
     }
+    setIsLoading(false);
   }, []);
 
-  const login = (username: string, email: string) => {
+  const login = (userId: string, username: string, email: string, avatar?: string, role?: 'user' | 'admin' | 'moderator') => {
     const newUser: User = {
+      id: userId,
       username,
       email,
-      avatar: generateAvatar(username),
+      avatar: avatar || generateAvatar(username),
+      role,
     };
     setUser(newUser);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
@@ -52,8 +60,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value: AuthContextType = {
     isAuthenticated: !!user,
     user,
+    userId: user?.id || null,
     login,
     logout,
+    isLoading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

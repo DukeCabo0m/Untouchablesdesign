@@ -1,14 +1,23 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { GlitchText } from '@/app/components/GlitchText';
 import { SectionSeparator } from '@/app/components/SectionSeparator';
 import { PageHeader } from '@/app/components/PageHeader';
 import { Mail, Lock, Bell, Eye, AlertTriangle, Trash2, Shield, Save, X } from 'lucide-react';
+import { useAuth } from '@/app/contexts/AuthContext';
+import { usersApi } from '@/app/utils/api';
+import { useAlert } from '@/app/contexts/AlertContext';
 
 export function SettingsPage() {
+  const { userId, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const { showAlert } = useAlert();
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
   const [emailData, setEmailData] = useState({
-    currentEmail: 'darkfreak@untouchables.fr',
+    currentEmail: '',
     newEmail: '',
     confirmEmail: ''
   });
@@ -37,6 +46,56 @@ export function SettingsPage() {
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Load user data from backend
+  useEffect(() => {
+    async function loadUserSettings() {
+      if (!isAuthenticated || !userId) {
+        console.log('[SettingsPage] User not authenticated, redirecting to login');
+        navigate('/login');
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        console.log(`[SettingsPage] Loading user settings for userId: ${userId}`);
+        
+        const user = await usersApi.getById(userId);
+        
+        if (!user) {
+          console.error('[SettingsPage] User not found');
+          navigate('/login');
+          return;
+        }
+        
+        console.log('[SettingsPage] Loaded user:', user);
+        setCurrentUser(user);
+        
+        // Set email from user data
+        setEmailData({
+          currentEmail: user.email || '',
+          newEmail: '',
+          confirmEmail: ''
+        });
+
+        // Set notifications preferences if they exist
+        if (user.preferences?.notifications) {
+          setNotifications(user.preferences.notifications);
+        }
+
+        // Set privacy preferences if they exist
+        if (user.preferences?.privacy) {
+          setPrivacy(user.preferences.privacy);
+        }
+      } catch (err) {
+        console.error('[SettingsPage] Failed to load user settings:', err);
+        showAlert('Impossible de charger les paramètres', 'error');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadUserSettings();
+  }, [userId, isAuthenticated, navigate, showAlert]);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -93,9 +152,10 @@ export function SettingsPage() {
     }
     
     console.log('Email mis à jour:', emailData);
+    showAlert('Email mis à jour avec succès', 'success');
     // Reset form
     setEmailData({
-      ...emailData,
+      currentEmail: emailData.newEmail,
       newEmail: '',
       confirmEmail: ''
     });
@@ -120,6 +180,7 @@ export function SettingsPage() {
     }
     
     console.log('Mot de passe mis à jour');
+    showAlert('Mot de passe mis à jour avec succès', 'success');
     // Reset form
     setPasswordData({
       currentPassword: '',
@@ -130,8 +191,21 @@ export function SettingsPage() {
 
   const handleDeleteAccount = () => {
     console.log('Suppression du compte...');
+    showAlert('Compte supprimé avec succès', 'success');
     // En production, rediriger vers une page de confirmation finale
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block w-8 h-8 border-2 border-[#8B0000] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-[#a8a8a8] font-mono text-sm uppercase">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">

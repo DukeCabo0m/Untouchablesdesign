@@ -12,6 +12,8 @@ interface HandDrawnLineProps {
   className?: string;
   /** Nombre de passages du trait (1-3) */
   passes?: number;
+  /** Largeur fixe en pixels (optionnel, sinon prend toute la largeur) */
+  width?: number;
 }
 
 /**
@@ -24,12 +26,19 @@ export function HandDrawnLine({
   roughness = 2,
   className = '',
   passes = 2,
+  width: fixedWidth,
 }: HandDrawnLineProps) {
   const [paths, setPaths] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
+    // Si une largeur fixe est fournie, l'utiliser directement
+    if (fixedWidth) {
+      setWidth(fixedWidth);
+      return;
+    }
+
     const updateWidth = () => {
       if (containerRef.current) {
         setWidth(containerRef.current.offsetWidth);
@@ -47,7 +56,7 @@ export function HandDrawnLine({
     return () => {
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [fixedWidth]);
 
   useEffect(() => {
     if (width === 0) return;
@@ -65,7 +74,11 @@ export function HandDrawnLine({
   }, [width, roughness, passes, strokeWidth]);
 
   return (
-    <div ref={containerRef} className={`relative w-full h-[4px] ${className}`}>
+    <div 
+      ref={containerRef} 
+      className={`relative h-[4px] ${className}`}
+      style={fixedWidth ? { width: `${fixedWidth}px` } : { width: '100%' }}
+    >
       {width > 0 && (
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"

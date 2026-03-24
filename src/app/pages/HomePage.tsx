@@ -21,8 +21,8 @@ export function HomePage() {
       <HeroSection />
       
       {/* Main layout with sidebar */}
-      <div className="max-w-[1920px] mx-auto px-4 py-8">
-        <div className="flex gap-12">
+      <div className="max-w-[1920px] mx-auto px-4 md:px-6 lg:px-8 py-6 md:py-8 lg:py-12">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
           {/* Main content */}
           <div className="flex-1 min-w-0">
             <LatestNewsSection />
@@ -36,8 +36,8 @@ export function HomePage() {
             <FanzineSection />
           </div>
 
-          {/* Sticky sidebar */}
-          <aside className="hidden lg:block w-[360px] flex-shrink-0">
+          {/* Sticky sidebar - Desktop only */}
+          <aside className="hidden lg:block lg:w-[340px] xl:w-[360px] flex-shrink-0">
             <StickySidebar>
               <div className="space-y-6">
                 <NewsletterWidget />
@@ -47,6 +47,16 @@ export function HomePage() {
               </div>
             </StickySidebar>
           </aside>
+        </div>
+
+        {/* Mobile/Tablet Sidebar Content - Below main content */}
+        <div className="lg:hidden mt-12 space-y-6">
+          <NewsletterWidget />
+          <LatestVideoWidget />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <ShortsReelsWidget />
+            <InstagramPostsWidget />
+          </div>
         </div>
       </div>
       

@@ -10,6 +10,7 @@ export function FlagIcon({ country, size = 24 }: FlagIconProps) {
     'FR': '🇫🇷',
     'USA': '🇺🇸',
     'US': '🇺🇸',
+    'États-Unis': '🇺🇸',
     'Allemagne': '🇩🇪',
     'DE': '🇩🇪',
     'Royaume-Uni': '🇬🇧',

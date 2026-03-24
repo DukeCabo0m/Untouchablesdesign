@@ -1,10 +1,15 @@
 import { GlitchText } from '@/app/components/GlitchText';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { motion } from 'motion/react';
-import { User, Mail, Lock, Shield, Calendar, Check } from 'lucide-react';
+import { User, Mail, Lock, Shield, Calendar, Check, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
+import { Button } from '@/app/components/Button';
+import { authApi } from '@/app/utils/api';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export function SignupPage() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -16,9 +21,10 @@ export function SignupPage() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validation basique
@@ -53,9 +59,56 @@ export function SignupPage() {
       return;
     }
     
-    // Mock submission
-    setErrors({});
-    setSubmitted(true);
+    // Call signup API
+    setLoading(true);
+    try {
+      const response = await authApi.signup(
+        formData.username,
+        formData.email,
+        formData.password,
+        formData.birthdate
+      );
+      
+      console.log('[SignupPage] Signup successful:', response);
+      
+      // Update auth context
+      login(response.user.username, response.user.email, response.user.role || 'user');
+      
+      // Show success and redirect
+      setErrors({});
+      setSubmitted(true);
+      
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        navigate('/profile');
+      }, 2000);
+    } catch (error) {
+      console.error('[SignupPage] Signup error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue lors de l\'inscription';
+      
+      // Map specific error messages to their appropriate fields with helpful suggestions
+      if (errorMessage.includes('pseudonyme')) {
+        const suggestions = [
+          `${formData.username}${Math.floor(Math.random() * 1000)}`,
+          `${formData.username}_${new Date().getFullYear()}`,
+          `${formData.username}Fan`
+        ];
+        
+        setErrors({ 
+          general: `${errorMessage}. Suggestions : ${suggestions.join(', ')}`,
+          username: errorMessage
+        });
+      } else if (errorMessage.includes('email')) {
+        setErrors({ 
+          general: errorMessage,
+          email: errorMessage
+        });
+      } else {
+        setErrors({ general: errorMessage });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +144,7 @@ export function SignupPage() {
             <Link
               to="/login"
               className="inline-block bg-[#8B0000] hover:bg-[#8B0000]/80 text-[#FFFFFF] font-black text-sm uppercase tracking-wider
-                py-4 px-8 transition-all duration-300 cursor-none
+                py-4 px-8 transition-all duration-300 cursor-pointer
                 border-2 border-[#8B0000] hover:border-[#FFFFFF]"
             >
               SE CONNECTER
@@ -103,41 +156,40 @@ export function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen py-32 px-4">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen pt-24 md:pt-28 lg:pt-32 pb-16 md:pb-20 lg:pb-24 px-4 md:px-6 flex items-center justify-center relative z-[100]">
+      <div className="max-w-2xl w-full">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
+          className="mb-8 md:mb-10 lg:mb-12 text-center"
         >
-          <div className="inline-block bg-[#8B0000] px-4 py-2 mb-6">
-            <span className="font-black text-sm text-[#E0E0E0] uppercase tracking-wider">
-              REJOIGNEZ-NOUS
-            </span>
-          </div>
-
           <h1
-            className="text-5xl lg:text-7xl font-black text-[#FFFFFF] tracking-tighter uppercase mb-8 leading-tight"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-[#E0E0E0] uppercase tracking-tighter mb-3 md:mb-4"
             style={{ fontFamily: 'Arial Black, sans-serif', letterSpacing: '-0.05em' }}
           >
-            <GlitchText glitchIntensity="high">CRÉER UN COMPTE</GlitchText>
+            <GlitchText>INSCRIPTION</GlitchText>
           </h1>
-
-          <p className="text-xl text-[#a8a8a8] leading-loose">
-            Rejoignez la communauté francophone de fans de Korn
+          <div className="h-1 w-20 md:w-24 bg-[#8B0000] mx-auto mb-3 md:mb-4" />
+          <p className="font-mono text-xs md:text-sm text-[#E0E0E0]/70">
+            Rejoignez la communauté francophone des fans de Korn
           </p>
         </motion.div>
 
         {/* Formulaire */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-[#0A0A0A] border-2 border-[#8B0000]/30 p-8 lg:p-12"
-        >
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-[#0A0A0A] border-2 border-[#8B0000]/30 p-8 lg:p-12 relative z-[150]">
+          <form onSubmit={handleSubmit} className="space-y-6 relative z-[151]">
+            {/* Error Message Général */}
+            {errors.general && (
+              <div className="bg-[#8B0000]/10 border-2 border-[#8B0000] p-4 flex items-start gap-3 animate-pulse">
+                <AlertCircle size={20} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="font-mono text-sm text-[#8B0000] font-bold mb-1">ERREUR D'INSCRIPTION</p>
+                  <p className="font-mono text-xs text-[#E0E0E0]">{errors.general}</p>
+                </div>
+              </div>
+            )}
+            
             {/* Pseudonyme */}
             <div>
               <label htmlFor="username" className="block font-mono text-xs text-[#8B0000] uppercase mb-2">
@@ -152,7 +204,7 @@ export function SignupPage() {
                 onChange={handleChange}
                 required
                 className={`w-full bg-[#0A0A0A] border-2 ${errors.username ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
-                  focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
+                  focus:border-[#8B0000] focus:outline-none transition-colors
                   hover:border-[#8B0000]/50`}
                 placeholder="Votre pseudonyme..."
               />
@@ -175,7 +227,7 @@ export function SignupPage() {
                 onChange={handleChange}
                 required
                 className={`w-full bg-[#0A0A0A] border-2 ${errors.email ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
-                  focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
+                  focus:border-[#8B0000] focus:outline-none transition-colors
                   hover:border-[#8B0000]/50`}
                 placeholder="votre.email@example.com"
               />
@@ -199,7 +251,7 @@ export function SignupPage() {
                 required
                 max={new Date().toISOString().split('T')[0]}
                 className={`w-full bg-[#0A0A0A] border-2 ${errors.birthdate ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
-                  focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
+                  focus:border-[#8B0000] focus:outline-none transition-colors
                   hover:border-[#8B0000]/50`}
               />
               {errors.birthdate && (
@@ -221,7 +273,7 @@ export function SignupPage() {
                 onChange={handleChange}
                 required
                 className={`w-full bg-[#0A0A0A] border-2 ${errors.password ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
-                  focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
+                  focus:border-[#8B0000] focus:outline-none transition-colors
                   hover:border-[#8B0000]/50`}
                 placeholder="Minimum 8 caractères..."
               />
@@ -244,7 +296,7 @@ export function SignupPage() {
                 onChange={handleChange}
                 required
                 className={`w-full bg-[#0A0A0A] border-2 ${errors.confirmPassword ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'} px-4 py-3 text-[#FFFFFF] font-mono text-sm
-                  focus:border-[#8B0000] focus:outline-none transition-colors cursor-none
+                  focus:border-[#8B0000] focus:outline-none transition-colors
                   hover:border-[#8B0000]/50`}
                 placeholder="Confirmez votre mot de passe..."
               />
@@ -261,10 +313,10 @@ export function SignupPage() {
                 name="newsletter"
                 checked={formData.newsletter}
                 onChange={handleChange}
-                className="mt-1 w-5 h-5 bg-[#0A0A0A] border-2 border-[#E0E0E0]/20 cursor-none
+                className="mt-1 w-5 h-5 bg-[#0A0A0A] border-2 border-[#E0E0E0]/20 cursor-pointer
                   checked:bg-[#8B0000] checked:border-[#8B0000]"
               />
-              <label htmlFor="newsletter" className="text-[#a8a8a8] text-sm leading-relaxed cursor-none">
+              <label htmlFor="newsletter" className="text-[#a8a8a8] text-sm leading-relaxed cursor-pointer">
                 Je souhaite recevoir la newsletter Untouchables (actualités, nouveautés, événements)
               </label>
             </div>
@@ -277,10 +329,10 @@ export function SignupPage() {
                 name="terms"
                 checked={formData.terms}
                 onChange={handleChange}
-                className="mt-1 w-5 h-5 bg-[#0A0A0A] border-2 border-[#E0E0E0]/20 cursor-none
+                className="mt-1 w-5 h-5 bg-[#0A0A0A] border-2 border-[#E0E0E0]/20 cursor-pointer
                   checked:bg-[#8B0000] checked:border-[#8B0000]"
               />
-              <label htmlFor="terms" className="text-[#a8a8a8] text-sm leading-relaxed cursor-none">
+              <label htmlFor="terms" className="text-[#a8a8a8] text-sm leading-relaxed cursor-pointer">
                 J'accepte les <Link to="/terms" className="text-[#8B0000] hover:underline">conditions d'utilisation</Link> et 
                 la <Link to="/privacy" className="text-[#8B0000] hover:underline">politique de confidentialité</Link> *
               </label>
@@ -306,13 +358,14 @@ export function SignupPage() {
             {/* Submit */}
             <button
               type="submit"
+              disabled={loading}
               className="w-full bg-[#8B0000] hover:bg-[#8B0000]/80 text-[#FFFFFF] font-black text-sm uppercase tracking-wider
-                py-4 px-8 transition-all duration-300 cursor-none
+                py-4 px-8 transition-all duration-300 cursor-pointer
                 border-2 border-[#8B0000] hover:border-[#FFFFFF]
-                flex items-center justify-center gap-3"
+                flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Check size={16} />
-              CRÉER MON COMPTE
+              {loading ? 'CRÉATION EN COURS...' : 'CRÉER MON COMPTE'}
             </button>
 
             {/* Lien connexion */}
@@ -325,7 +378,7 @@ export function SignupPage() {
               </p>
             </div>
           </form>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

@@ -117,7 +117,7 @@ export function CommunitySection() {
                 color="#E0E0E0"
                 strokeWidth={2}
                 roughness={2}
-                className="p-6 bg-[#0A0A0A] hover:bg-[#8B0000]/5 transition-colors cursor-none"
+                className="p-6 bg-[#0A0A0A] hover:bg-[#8B0000]/5 transition-colors"
               >
                 <motion.div
                   initial={{ opacity: 0, x: -30 }}
@@ -160,9 +160,7 @@ export function CommunitySection() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
-                className={`flex items-center justify-between p-6 hover:bg-[#8B0000]/5 transition-colors cursor-none ${
-                  index !== topMembers.length - 1 ? 'border-b border-[#E0E0E0]/20' : ''
-                }`}
+                className={`flex items-center justify-between p-6 hover:bg-[#8B0000]/5 transition-colors ${\n                  index !== topMembers.length - 1 ? 'border-b border-[#E0E0E0]/20' : ''\n                }`}
               >
                 <div className="flex items-center gap-6">
                   <div

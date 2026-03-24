@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { User, Settings, Activity, LogOut, ChevronDown } from 'lucide-react';
+import { User, Settings, Activity, LogOut, ChevronDown, BarChart3, Shield } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { COLORS } from '@/app/constants/colors';
 
@@ -44,7 +44,7 @@ export function UserMenu({ scrolled }: UserMenuProps) {
       {/* Bouton trigger */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-4 py-2 transition-colors cursor-none group ${
+        className={`flex items-center gap-2 px-4 py-2 transition-colors group ${
           scrolled
             ? 'border border-[#E0E0E0]/50 bg-transparent hover:bg-[#E0E0E0]/10'
             : 'border border-[#E0E0E0]/30 bg-transparent hover:bg-[#E0E0E0]/10'
@@ -87,7 +87,7 @@ export function UserMenu({ scrolled }: UserMenuProps) {
             <Link
               to="/profile"
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-[#E0E0E0] hover:bg-[#8B0000]/20 transition-colors cursor-none group"
+              className="flex items-center gap-3 px-4 py-3 text-[#E0E0E0] hover:bg-[#8B0000]/20 transition-colors group"
             >
               <User size={16} className="text-[#8B0000]" />
               <span className="font-mono text-xs uppercase tracking-wider">Mon profil</span>
@@ -96,7 +96,7 @@ export function UserMenu({ scrolled }: UserMenuProps) {
             <Link
               to="/profile/activity"
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-[#E0E0E0] hover:bg-[#8B0000]/20 transition-colors cursor-none group"
+              className="flex items-center gap-3 px-4 py-3 text-[#E0E0E0] hover:bg-[#8B0000]/20 transition-colors group"
             >
               <Activity size={16} className="text-[#8B0000]" />
               <span className="font-mono text-xs uppercase tracking-wider">Activité</span>
@@ -105,18 +105,30 @@ export function UserMenu({ scrolled }: UserMenuProps) {
             <Link
               to="/profile/settings"
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-[#E0E0E0] hover:bg-[#8B0000]/20 transition-colors cursor-none group"
+              className="flex items-center gap-3 px-4 py-3 text-[#E0E0E0] hover:bg-[#8B0000]/20 transition-colors group"
             >
               <Settings size={16} className="text-[#8B0000]" />
               <span className="font-mono text-xs uppercase tracking-wider">Paramètres</span>
             </Link>
+
+            {/* Admin Dashboard - only for admins */}
+            {user?.role === 'admin' && (
+              <Link
+                to="/admin"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-[#E0E0E0] hover:bg-[#8B0000]/20 transition-colors group border-t border-[#8B0000]/30"
+              >
+                <Shield size={16} className="text-[#8B0000]" />
+                <span className="font-mono text-xs uppercase tracking-wider">cPanel Admin</span>
+              </Link>
+            )}
           </div>
 
           {/* Logout */}
           <div className="border-t border-[#8B0000]/30">
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 text-[#8B0000] hover:bg-[#8B0000]/20 transition-colors cursor-none group"
+              className="w-full flex items-center gap-3 px-4 py-3 text-[#8B0000] hover:bg-[#8B0000]/20 transition-colors group"
             >
               <LogOut size={16} className="text-[#8B0000]" />
               <span className="font-mono text-xs uppercase tracking-wider">Déconnexion</span>

@@ -111,7 +111,7 @@ export function Statuts() {
         </div>
 
         <div className="relative z-10 px-4 pb-24">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-[1920px] mx-auto">
             {/* Introduction badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}

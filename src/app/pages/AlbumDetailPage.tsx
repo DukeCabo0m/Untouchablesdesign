@@ -4,18 +4,66 @@ import { GlitchText } from '@/app/components/GlitchText';
 import { PageHeader } from '@/app/components/PageHeader';
 import { CommentSection } from '@/app/components/CommentSection';
 import { ArrowLeft, Play, Clock, Disc, Award, Heart, Users, Film, Disc3 } from 'lucide-react';
-import { getAlbumBySlug } from '@/app/data/albums';
 import { useState, useEffect } from 'react';
+import { albumsApi, commentsApi } from '@/app/utils/api';
 
 export function AlbumDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const album = slug ? getAlbumBySlug(slug) : undefined;
+  const [album, setAlbum] = useState<any>(null);
+  const [comments, setComments] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Favorites state with localStorage persistence
   const [favorites, setFavorites] = useState<number[]>(() => {
     const saved = localStorage.getItem('korn-favorites');
     return saved ? JSON.parse(saved) : [];
   });
+
+  // Load album and comments from backend
+  useEffect(() => {
+    async function loadAlbum() {
+      if (!slug) {
+        console.error('[AlbumDetailPage] No slug provided!');
+        return;
+      }
+      
+      try {
+        setIsLoading(true);
+        console.log('[AlbumDetailPage] Loading album with slug:', slug);
+        
+        // Get all albums and find by slug
+        const albums = await albumsApi.getAll();
+        console.log('[AlbumDetailPage] Total albums received:', albums.length);
+        console.log('[AlbumDetailPage] Albums with slugs:', albums.map((a: any) => ({ id: a.id, slug: a.slug, title: a.title })));
+        
+        const foundAlbum = albums.find((a: any) => a.slug === slug);
+        
+        if (!foundAlbum) {
+          console.error('[AlbumDetailPage] Album not found with slug:', slug);
+          console.error('[AlbumDetailPage] Available slugs:', albums.map((a: any) => a.slug));
+          setError('Album non trouvé');
+          setIsLoading(false);
+          return;
+        }
+        
+        console.log('[AlbumDetailPage] Found album:', foundAlbum);
+        
+        // Load comments
+        const commentsData = await commentsApi.getByEntity('album', foundAlbum.id).catch(() => []);
+        
+        setAlbum(foundAlbum);
+        setComments(commentsData.filter((c: any) => c.isApproved));
+        setError(null);
+      } catch (err) {
+        console.error('[AlbumDetailPage] Failed to load album:', err);
+        setError('Impossible de charger l\'album');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadAlbum();
+  }, [slug]);
 
   // Save to localStorage when favorites change
   useEffect(() => {
@@ -32,64 +80,24 @@ export function AlbumDetailPage() {
     );
   };
 
-  // Mock favorite count (simule des favoris d'autres utilisateurs)
+  // Calculate favorite count (base count + user's favorite)
   const getFavoriteCount = (albumId: number) => {
-    // Nombres de base différents pour chaque album
-    const baseCounts: { [key: number]: number } = {
-      1: 2847,  // Korn (1994)
-      2: 3521,  // Life Is Peachy
-      3: 5892,  // Follow the Leader
-      4: 4231,  // Issues
-      5: 6845,  // Untouchables - le plus populaire
-      6: 3198,  // Take a Look in the Mirror
-      7: 2564,  // See You on the Other Side
-      8: 1876,  // Untitled Album
-      9: 2103,  // Korn III
-      10: 1645, // The Path of Totality
-      11: 1398, // The Paradigm Shift
-      12: 1721, // The Serenity of Suffering
-      13: 1534, // The Nothing
-      14: 1289, // Requiem
-    };
-    
-    const baseCount = baseCounts[albumId] || 1000;
-    // Ajoute 1 si l'utilisateur actuel l'a en favori
+    // Base count from album data or generate from ID
+    const baseCount = Math.floor(1000 + (albumId * 347) % 5000);
     return baseCount + (favorites.includes(albumId) ? 1 : 0);
   };
 
-  // Mock comments data for albums
-  const albumComments = [
-    {
-      id: 1,
-      user: 'KornArmy666',
-      avatar: 'https://i.pravatar.cc/150?img=33',
-      date: '2026-01-15',
-      text: 'Un chef-d\'œuvre absolu ! Cet album a changé ma vie. Chaque morceau est un uppercut émotionnel.'
-    },
-    {
-      id: 2,
-      user: 'NuMetalKing',
-      avatar: 'https://i.pravatar.cc/150?img=25',
-      date: '2026-01-10',
-      text: 'La production est incroyable, les riffs sont lourds et brutaux. Korn au sommet de leur art !'
-    },
-    {
-      id: 3,
-      user: 'MetalFan92',
-      avatar: 'https://i.pravatar.cc/150?img=12',
-      date: '2026-01-05',
-      text: 'Je ne me lasse jamais de cet album. Après toutes ces années, il reste aussi percutant qu\'au premier jour.'
-    },
-    {
-      id: 4,
-      user: 'JonathanD_Fan',
-      avatar: 'https://i.pravatar.cc/150?img=45',
-      date: '2025-12-28',
-      text: 'Les paroles sont sombres et profondes. Jonathan Davis livre ici une performance vocale exceptionnelle.'
-    }
-  ];
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A]">
+        <div className="font-mono text-[#8B0000] text-lg animate-pulse">
+          Chargement de l'album...
+        </div>
+      </div>
+    );
+  }
 
-  if (!album) {
+  if (error || !album) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A]">
         <div className="text-center">
@@ -133,10 +141,10 @@ export function AlbumDetailPage() {
         glitchIntensity="high"
       />
 
-      <div className="px-4 pb-24 bg-[#0A0A0A]">
-        <div className="max-w-7xl mx-auto">
+      <div className="px-4 md:px-6 lg:px-8 pb-16 md:pb-20 lg:pb-24 bg-[#0A0A0A]">
+        <div className="max-w-[1920px] mx-auto">
           {/* Album Header */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12 mb-12 md:mb-16 lg:mb-20">
             {/* Album Cover */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -144,7 +152,7 @@ export function AlbumDetailPage() {
               transition={{ duration: 0.8 }}
               className="lg:col-span-1"
             >
-              <div className="relative overflow-hidden border-4 border-[#8B0000] aspect-square mb-8">
+              <div className="relative overflow-hidden border-2 md:border-4 border-[#8B0000] aspect-square mb-6 md:mb-8">
                 <img
                   src={album.cover}
                   alt={album.title}
@@ -163,18 +171,18 @@ export function AlbumDetailPage() {
 
               {/* Certifications & Sales */}
               {(album.certifications || album.salesInfo) && (
-                <div className="mb-8 p-6 bg-[#8B0000]/10 border-l-4 border-[#8B0000]">
+                <div className="mb-6 md:mb-8 p-4 md:p-6 bg-[#8B0000]/10 border-l-4 border-[#8B0000]">
                   {album.certifications && (
-                    <div className="mb-4">
+                    <div className="mb-3 md:mb-4">
                       <div className="flex items-center gap-2 mb-2">
-                        <Award size={16} className="text-[#8B0000]" />
+                        <Award size={14} className="md:w-4 md:h-4 text-[#8B0000]" />
                         <span className="font-mono text-xs text-[#8B0000] uppercase">Certifications</span>
                       </div>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5 md:gap-2">
                         {album.certifications.map((cert, i) => (
                           <span
                             key={i}
-                            className="font-mono text-xs text-[#E0E0E0] bg-[#0A0A0A] border border-[#8B0000] px-3 py-1"
+                            className="font-mono text-xs text-[#E0E0E0] bg-[#0A0A0A] border border-[#8B0000] px-2 py-1 md:px-3"
                           >
                             {cert}
                           </span>
@@ -192,15 +200,15 @@ export function AlbumDetailPage() {
               )}
 
               {/* Favorite Button & Counter */}
-              <div className="p-6 bg-[#0A0A0A] border-2 border-[#8B0000]">
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center gap-4">
-                    <Users size={24} className="text-[#8B0000]" />
+              <div className="p-4 md:p-6 bg-[#0A0A0A] border-2 border-[#8B0000]">
+                <div className="flex flex-col gap-3 md:gap-4">
+                  <div className="flex items-center gap-3 md:gap-4">
+                    <Users size={20} className="md:w-6 md:h-6 text-[#8B0000]" />
                     <div>
                       <div className="font-mono text-xs text-[#8B0000] uppercase mb-1">
                         FAVORIS COMMUNAUTÉ
                       </div>
-                      <div className="font-black text-3xl text-[#E0E0E0]">
+                      <div className="font-black text-2xl md:text-3xl text-[#E0E0E0]">
                         {favoriteCount.toLocaleString('fr-FR')}
                       </div>
                     </div>
@@ -209,7 +217,7 @@ export function AlbumDetailPage() {
                   <button
                     onClick={toggleFavorite}
                     className={`
-                      flex items-center justify-center gap-3 px-6 py-3 border-2 transition-all font-black text-sm uppercase tracking-wider cursor-none w-full
+                      flex items-center justify-center gap-2 md:gap-3 px-4 py-2.5 md:px-6 md:py-3 border-2 transition-all font-black text-xs md:text-sm uppercase tracking-wider cursor-pointer w-full
                       ${isFavorite 
                         ? 'bg-[#8B0000] border-[#8B0000] text-[#E0E0E0]' 
                         : 'bg-transparent border-[#E0E0E0]/30 text-[#E0E0E0] hover:border-[#8B0000] hover:text-[#8B0000]'
@@ -304,7 +312,7 @@ export function AlbumDetailPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: 0.5 + index * 0.03 }}
-                  className="border border-[#E0E0E0]/20 hover:border-[#8B0000] p-3 transition-all duration-300 cursor-none group bg-[#0A0A0A]"
+                  className="border border-[#E0E0E0]/20 hover:border-[#8B0000] p-3 transition-all duration-300 group bg-[#0A0A0A]"
                 >
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4 flex-1">
@@ -358,7 +366,7 @@ export function AlbumDetailPage() {
                           {track.streamingLinks.spotify && (
                             <a
                               href={track.streamingLinks.spotify}
-                              className="p-1 bg-[#1DB954]/10 border border-[#1DB954]/30 hover:bg-[#1DB954]/30 transition-colors cursor-none"
+                              className="p-1 bg-[#1DB954]/10 border border-[#1DB954]/30 hover:bg-[#1DB954]/30 transition-colors cursor-pointer"
                               title="Écouter sur Spotify"
                             >
                               <svg className="w-3.5 h-3.5 fill-[#1DB954]" viewBox="0 0 24 24">
@@ -370,7 +378,7 @@ export function AlbumDetailPage() {
                           {track.streamingLinks.appleMusic && (
                             <a
                               href={track.streamingLinks.appleMusic}
-                              className="p-1 bg-[#FA243C]/10 border border-[#FA243C]/30 hover:bg-[#FA243C]/30 transition-colors cursor-none"
+                              className="p-1 bg-[#FA243C]/10 border border-[#FA243C]/30 hover:bg-[#FA243C]/30 transition-colors cursor-pointer"
                               title="Écouter sur Apple Music"
                             >
                               <svg className="w-3.5 h-3.5 fill-[#FA243C]" viewBox="0 0 24 24">
@@ -382,7 +390,7 @@ export function AlbumDetailPage() {
                           {track.streamingLinks.youtube && (
                             <a
                               href={track.streamingLinks.youtube}
-                              className="p-1 bg-[#FF0000]/10 border border-[#FF0000]/30 hover:bg-[#FF0000]/30 transition-colors cursor-none"
+                              className="p-1 bg-[#FF0000]/10 border border-[#FF0000]/30 hover:bg-[#FF0000]/30 transition-colors cursor-pointer"
                               title="Écouter sur YouTube Music"
                             >
                               <svg className="w-3.5 h-3.5 fill-[#FF0000]" viewBox="0 0 24 24">
@@ -414,7 +422,7 @@ export function AlbumDetailPage() {
           </motion.div>
 
           {/* Comment Section */}
-          <CommentSection comments={albumComments} />
+          <CommentSection comments={comments} />
         </div>
       </div>
     </div>

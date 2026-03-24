@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { User, X, Save, Upload } from 'lucide-react';
 import { GlitchText } from '@/app/components/GlitchText';
 import { SectionSeparator } from '@/app/components/SectionSeparator';
 import { PageHeader } from '@/app/components/PageHeader';
+import { usersApi } from '@/app/utils/api';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 // Liste des pays (francophones en premier)
 const countries = [
@@ -154,28 +156,91 @@ const frenchDepartments = [
 
 export function EditProfilePage() {
   const navigate = useNavigate();
+  const { userId, isAuthenticated } = useAuth();
   
   const [formData, setFormData] = useState({
-    username: 'DarkFreak666',
-    bio: 'Fan de Korn depuis Follow The Leader. La scène française manque de vraie énergie brute. Korn forever 🤘',
+    username: '',
+    bio: '',
     country: 'France',
-    city: 'Paris',
-    department: '75',
-    facebook: 'https://facebook.com/darkfreak666',
-    twitter: '@darkfreak666',
-    instagram: 'darkfreak_official',
-    tiktok: '@darkfreak666'
+    city: '',
+    department: '',
+    facebook: '',
+    twitter: '',
+    instagram: '',
+    tiktok: ''
   });
 
   const [socialEnabled, setSocialEnabled] = useState({
-    facebook: true,
-    twitter: true,
-    instagram: true,
-    tiktok: true
+    facebook: false,
+    twitter: false,
+    instagram: false,
+    tiktok: false
   });
 
   const [avatarPreview, setAvatarPreview] = useState('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Load user profile from backend
+  useEffect(() => {
+    async function loadProfile() {
+      // Vérifier si l'utilisateur est authentifié
+      if (!isAuthenticated || !userId) {
+        console.log('[EditProfilePage] User not authenticated, redirecting to login');
+        navigate('/login');
+        return;
+      }
+      
+      try {
+        setIsLoading(true);
+        console.log('[EditProfilePage] Loading profile for user:', userId);
+        
+        // Get current user from backend using their ID
+        const currentUser = await usersApi.getById(userId);
+        
+        if (!currentUser) {
+          console.error('[EditProfilePage] User not found');
+          navigate('/login');
+          return;
+        }
+        
+        console.log('[EditProfilePage] Loaded user:', currentUser);
+        
+        // Set form data from user
+        setFormData({
+          username: currentUser.username || '',
+          bio: currentUser.bio || '',
+          country: currentUser.location?.split(',')[1]?.trim() || 'France',
+          city: currentUser.location?.split(',')[0]?.trim() || '',
+          department: currentUser.department || '',
+          facebook: currentUser.facebookUrl || '',
+          twitter: currentUser.twitterUrl || '',
+          instagram: currentUser.instagramUrl || '',
+          tiktok: currentUser.tiktokUrl || ''
+        });
+        
+        // Set social enabled states
+        setSocialEnabled({
+          facebook: !!currentUser.facebookUrl,
+          twitter: !!currentUser.twitterUrl,
+          instagram: !!currentUser.instagramUrl,
+          tiktok: !!currentUser.tiktokUrl
+        });
+        
+        // Set avatar
+        if (currentUser.avatar) {
+          setAvatarPreview(currentUser.avatar);
+        }
+      } catch (err) {
+        console.error('[EditProfilePage] Failed to load profile:', err);
+        setErrors({ general: 'Impossible de charger le profil' });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadProfile();
+  }, [userId, isAuthenticated, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -233,12 +298,62 @@ export function EditProfilePage() {
       return;
     }
     
-    // Mock submission - en production, envoyer à l'API
-    console.log('Profil mis à jour:', formData);
-    
-    // Rediriger vers le profil
-    navigate('/profile');
+    // Save to backend
+    saveProfile();
   };
+  
+  const saveProfile = async () => {
+    if (!userId) {
+      setErrors({ general: 'Utilisateur non trouvé' });
+      return;
+    }
+    
+    try {
+      setIsSaving(true);
+      console.log('[EditProfilePage] Saving profile for user:', userId);
+      
+      // Prepare location string
+      const location = formData.city && formData.country 
+        ? `${formData.city}, ${formData.country}` 
+        : formData.country;
+      
+      // Prepare update data
+      const updateData = {
+        username: formData.username,
+        bio: formData.bio,
+        location: location,
+        department: formData.department,
+        avatar: avatarPreview,
+        facebookUrl: socialEnabled.facebook ? formData.facebook : null,
+        twitterUrl: socialEnabled.twitter ? formData.twitter : null,
+        instagramUrl: socialEnabled.instagram ? formData.instagram : null,
+        tiktokUrl: socialEnabled.tiktok ? formData.tiktok : null
+      };
+      
+      // Update user in backend
+      await usersApi.update(userId, updateData);
+      
+      console.log('[EditProfilePage] Profile updated successfully');
+      
+      // Redirect to profile
+      navigate('/profile');
+    } catch (err) {
+      console.error('[EditProfilePage] Failed to save profile:', err);
+      setErrors({ general: 'Erreur lors de la sauvegarde du profil' });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A]">
+        <div className="font-mono text-[#8B0000] text-lg animate-pulse">
+          Chargement du profil...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -254,7 +369,7 @@ export function EditProfilePage() {
         glitchIntensity="high"
       />
 
-      <div className="max-w-7xl mx-auto pt-0 pb-12">
+      <div className="max-w-[1920px] mx-auto pt-0 pb-12">
         {/* Formulaire */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -315,6 +430,13 @@ export function EditProfilePage() {
                     <User size={16} className="text-[#8B0000]" />
                     INFORMATIONS DU PROFIL
                   </h2>
+
+                  {/* Error Message Général */}
+                  {errors.general && (
+                    <div className="bg-[#8B0000]/10 border-2 border-[#8B0000] p-4 mb-6">
+                      <p className="font-mono text-sm text-[#8B0000] font-bold">⚠ {errors.general}</p>
+                    </div>
+                  )}
 
                   <div className="space-y-6">
                     {/* Pseudonyme */}
@@ -601,10 +723,11 @@ export function EditProfilePage() {
 
                       <button
                         type="submit"
-                        className="w-full lg:w-auto bg-[#8B0000] hover:bg-[#FFFFFF] text-[#FFFFFF] hover:text-[#0A0A0A] font-black text-xs uppercase tracking-wider px-8 py-4 transition-all duration-300 cursor-none border-2 border-[#8B0000] hover:border-[#FFFFFF] flex items-center justify-center gap-2"
+                        disabled={isSaving}
+                        className="w-full lg:w-auto bg-[#8B0000] hover:bg-[#FFFFFF] text-[#FFFFFF] hover:text-[#0A0A0A] font-black text-xs uppercase tracking-wider px-8 py-4 transition-all duration-300 cursor-none border-2 border-[#8B0000] hover:border-[#FFFFFF] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Save size={14} />
-                        ENREGISTRER LES MODIFICATIONS
+                        {isSaving ? 'ENREGISTREMENT...' : 'ENREGISTRER LES MODIFICATIONS'}
                       </button>
                     </div>
                   </div>

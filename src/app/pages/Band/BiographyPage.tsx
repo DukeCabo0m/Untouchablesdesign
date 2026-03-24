@@ -19,7 +19,7 @@ export function BiographyPage() {
       />
 
       <div className="px-4 pb-24 bg-[#0A0A0A]">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1920px] mx-auto">
           {/* Content */}
           <motion.article
             initial={{ opacity: 0, y: 20 }}

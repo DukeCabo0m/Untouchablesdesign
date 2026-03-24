@@ -3,39 +3,34 @@ import { HandDrawnBox } from './HandDrawnBox';
 import { GlitchText } from './GlitchText';
 import { Button } from './Button';
 import { COLORS } from '@/app/constants/colors';
-
-const instagramPosts = [
-  {
-    id: 'ig-1',
-    image: 'https://images.unsplash.com/photo-1747003869273-9fc7ad373137?w=400&q=80',
-    likes: 45620,
-    comments: 234,
-    url: 'https://www.instagram.com/untouchables.fr/',
-  },
-  {
-    id: 'ig-2',
-    image: 'https://images.unsplash.com/photo-1552595458-e8ad6af8aa10?w=400&q=80',
-    likes: 38950,
-    comments: 189,
-    url: 'https://www.instagram.com/untouchables.fr/',
-  },
-  {
-    id: 'ig-3',
-    image: 'https://images.unsplash.com/photo-1694024561275-c91acabb05ce?w=400&q=80',
-    likes: 52100,
-    comments: 312,
-    url: 'https://www.instagram.com/untouchables.fr/',
-  },
-  {
-    id: 'ig-4',
-    image: 'https://images.unsplash.com/photo-1608660890457-e985951f07d2?w=400&q=80',
-    likes: 41830,
-    comments: 276,
-    url: 'https://www.instagram.com/untouchables.fr/',
-  },
-];
+import { useState, useEffect } from 'react';
+import { projectId } from '/utils/supabase/info';
 
 export function InstagramPostsWidget() {
+  const [posts, setPosts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch(
+          `https://${projectId}.supabase.co/functions/v1/make-server-d462d5d8/media/instagram`
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          setPosts(data.posts || []);
+        }
+      } catch (error) {
+        console.error('Error fetching Instagram posts:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
   return (
     <HandDrawnBox
       color="#80808080"
@@ -43,86 +38,91 @@ export function InstagramPostsWidget() {
       roughness={2.5}
       padding="0"
     >
-      <div className="bg-[#000000] p-4">
+      <div className="bg-[#000000] p-4 md:p-5 lg:p-6">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <Instagram size={28} className="text-[#8B0000]" />
-          <h3 className="font-black text-lg uppercase tracking-tight text-[#E0E0E0]">
+        <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
+          <Instagram size={24} className="md:w-7 md:h-7 text-[#8B0000]" />
+          <h3 className="font-black text-base md:text-lg uppercase tracking-tight text-[#E0E0E0] leading-tight">
             Le Quartier Général Social des Korn Kids
           </h3>
         </div>
 
         {/* Description */}
-        <p className="font-mono text-[#E0E0E0]/70 mb-6">
+        <p className="font-mono text-xs md:text-sm text-[#E0E0E0]/70 mb-4 md:mb-6 leading-relaxed">
           Débats sur les albums, sondages en Story et partages de fans : là où la communauté vibre au quotidien.
         </p>
 
         {/* Grid */}
-        <div className="grid grid-cols-2 gap-4">
-          {instagramPosts.map((post) => (
-            <a
-              key={post.id}
-              href={post.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group"
-            >
-              <HandDrawnBox
-                color={COLORS.red.pure}
-                strokeWidth={3}
-                roughness={2}
-                className="relative overflow-hidden"
-                style={{ aspectRatio: '1/1' }}
-                hoverColor={COLORS.red.pure}
+        <div className="grid grid-cols-2 gap-3 md:gap-4">
+          {isLoading ? (
+            <div className="col-span-2 text-center text-[#E0E0E0]/70">Chargement...</div>
+          ) : (
+            posts.map((post) => (
+              <a
+                key={post.id}
+                href={post.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group"
               >
-                <div className="absolute inset-0">
-                  <img
-                    src={post.image}
-                    alt="Instagram post"
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    style={{
-                      filter: 'contrast(1.4) brightness(0.7) saturate(0.8)',
-                    }}
-                  />
+                <HandDrawnBox
+                  color={COLORS.red.pure}
+                  strokeWidth={3}
+                  roughness={2}
+                  className="relative overflow-hidden"
+                  style={{ aspectRatio: '1/1' }}
+                  hoverColor={COLORS.red.pure}
+                >
+                  <div className="absolute inset-0">
+                    <img
+                      src={post.image}
+                      alt="Instagram post"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      style={{
+                        filter: 'contrast(1.4) brightness(0.7) saturate(0.8)',
+                      }}
+                    />
 
-                  {/* Scanlines overlay */}
-                  <div
-                    className="absolute inset-0 pointer-events-none opacity-20"
-                    style={{
-                      background:
-                        'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 0, 0, 0.15) 2px, rgba(139, 0, 0, 0.15) 4px)',
-                    }}
-                  />
+                    {/* Scanlines overlay */}
+                    <div
+                      className="absolute inset-0 pointer-events-none opacity-20"
+                      style={{
+                        background:
+                          'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 0, 0, 0.15) 2px, rgba(139, 0, 0, 0.15) 4px)',
+                      }}
+                    />
 
-                  {/* Hover Stats */}
-                  <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3">
-                    <div className="flex items-center gap-2 font-mono text-sm text-[#E0E0E0]">
-                      <Heart size={16} className="text-[#8B0000]" />
-                      <span>{(post.likes / 1000).toFixed(1)}K</span>
-                    </div>
-                    <div className="flex items-center gap-2 font-mono text-sm text-[#E0E0E0]">
-                      <MessageCircle size={16} className="text-[#8B0000]" />
-                      <span>{post.comments}</span>
+                    {/* Hover Stats */}
+                    <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 md:gap-3">
+                      <div className="flex items-center gap-1.5 md:gap-2 font-mono text-xs md:text-sm text-[#E0E0E0]">
+                        <Heart size={14} className="md:w-4 md:h-4 text-[#8B0000]" />
+                        <span>{(post.likes / 1000).toFixed(1)}K</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 md:gap-2 font-mono text-xs md:text-sm text-[#E0E0E0]">
+                        <MessageCircle size={14} className="md:w-4 md:h-4 text-[#8B0000]" />
+                        <span>{post.comments}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </HandDrawnBox>
-            </a>
-          ))}
+                </HandDrawnBox>
+              </a>
+            ))
+          )}
         </div>
 
         {/* Footer */}
-        <div className="mt-6 pt-6 border-t border-[#8B0000]/30">
+        <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-[#8B0000]/30">
           <div className="flex justify-center">
-            {/* CTA Instagram */}
             <Button
               as="a"
               href="https://www.instagram.com/untouchables.fr/"
               external
               variant="primary"
-              size="md"
+              size="sm"
+              className="w-full sm:w-auto"
             >
-              Rejoindre la communauté sur Insta
+              <span className="hidden md:inline">Rejoindre la communauté sur Insta</span>
+              <span className="md:hidden">Suivre sur Insta</span>
             </Button>
           </div>
         </div>

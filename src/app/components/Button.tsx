@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes, AnchorHTMLAttributes, ReactNode } from 'react';
+import { Link } from 'react-router';
 import { COLORS } from '@/app/constants/colors';
 import { getGafferTexture } from '@/app/utils/gafferTexture';
 import { ExternalLink } from 'lucide-react';
@@ -99,20 +100,38 @@ export function Button({
 
   if (as === 'a') {
     const { href, external, ...linkProps } = props as ButtonAsLink;
+    
+    // Si c'est un lien externe, utiliser <a>
+    if (external) {
+      return (
+        <a
+          href={href}
+          className={combinedClassName}
+          style={defaultStyles}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          target="_blank"
+          rel="noopener noreferrer"
+          {...linkProps}
+        >
+          {children}
+          <ExternalLink className="ml-2" size={12} />
+        </a>
+      );
+    }
+    
+    // Si c'est un lien interne, utiliser Link de React Router
     return (
-      <a
-        href={href}
+      <Link
+        to={href}
         className={combinedClassName}
         style={defaultStyles}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        target={external ? '_blank' : undefined}
-        rel={external ? 'noopener noreferrer' : undefined}
         {...linkProps}
       >
         {children}
-        {external && <ExternalLink className="ml-2" size={12} />}
-      </a>
+      </Link>
     );
   }
 

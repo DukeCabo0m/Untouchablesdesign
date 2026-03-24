@@ -2,29 +2,59 @@ import { useState } from 'react';
 import { MessageSquare } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Button } from './Button';
+import { LikeButton } from './LikeButton';
+import { useAuth } from '@/app/contexts/AuthContext';
+import { useAlert } from '@/app/contexts/AlertContext';
 
 interface Comment {
-  id: number;
-  user: string;
-  avatar: string;
-  date: string;
-  text: string;
+  id: string;
+  content: string;
+  userId: string;
+  username?: string;
+  avatar?: string;
+  createdAt: string;
+  isApproved: boolean;
 }
 
 interface CommentSectionProps {
   comments: Comment[];
-  onAddComment?: (text: string) => void;
+  onAddComment?: (text: string) => Promise<void>;
 }
 
 export function CommentSection({ comments, onAddComment }: CommentSectionProps) {
+  const { isAuthenticated } = useAuth();
+  const { showAlert } = useAlert();
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [commentText, setCommentText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {
-    if (commentText.trim() && onAddComment) {
-      onAddComment(commentText);
+  const handleSubmit = async () => {
+    if (!isAuthenticated) {
+      showAlert('Vous devez être connecté pour commenter', 'error');
+      return;
+    }
+
+    if (!commentText.trim()) {
+      showAlert('Le commentaire ne peut pas être vide', 'error');
+      return;
+    }
+
+    if (!onAddComment) {
+      showAlert('Impossible d\'ajouter un commentaire', 'error');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      await onAddComment(commentText);
       setCommentText('');
       setShowCommentForm(false);
+      showAlert('Commentaire envoyé ! Il sera visible après modération.', 'success');
+    } catch (error) {
+      console.error('[CommentSection] Failed to post comment:', error);
+      showAlert('Erreur lors de la publication du commentaire', 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -68,8 +98,9 @@ export function CommentSection({ comments, onAddComment }: CommentSectionProps) 
               onClick={handleSubmit}
               variant="primary"
               size="sm"
+              disabled={isSubmitting}
             >
-              PUBLIER
+              {isSubmitting ? 'ENVOI...' : 'PUBLIER'}
             </Button>
             <Button
               onClick={() => {
@@ -98,18 +129,28 @@ export function CommentSection({ comments, onAddComment }: CommentSectionProps) 
             <div key={comment.id} className="bg-[#0A0A0A] border border-[#E0E0E0]/20 p-6">
               <div className="flex items-start gap-4">
                 <img
-                  src={comment.avatar}
-                  alt={comment.user}
-                  className="w-12 h-12 rounded-none border-2 border-[#8B0000]"
+                  src={comment.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop'}
+                  alt={comment.username || 'Anonymous'}
+                  className="w-12 h-12 rounded-none border-2 border-[#8B0000] object-cover"
                 />
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h4 className="font-black text-[#FFFFFF]">{comment.user}</h4>
+                    <h4 className="font-black text-[#FFFFFF]">{comment.username || 'Anonymous'}</h4>
                     <span className="font-mono text-xs text-[#8B0000]">
-                      {new Date(comment.date).toLocaleDateString('fr-FR')}
+                      {new Date(comment.createdAt).toLocaleDateString('fr-FR')}
                     </span>
                   </div>
-                  <p className="text-[#E0E0E0] leading-relaxed">{comment.text}</p>
+                  <p className="text-[#E0E0E0] leading-relaxed mb-3">{comment.content}</p>
+                  
+                  {/* Like button for comment */}
+                  <div className="mt-3 pt-3 border-t border-[#E0E0E0]/10">
+                    <LikeButton 
+                      targetType="comment" 
+                      targetId={comment.id} 
+                      size="small"
+                      showCount={true}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

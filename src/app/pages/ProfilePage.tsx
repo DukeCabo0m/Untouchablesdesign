@@ -1,10 +1,12 @@
 import { Calendar, MapPin, Mail, Edit, Settings, Award, Heart, MessageSquare, Trash2, UserCheck, Ticket, X, Users, MessageCircle, Star, Trophy, Flame, FileText, Bug, Disc, Activity } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { GlitchText } from '@/app/components/GlitchText';
 import { PageHeader } from '@/app/components/PageHeader';
 import { useAttendedConcerts } from '@/app/hooks/useAttendedConcerts';
+import { usersApi } from '@/app/utils/api';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 // Icônes SVG pour les réseaux sociaux
 const FacebookIcon = () => (
@@ -27,95 +29,81 @@ const TikTokIcon = () => (
   </svg>
 );
 
-// Mock data - à remplacer par de vraies données
-const mockUserData = {
-  username: 'DarkFreak666',
-  avatar: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop',
-  bio: 'Fan de Korn depuis Follow The Leader. La scène française manque de vraie énergie brute. Korn forever 🤘',
-  joinDate: '15 mars 2024',
-  location: 'Paris (75), France',
-  website: 'https://darkfreakmusic.com',
-  email: 'darkfreak@untouchables.fr',
-  level: {
-    name: 'Freak',
-    description: 'Déchaîné et complètement intégré'
-  },
-  stats: {
-    posts: 247,
-    comments: 1.2,
-    likes: 892,
-    badges: 3
-  },
-  favoriteAlbums: [
-    { title: 'Untouchables', year: '2002' },
-    { title: 'Issues', year: '1999' },
-    { title: 'Follow The Leader', year: '1998' }
-  ],
-  badges: [
-    { name: 'Korn Kid', description: 'Membre officiel de la famille', icon: <Users size={28} />, earned: true },
-    { name: 'Twist', description: 'Plus de 200 messages postés', icon: <MessageCircle size={28} />, earned: true },
-    { name: 'Got the Life', description: 'Profil complet à 100%', icon: <Star size={28} />, earned: true },
-    { name: 'Here to Stay', description: 'Fidèle depuis plus d\'un an', icon: <Trophy size={28} />, earned: false },
-    { name: 'A.D.I.D.A.S.', description: 'Visite quotidienne pendant 30 jours', icon: <Flame size={28} />, earned: false },
-    { name: 'Y\'All Want a Single', description: '10 sujets créés', icon: <FileText size={28} />, earned: false },
-    { name: 'Issues', description: 'Rapporteur de bugs', icon: <Bug size={28} />, earned: false },
-    { name: 'Issues Cover', description: 'Collectionneur vérifié', icon: <Disc size={28} />, earned: false }
-  ]
-};
-
-const initialRecentActivity = [
-  { 
-    id: 1, 
-    type: 'post', 
-    content: 'Nouveau son de Korn incroyable !', 
-    date: 'Il y a 2h',
-    linkTo: '/actualites/korn-devoile-nouveau-single',
-    articleTitle: 'Korn dévoile un nouveau single explosif'
-  },
-  { 
-    id: 2, 
-    type: 'comment', 
-    content: 'Totalement d\'accord avec cette analyse', 
-    date: 'Il y a 5h',
-    linkTo: '/actualites/interview-jonathan-davis',
-    articleTitle: 'Interview exclusive avec Jonathan Davis'
-  },
-  { 
-    id: 3, 
-    type: 'like', 
-    content: 'A aimé "Les meilleures performances live"', 
-    date: 'Hier',
-    linkTo: '/actualites/meilleures-performances-live',
-    articleTitle: 'Les meilleures performances live de Korn'
-  },
-  { 
-    id: 4, 
-    type: 'post', 
-    content: 'Les riffs de Munky sont légendaires', 
-    date: 'Il y a 1 jour',
-    linkTo: '/actualites/analyse-riffs-munky',
-    articleTitle: 'Analyse : Les riffs légendaires de Munky'
-  },
-  { 
-    id: 5, 
-    type: 'comment', 
-    content: 'Cette setlist était parfaite', 
-    date: 'Il y a 2 jours',
-    linkTo: '/actualites/concert-paris-2024',
-    articleTitle: 'Retour sur le concert de Paris 2024'
-  }
-];
-
 export function ProfilePage() {
+  const navigate = useNavigate();
+  const { userId, isAuthenticated } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [userData, setUserData] = useState<any>(null);
   const [isOwnProfile] = useState(true); // Mock - true si c'est le profil de l'utilisateur connecté
-  const [recentActivity, setRecentActivity] = useState(initialRecentActivity);
+  const [recentActivity, setRecentActivity] = useState<any[]>([]);
   const [deletingActivityId, setDeletingActivityId] = useState<number | null>(null);
-  const [favoriteAlbums, setFavoriteAlbums] = useState(mockUserData.favoriteAlbums);
+  const [favoriteAlbums, setFavoriteAlbums] = useState<any[]>([]);
   const [deletingAlbumIndex, setDeletingAlbumIndex] = useState<number | null>(null);
   
   // Récupérer les concerts auxquels l'utilisateur a assisté
   const { attendedConcerts, toggleAttendance } = useAttendedConcerts();
   const [deletingConcertSlug, setDeletingConcertSlug] = useState<string | null>(null);
+
+  // Load user profile from backend
+  useEffect(() => {
+    async function loadProfile() {
+      // Vérifier si l'utilisateur est authentifié
+      if (!isAuthenticated || !userId) {
+        console.log('[ProfilePage] User not authenticated, redirecting to login');
+        navigate('/login');
+        return;
+      }
+      
+      try {
+        setIsLoading(true);
+        console.log('[ProfilePage] Loading profile for user:', userId);
+        
+        // Get current user from backend using their ID
+        const currentUser = await usersApi.getById(userId);
+        
+        if (!currentUser) {
+          setError('Utilisateur non trouvé');
+          setIsLoading(false);
+          return;
+        }
+        
+        console.log('[ProfilePage] Loaded user:', currentUser);
+        
+        // Load user stats
+        try {
+          const stats = await usersApi.getStats(currentUser.id);
+          currentUser.stats = stats;
+          console.log('[ProfilePage] Loaded stats:', stats);
+        } catch (err) {
+          console.error('[ProfilePage] Failed to load stats:', err);
+          currentUser.stats = { posts: 0, comments: 0, likes: 0, badges: 0 };
+        }
+        
+        // Load user activity
+        try {
+          const activity = await usersApi.getActivity(currentUser.id);
+          setRecentActivity(activity.slice(0, 5)); // Limiter aux 5 derniers
+          console.log('[ProfilePage] Loaded activity:', activity.length);
+        } catch (err) {
+          console.error('[ProfilePage] Failed to load activity:', err);
+          setRecentActivity([]);
+        }
+        
+        // Set favorite albums from user data
+        setFavoriteAlbums(currentUser.favoriteAlbums || []);
+        
+        setUserData(currentUser);
+        setError(null);
+      } catch (err) {
+        console.error('[ProfilePage] Failed to load profile:', err);
+        setError('Impossible de charger le profil');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadProfile();
+  }, []);
 
   const handleDeleteActivity = (activityId: number) => {
     setDeletingActivityId(activityId);
@@ -156,12 +144,36 @@ export function ProfilePage() {
     setDeletingConcertSlug(null);
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A]">
+        <div className="font-mono text-[#8B0000] text-lg animate-pulse">
+          Chargement du profil...
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !userData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A]">
+        <div className="text-center">
+          <h1 className="text-4xl font-black text-[#E0E0E0] mb-4">ERREUR</h1>
+          <p className="text-[#8B0000] font-mono text-sm mb-6">{error || 'Profil non trouvé'}</p>
+          <Link to="/" className="text-[#8B0000] font-mono text-sm hover:underline">
+            &lt;&lt; RETOUR À L'ACCUEIL
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen">
       {/* Page Header */}
       <PageHeader
         title="PROFIL"
-        description={`${mockUserData.username} • ${mockUserData.level.name}<br />${mockUserData.level.description}`}
+        description={`${userData?.username}${userData?.level ? ` • ${userData.level.name}<br />${userData.level.description}` : ''}`}
         backgroundImage="https://images.unsplash.com/photo-1756978303719-57095d8bd250?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25jZXJ0JTIwbWV0YWwlMjBjcm93ZHxlbnwxfHx8fDE3NjkyMTA0Nzh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
         breadcrumbs={[
           { label: 'Accueil', path: '/' },
@@ -170,307 +182,304 @@ export function ProfilePage() {
         glitchIntensity="high"
       />
 
-      <div className="max-w-7xl mx-auto pt-0 pb-12">
+      <div className="max-w-[1920px] mx-auto pt-0 pb-8 md:pb-10 lg:pb-12 px-4 md:px-6 lg:px-8">
         {/* Layout en colonnes */}
-        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] xl:grid-cols-[380px_1fr] gap-6 md:gap-8">
           
           {/* COLONNE GAUCHE - Sidebar */}
-          <div className="space-y-8">
-            
-            {/* Carte Profil Principal avec Stats et Badges intégrés */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="bg-[#8B0000]/20 border border-[#8B0000]"
-            >
-              {/* Avatar - sans padding */}
-              <div className="relative">
-                <div className="w-full aspect-[4/3] border-b border-[#8B0000]/30 overflow-hidden relative group">
-                  <img 
-                    src={mockUserData.avatar} 
-                    alt={mockUserData.username}
-                    className="w-full h-full object-cover contrast-125 brightness-90"
-                  />
-                  {/* Effet X-Ray au survol */}
-                  <div className="absolute inset-0 bg-[#8B0000] mix-blend-multiply opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
-                  
-                  {/* Badge de statut - en haut à droite */}
-                  <div className="absolute top-3 right-3 bg-[#8B0000] px-3 py-1">
-                    <span className="font-mono text-xs text-[#E0E0E0] uppercase">Actif</span>
-                  </div>
-
-                  {/* Boutons d'action - en bas à droite */}
-                  {isOwnProfile && (
-                    <div className="absolute bottom-3 right-3 flex flex-col gap-2">
-                      <Link
-                        to="/profile/edit"
-                        className="bg-[#8B0000] hover:bg-[#FFFFFF] text-[#FFFFFF] hover:text-[#0A0A0A] font-black text-xs uppercase tracking-wider px-4 py-2 transition-all duration-300 cursor-none flex items-center justify-center gap-2 backdrop-blur-sm border border-[#8B0000] hover:border-[#FFFFFF]"
-                      >
-                        <Edit size={12} />
-                        Modifier
-                      </Link>
-                      <Link
-                        to="/profile/settings"
-                        className="bg-[#0A0A0A]/80 hover:bg-[#8B0000]/80 text-[#FFFFFF] hover:text-[#FFFFFF] font-black text-xs uppercase tracking-wider px-4 py-2 transition-all duration-300 cursor-none border border-[#FFFFFF] flex items-center justify-center gap-2 backdrop-blur-sm"
-                      >
-                        <Settings size={12} />
-                        Paramètres
-                      </Link>
-                    </div>
-                  )}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="bg-[#8B0000]/20 border border-[#8B0000]"
+          >
+            {/* Avatar - sans padding */}
+            <div className="relative">
+              <div className="w-full aspect-[4/3] border-b border-[#8B0000]/30 overflow-hidden relative group">
+                <img 
+                  src={userData?.avatar} 
+                  alt={userData?.username}
+                  className="w-full h-full object-cover contrast-125 brightness-90"
+                />
+                {/* Effet X-Ray au survol */}
+                <div className="absolute inset-0 bg-[#8B0000] mix-blend-multiply opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                
+                {/* Badge de statut - en haut à droite */}
+                <div className="absolute top-3 right-3 bg-[#8B0000] px-3 py-1">
+                  <span className="font-mono text-xs text-[#E0E0E0] uppercase">Actif</span>
                 </div>
+
+                {/* Boutons d'action - en bas à droite */}
+                {isOwnProfile && (
+                  <div className="absolute bottom-3 right-3 flex flex-col gap-2">
+                    <Link
+                      to="/profile/edit"
+                      className="bg-[#8B0000] hover:bg-[#FFFFFF] text-[#FFFFFF] hover:text-[#0A0A0A] font-black text-xs uppercase tracking-wider px-4 py-2 transition-all duration-300 cursor-none flex items-center justify-center gap-2 backdrop-blur-sm border border-[#8B0000] hover:border-[#FFFFFF]"
+                    >
+                      <Edit size={12} />
+                      Modifier
+                    </Link>
+                    <Link
+                      to="/profile/settings"
+                      className="bg-[#0A0A0A]/80 hover:bg-[#8B0000]/80 text-[#FFFFFF] hover:text-[#FFFFFF] font-black text-xs uppercase tracking-wider px-4 py-2 transition-all duration-300 cursor-none border border-[#FFFFFF] flex items-center justify-center gap-2 backdrop-blur-sm"
+                    >
+                      <Settings size={12} />
+                      Paramètres
+                    </Link>
+                  </div>
+                )}
               </div>
+            </div>
 
-              {/* Contenu avec padding */}
-              <div className="p-6">
-                {/* Username */}
-                <h1 
-                  className="text-3xl font-black text-[#FFFFFF] uppercase mb-2"
-                  style={{ fontFamily: 'Arial Black, sans-serif', letterSpacing: '-0.05em' }}
-                >
-                  <GlitchText glitchIntensity="medium">{mockUserData.username}</GlitchText>
-                </h1>
+            {/* Contenu avec padding */}
+            <div className="p-6">
+              {/* Username */}
+              <h1 
+                className="text-3xl font-black text-[#FFFFFF] uppercase mb-2"
+                style={{ fontFamily: 'Arial Black, sans-serif', letterSpacing: '-0.05em' }}
+              >
+                <GlitchText glitchIntensity="medium">{userData?.username}</GlitchText>
+              </h1>
 
-                {/* Niveau / Titre */}
+              {/* Niveau / Titre */}
+              {userData?.level && (
                 <div className="mb-4 inline-block">
                   <div className="bg-[#8B0000] px-3 py-1 border-l-4 border-[#FFFFFF]">
                     <div className="flex items-center gap-2">
                       <span className="font-black text-sm text-[#FFFFFF] uppercase tracking-wider">
-                        {mockUserData.level.name}
+                        {userData.level.name}
                       </span>
                       <span className="text-[#E0E0E0] text-xs font-mono">•</span>
                       <span className="text-[#E0E0E0] text-xs font-mono italic">
-                        {mockUserData.level.description}
+                        {userData.level.description}
                       </span>
                     </div>
                   </div>
                 </div>
+              )}
 
-                {/* Bio */}
-                <p className="text-[#E0E0E0] text-sm leading-relaxed mb-6">
-                  {mockUserData.bio}
-                </p>
+              {/* Bio */}
+              <p className="text-[#E0E0E0] text-sm leading-relaxed mb-6">
+                {userData?.bio}
+              </p>
 
-                {/* Infos */}
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center gap-2 text-sm text-[#a8a8a8] font-mono">
-                    <Calendar size={14} className="text-[#8B0000]" />
-                    Membre depuis le {mockUserData.joinDate}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-[#a8a8a8] font-mono">
-                    <MapPin size={14} className="text-[#8B0000]" />
-                    {mockUserData.location}
-                  </div>
-                  
-                  {/* Réseaux sociaux */}
-                  <div className="flex items-center gap-4 pt-2">
-                    <a 
-                      href="https://facebook.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#FFFFFF] hover:text-[#8B0000] transition-colors cursor-none"
-                      title="Facebook"
-                    >
-                      <FacebookIcon />
-                    </a>
-                    <a 
-                      href="https://instagram.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#FFFFFF] hover:text-[#8B0000] transition-colors cursor-none"
-                      title="Instagram"
-                    >
-                      <InstagramIcon />
-                    </a>
-                    <a 
-                      href="https://tiktok.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#FFFFFF] hover:text-[#8B0000] transition-colors cursor-none"
-                      title="TikTok"
-                    >
-                      <TikTokIcon />
-                    </a>
-                  </div>
+              {/* Infos */}
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-2 text-sm text-[#a8a8a8] font-mono">
+                  <Calendar size={14} className="text-[#8B0000]" />
+                  Membre depuis le {userData?.joinDate}
                 </div>
+                <div className="flex items-center gap-2 text-sm text-[#a8a8a8] font-mono">
+                  <MapPin size={14} className="text-[#8B0000]" />
+                  {userData?.location}
+                </div>
+                
+                {/* Réseaux sociaux */}
+                <div className="flex items-center gap-4 pt-2">
+                  <a 
+                    href="https://facebook.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#FFFFFF] hover:text-[#8B0000] transition-colors cursor-none"
+                    title="Facebook"
+                  >
+                    <FacebookIcon />
+                  </a>
+                  <a 
+                    href="https://instagram.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#FFFFFF] hover:text-[#8B0000] transition-colors cursor-none"
+                    title="Instagram"
+                  >
+                    <InstagramIcon />
+                  </a>
+                  <a 
+                    href="https://tiktok.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#FFFFFF] hover:text-[#8B0000] transition-colors cursor-none"
+                    title="TikTok"
+                  >
+                    <TikTokIcon />
+                  </a>
+                </div>
+              </div>
 
-                {/* Séparateur */}
-                <div className="h-[1px] bg-[#FFFFFF]/30 mb-6" />
+              {/* Séparateur */}
+              <div className="h-[1px] bg-[#FFFFFF]/30 mb-6" />
 
-                {/* Albums favoris (intégrés et compacts) */}
+              {/* Albums favoris (intégrés et compacts) */}
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="h-[2px] w-8 bg-[#FFFFFF]" />
+                  <span className="font-black text-sm text-[#FFFFFF] uppercase">
+                    <Heart size={12} className="inline mr-1" />
+                    Albums favoris
+                  </span>
+                </div>
+                
+                <div className="space-y-2">
+                  {favoriteAlbums.map((album, index) => (
+                    <div
+                      key={index}
+                      className="bg-black hover:bg-[#8B0000]/10 border-l-2 border-[#8B0000] p-3 hover:border-l-4 transition-all duration-300 cursor-none group relative"
+                    >
+                      <div className="flex items-center justify-between gap-8">
+                        <div className="flex-1">
+                          <h3 className="text-sm font-black text-[#FFFFFF] uppercase group-hover:text-[#8B0000] transition-colors leading-tight">
+                            {album.title}
+                          </h3>
+                          <p className="font-mono text-xs text-[#a8a8a8] mt-1">{album.year}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Heart className="text-[#8B0000] flex-shrink-0" size={16} fill="#8B0000" />
+                          {isOwnProfile && (
+                            <>
+                              {deletingAlbumIndex === index ? (
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      confirmDeleteAlbum(index);
+                                    }}
+                                    className="bg-[#8B0000] hover:bg-[#8B0000]/80 text-[#FFFFFF] font-black text-[10px] uppercase tracking-wider px-2 py-1 transition-all duration-300 cursor-none border border-[#8B0000] hover:border-[#FFFFFF]"
+                                  >
+                                    Oui
+                                  </button>
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      cancelDeleteAlbum();
+                                    }}
+                                    className="bg-transparent hover:bg-[#8B0000]/20 text-[#8B0000] font-black text-[10px] uppercase tracking-wider px-2 py-1 transition-all duration-300 cursor-none border border-[#8B0000]"
+                                  >
+                                    Non
+                                  </button>
+                                </div>
+                              ) : (
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleDeleteAlbum(index);
+                                  }}
+                                  className="opacity-0 group-hover:opacity-100 bg-transparent hover:bg-[#8B0000]/20 text-[#8B0000] p-1 transition-all duration-300 cursor-none border border-[#8B0000] hover:border-[#FFFFFF]"
+                                  title="Supprimer"
+                                >
+                                  <X size={12} />
+                                </button>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Concerts où j'ai été (intégrés et compacts) */}
+              {attendedConcerts.length > 0 && (
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="h-[2px] w-8 bg-[#FFFFFF]" />
                     <span className="font-black text-sm text-[#FFFFFF] uppercase">
-                      <Heart size={12} className="inline mr-1" />
-                      Albums favoris
+                      <Ticket size={12} className="inline mr-1" />
+                      Concerts où j'ai été
                     </span>
                   </div>
                   
                   <div className="space-y-2">
-                    {favoriteAlbums.map((album, index) => (
+                    {attendedConcerts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 3).map((concert) => (
                       <div
-                        key={index}
-                        className="bg-black hover:bg-[#8B0000]/10 border-l-2 border-[#8B0000] p-3 hover:border-l-4 transition-all duration-300 cursor-none group relative"
+                        key={concert.slug}
+                        className="relative bg-black hover:bg-[#8B0000]/10 border-l-2 border-[#8B0000] p-3 hover:border-l-4 transition-all duration-300 cursor-none group"
                       >
-                        <div className="flex items-center justify-between gap-8">
-                          <div className="flex-1">
-                            <h3 className="text-sm font-black text-[#FFFFFF] uppercase group-hover:text-[#8B0000] transition-colors leading-tight">
-                              {album.title}
-                            </h3>
-                            <p className="font-mono text-xs text-[#a8a8a8] mt-1">{album.year}</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Heart className="text-[#8B0000] flex-shrink-0" size={16} fill="#8B0000" />
-                            {isOwnProfile && (
-                              <>
-                                {deletingAlbumIndex === index ? (
-                                  <div className="flex items-center gap-2">
-                                    <button
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        confirmDeleteAlbum(index);
-                                      }}
-                                      className="bg-[#8B0000] hover:bg-[#8B0000]/80 text-[#FFFFFF] font-black text-[10px] uppercase tracking-wider px-2 py-1 transition-all duration-300 cursor-none border border-[#8B0000] hover:border-[#FFFFFF]"
-                                    >
-                                      Oui
-                                    </button>
-                                    <button
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        cancelDeleteAlbum();
-                                      }}
-                                      className="bg-transparent hover:bg-[#8B0000]/20 text-[#8B0000] font-black text-[10px] uppercase tracking-wider px-2 py-1 transition-all duration-300 cursor-none border border-[#8B0000]"
-                                    >
-                                      Non
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <button
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      handleDeleteAlbum(index);
-                                    }}
-                                    className="opacity-0 group-hover:opacity-100 bg-transparent hover:bg-[#8B0000]/20 text-[#8B0000] p-1 transition-all duration-300 cursor-none border border-[#8B0000] hover:border-[#FFFFFF]"
-                                    title="Supprimer"
-                                  >
-                                    <X size={12} />
-                                  </button>
-                                )}
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Concerts où j'ai été (intégrés et compacts) */}
-                {attendedConcerts.length > 0 && (
-                  <div className="mb-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="h-[2px] w-8 bg-[#FFFFFF]" />
-                      <span className="font-black text-sm text-[#FFFFFF] uppercase">
-                        <Ticket size={12} className="inline mr-1" />
-                        Concerts où j'ai été
-                      </span>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      {attendedConcerts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 3).map((concert) => (
-                        <div
-                          key={concert.slug}
-                          className="relative bg-black hover:bg-[#8B0000]/10 border-l-2 border-[#8B0000] p-3 hover:border-l-4 transition-all duration-300 cursor-none group"
+                        <Link
+                          to={`/tour/concert/${concert.slug}`}
+                          className="block"
                         >
-                          <Link
-                            to={`/tour/concert/${concert.slug}`}
-                            className="block"
-                          >
-                            <div className="flex items-start justify-between gap-8 mb-2">
-                              <h3 className="text-sm font-black text-[#FFFFFF] uppercase group-hover:text-[#8B0000] transition-colors leading-tight flex-1">
-                                {concert.venue}
-                              </h3>
-                              <div className="flex items-center gap-2">
-                                <UserCheck className="text-[#8B0000] flex-shrink-0" size={14} />
-                                {isOwnProfile && (
-                                  <>
-                                    {deletingConcertSlug === concert.slug ? (
-                                      <div className="flex items-center gap-2" onClick={(e) => e.preventDefault()}>
-                                        <button
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            confirmDeleteConcert(concert.slug);
-                                          }}
-                                          className="bg-[#8B0000] hover:bg-[#8B0000]/80 text-[#FFFFFF] font-black text-[10px] uppercase tracking-wider px-2 py-1 transition-all duration-300 cursor-none border border-[#8B0000] hover:border-[#FFFFFF]"
-                                        >
-                                          Oui
-                                        </button>
-                                        <button
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            cancelDeleteConcert();
-                                          }}
-                                          className="bg-transparent hover:bg-[#8B0000]/20 text-[#8B0000] font-black text-[10px] uppercase tracking-wider px-2 py-1 transition-all duration-300 cursor-none border border-[#8B0000]"
-                                        >
-                                          Non
-                                        </button>
-                                      </div>
-                                    ) : (
+                          <div className="flex items-start justify-between gap-8 mb-2">
+                            <h3 className="text-sm font-black text-[#FFFFFF] uppercase group-hover:text-[#8B0000] transition-colors leading-tight flex-1">
+                              {concert.venue}
+                            </h3>
+                            <div className="flex items-center gap-2">
+                              <UserCheck className="text-[#8B0000] flex-shrink-0" size={14} />
+                              {isOwnProfile && (
+                                <>
+                                  {deletingConcertSlug === concert.slug ? (
+                                    <div className="flex items-center gap-2" onClick={(e) => e.preventDefault()}>
                                       <button
                                         onClick={(e) => {
                                           e.preventDefault();
                                           e.stopPropagation();
-                                          handleDeleteConcert(concert.slug);
+                                          confirmDeleteConcert(concert.slug);
                                         }}
-                                        className="opacity-0 group-hover:opacity-100 bg-transparent hover:bg-[#8B0000]/20 text-[#8B0000] p-1 transition-all duration-300 cursor-none border border-[#8B0000] hover:border-[#FFFFFF]"
-                                        title="Supprimer"
+                                        className="bg-[#8B0000] hover:bg-[#8B0000]/80 text-[#FFFFFF] font-black text-[10px] uppercase tracking-wider px-2 py-1 transition-all duration-300 cursor-none border border-[#8B0000] hover:border-[#FFFFFF]"
                                       >
-                                        <X size={12} />
+                                        Oui
                                       </button>
-                                    )}
-                                  </>
-                                )}
-                              </div>
+                                      <button
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          cancelDeleteConcert();
+                                        }}
+                                        className="bg-transparent hover:bg-[#8B0000]/20 text-[#8B0000] font-black text-[10px] uppercase tracking-wider px-2 py-1 transition-all duration-300 cursor-none border border-[#8B0000]"
+                                      >
+                                        Non
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <button
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        handleDeleteConcert(concert.slug);
+                                      }}
+                                      className="opacity-0 group-hover:opacity-100 bg-transparent hover:bg-[#8B0000]/20 text-[#8B0000] p-1 transition-all duration-300 cursor-none border border-[#8B0000] hover:border-[#FFFFFF]"
+                                      title="Supprimer"
+                                    >
+                                      <X size={12} />
+                                    </button>
+                                  )}
+                                </>
+                              )}
                             </div>
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-1 text-xs text-[#a8a8a8]">
-                                <Calendar size={10} className="text-[#8B0000]" />
-                                <span className="font-mono">
-                                  {new Date(concert.date).toLocaleDateString('fr-FR', {
-                                    day: '2-digit',
-                                    month: 'short',
-                                    year: 'numeric'
-                                  })}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1 text-xs text-[#a8a8a8]">
-                                <MapPin size={10} className="text-[#8B0000]" />
-                                <span className="font-mono">{concert.city}</span>
-                              </div>
+                          </div>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1 text-xs text-[#a8a8a8]">
+                              <Calendar size={10} className="text-[#8B0000]" />
+                              <span className="font-mono">
+                                {new Date(concert.date).toLocaleDateString('fr-FR', {
+                                  day: '2-digit',
+                                  month: 'short',
+                                  year: 'numeric'
+                                })}
+                              </span>
                             </div>
-                          </Link>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    {attendedConcerts.length > 3 && (
-                      <Link
-                        to="/tour"
-                        className="block text-center text-[#8B0000] hover:text-[#FFFFFF] font-mono text-xs uppercase mt-3 transition-colors cursor-none"
-                      >
-                        Voir tous ({attendedConcerts.length})
-                      </Link>
-                    )}
+                            <div className="flex items-center gap-1 text-xs text-[#a8a8a8]">
+                              <MapPin size={10} className="text-[#8B0000]" />
+                              <span className="font-mono">{concert.city}</span>
+                            </div>
+                          </div>
+                        </Link>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
-            </motion.div>
-
-          </div>
+                  
+                  {attendedConcerts.length > 3 && (
+                    <Link
+                      to="/tour"
+                      className="block text-center text-[#8B0000] hover:text-[#FFFFFF] font-mono text-xs uppercase mt-3 transition-colors cursor-none"
+                    >
+                      Voir tous ({attendedConcerts.length})
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
+          </motion.div>
 
           {/* COLONNE DROITE - Contenu principal */}
           <div className="space-y-6">
@@ -494,19 +503,19 @@ export function ProfilePage() {
                 
                 <div className="grid grid-cols-4 gap-4">
                   <div className="p-3 border-l-2 border-[#8B0000] bg-black hover:bg-[#8B0000]/10 transition-all duration-300 cursor-none">
-                    <div className="text-xl font-black text-[#8B0000] mb-1">{mockUserData.stats.posts}</div>
+                    <div className="text-xl font-black text-[#8B0000] mb-1">{userData?.stats.posts}</div>
                     <div className="font-mono text-[9px] text-[#a8a8a8] uppercase">Posts publiés</div>
                   </div>
                   <div className="p-3 border-l-2 border-[#8B0000] bg-black hover:bg-[#8B0000]/10 transition-all duration-300 cursor-none">
-                    <div className="text-xl font-black text-[#8B0000] mb-1">{mockUserData.stats.comments}K</div>
+                    <div className="text-xl font-black text-[#8B0000] mb-1">{userData?.stats.comments}K</div>
                     <div className="font-mono text-[9px] text-[#a8a8a8] uppercase">Commentaires</div>
                   </div>
                   <div className="p-3 border-l-2 border-[#8B0000] bg-black hover:bg-[#8B0000]/10 transition-all duration-300 cursor-none">
-                    <div className="text-xl font-black text-[#8B0000] mb-1">{mockUserData.stats.likes}</div>
+                    <div className="text-xl font-black text-[#8B0000] mb-1">{userData?.stats.likes}</div>
                     <div className="font-mono text-[9px] text-[#a8a8a8] uppercase">Likes donnés</div>
                   </div>
                   <div className="p-3 border-l-2 border-[#8B0000] bg-black hover:bg-[#8B0000]/10 transition-all duration-300 cursor-none">
-                    <div className="text-xl font-black text-[#8B0000] mb-1">{mockUserData.stats.badges}</div>
+                    <div className="text-xl font-black text-[#8B0000] mb-1">{userData?.stats.badges}</div>
                     <div className="font-mono text-[9px] text-[#a8a8a8] uppercase">Badges débloqués</div>
                   </div>
                 </div>
@@ -527,12 +536,12 @@ export function ProfilePage() {
                     </span>
                   </div>
                   <span className="font-mono text-xs text-[#a8a8a8]">
-                    {mockUserData.badges.filter(b => b.earned).length}/{mockUserData.badges.length}
+                    {userData?.badges?.filter(b => b.earned).length || 0}/{userData?.badges?.length || 0}
                   </span>
                 </div>
                 
                 <div className="grid grid-cols-8 gap-3">
-                  {mockUserData.badges.map((badge, index) => (
+                  {userData?.badges?.map((badge, index) => (
                     <div
                       key={index}
                       className={`p-3 flex flex-col items-center justify-center bg-black hover:bg-[#8B0000]/10 transition-all duration-300 cursor-none group relative ${

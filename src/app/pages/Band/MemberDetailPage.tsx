@@ -2,14 +2,60 @@ import { useParams, Link } from 'react-router';
 import { motion } from 'motion/react';
 import { GlitchText } from '@/app/components/GlitchText';
 import { PageHeader } from '@/app/components/PageHeader';
-import { getActiveMember } from '@/app/data/members';
 import { ChevronLeft, Calendar, Music } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { membersApi } from '@/app/utils/api';
 
 export function MemberDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const member = slug ? getActiveMember(slug) : undefined;
+  const [member, setMember] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!member) {
+  // Load member from backend
+  useEffect(() => {
+    async function loadMember() {
+      if (!slug) return;
+      
+      try {
+        setIsLoading(true);
+        console.log('[MemberDetailPage] Loading member:', slug);
+        
+        // Get all members and find by slug
+        const members = await membersApi.getAll();
+        const foundMember = members.find((m: any) => m.slug === slug);
+        
+        if (!foundMember) {
+          setError('Membre non trouvé');
+          setIsLoading(false);
+          return;
+        }
+        
+        console.log('[MemberDetailPage] Found member:', foundMember);
+        
+        setMember(foundMember);
+        setError(null);
+      } catch (err) {
+        console.error('[MemberDetailPage] Failed to load member:', err);
+        setError('Impossible de charger le membre');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadMember();
+  }, [slug]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A]">
+        <div className="font-mono text-[#8B0000] text-lg animate-pulse">
+          Chargement du membre...
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !member) {
     return (
       <div className="min-h-screen pt-32 pb-24 px-4 flex items-center justify-center bg-[#0A0A0A]">
         <div className="text-center">
@@ -48,7 +94,7 @@ export function MemberDetailPage() {
       />
 
       <div className="px-4 pb-24 bg-[#0A0A0A]">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1920px] mx-auto">
           {/* Back button */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}

@@ -1,24 +1,92 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router';
 import { Disc, ArrowRight, Heart, Calendar } from 'lucide-react';
-import { albums } from '@/app/data/albums';
 import { GlitchText } from './GlitchText';
 import { SectionHeading } from './SectionHeading';
 import { Button } from './Button';
 import { HandDrawnBox } from './HandDrawnBox';
 import { getGafferTexture } from '@/app/utils/gafferTexture';
+import { useState, useEffect } from 'react';
+import { albumsApi } from '@/app/utils/api';
+
+// Map backend album to frontend format
+function mapBackendAlbum(album: any) {
+  return {
+    id: album.id,
+    slug: album.slug,
+    title: album.title,
+    year: new Date(album.releaseDate).getFullYear(),
+    type: album.type === 'album' ? 'studio' : album.type,
+    cover: album.coverImage || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800',
+    label: album.label || 'Korn',
+    description: album.description || '',
+    tracks: album.tracks || [],
+  };
+}
 
 export function FeaturedAlbumsSection() {
-  // Featured albums - les 4 plus aimés par la communauté, triés par nombre de pistes (du plus grand au plus petit)
-  const featuredAlbums = albums
-    .filter(a => 
-      ['untouchables-2002', 'follow-the-leader-1998', 'issues-1999', 'korn-1994'].includes(a.slug)
-    )
-    .sort((a, b) => b.tracks.length - a.tracks.length)
-    .slice(0, 4);
+  const [albums, setAlbums] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load albums from backend
+  useEffect(() => {
+    async function loadAlbums() {
+      try {
+        setIsLoading(true);
+        const data = await albumsApi.getAll();
+        // Map and sort by number of tracks
+        const mappedAlbums = data
+          .map(mapBackendAlbum)
+          .sort((a: any, b: any) => (b.tracks?.length || 0) - (a.tracks?.length || 0));
+        setAlbums(mappedAlbums);
+        setError(null);
+      } catch (err) {
+        console.error('[FeaturedAlbumsSection] Failed to load albums:', err);
+        setError('Impossible de charger les albums');
+        setAlbums([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadAlbums();
+  }, []);
+
+  // Featured albums - Take first 4
+  const featuredAlbums = albums.slice(0, 4);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <section className="bg-[#0A0A0A] py-8 md:py-10 lg:py-12 px-0 pb-4">
+        <div>
+          <div className="flex items-center justify-center h-48 md:h-64">
+            <div className="font-mono text-[#8B0000] text-base md:text-lg animate-pulse">
+              Chargement des albums...
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Error state
+  if (error || albums.length === 0) {
+    return (
+      <section className="bg-[#0A0A0A] py-8 md:py-10 lg:py-12 px-0 pb-4">
+        <div>
+          <div className="flex items-center justify-center h-48 md:h-64">
+            <div className="font-mono text-[#E0E0E0]/50 text-base md:text-lg">
+              {error || 'Aucun album disponible pour le moment'}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section className="bg-[#0A0A0A] py-12 px-0 pb-4">
+    <section className="bg-[#0A0A0A] py-8 md:py-10 lg:py-12 px-0 pb-4">
       {/* Animated gradient background */}
       {/* <AnimatedGradientBackground 
         colors={['#0A0A0A', '#1A0000', '#0A0A0A']} 
@@ -27,7 +95,7 @@ export function FeaturedAlbumsSection() {
 
       <div className="relative z-10">
         {/* Section Header */}
-        <div className="flex items-start justify-between mb-16">
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-6 lg:gap-8 mb-12 md:mb-14 lg:mb-16">
           <SectionHeading 
             title="L'HERITAGE NU METAL" 
             glitchIntensity="low"
@@ -40,20 +108,22 @@ export function FeaturedAlbumsSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 2.6 }}
-            className="mt-4"
+            className="w-full lg:w-auto lg:mt-4"
           >
             <Button
               href="/discography/studio"
               variant="primary"
+              className="w-full lg:w-auto"
             >
-              Explorer la discographie complète
+              <span className="hidden md:inline">Explorer la discographie complète</span>
+              <span className="md:hidden">Voir discographie</span>
               <ArrowRight size={14} />
             </Button>
           </motion.div>
         </div>
 
         {/* Albums Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
           {featuredAlbums.map((album, index) => (
             <motion.article
               key={album.id}
@@ -72,7 +142,7 @@ export function FeaturedAlbumsSection() {
                 hoverColor="#8B0000"
               >
                 <div className="bg-[#1A1A1A] h-full flex flex-col">
-                  <Link to={`/discography/${album.slug}`} className="flex flex-col h-full">
+                  <Link to={`/discography/album/${album.slug}`} className="flex flex-col h-full">
                     {/* Album Cover */}
                     <div className="relative overflow-hidden aspect-square">
                       <div className="relative w-full h-full overflow-hidden">
@@ -93,7 +163,7 @@ export function FeaturedAlbumsSection() {
 
                         {/* Type badge (Studio/Live/Compilation) - Top left */}
                         <div 
-                          className="absolute top-4 left-4 px-3 py-1 flex items-center gap-2 font-mono tracking-tight"
+                          className="absolute top-3 left-3 md:top-4 md:left-4 px-2 py-1 md:px-3 md:py-1 flex items-center gap-2 font-mono tracking-tight"
                           style={{
                             clipPath: `polygon(
                               3% 0%, 5% 2%, 8% 1%, 12% 3%, 15% 1%, 20% 2%, 25% 0%, 30% 1%, 35% 3%, 40% 1%, 
@@ -114,14 +184,14 @@ export function FeaturedAlbumsSection() {
                             color: '#FFFFFF',
                           }}
                         >
-                          <span className="font-['Special_Elite'] text-base uppercase text-white">
+                          <span className="font-['Special_Elite'] text-sm md:text-base uppercase text-white">
                             {album.type}
                           </span>
                         </div>
 
                         {/* Heart badge styled like primary button */}
                         <div 
-                          className="absolute top-4 right-4 px-3 py-1 flex items-center gap-2 font-mono tracking-tight"
+                          className="absolute top-3 right-3 md:top-4 md:right-4 px-2 py-1 md:px-3 md:py-1 flex items-center gap-1 md:gap-2 font-mono tracking-tight"
                           style={{
                             clipPath: `polygon(
                               3% 0%, 5% 2%, 8% 1%, 12% 3%, 15% 1%, 20% 2%, 25% 0%, 30% 1%, 35% 3%, 40% 1%, 
@@ -142,8 +212,8 @@ export function FeaturedAlbumsSection() {
                             color: '#FFFFFF',
                           }}
                         >
-                          <Heart size={12} className="text-white fill-white" />
-                          <span className="font-['Special_Elite'] text-base text-white">
+                          <Heart size={10} className="md:w-3 md:h-3 text-white fill-white" />
+                          <span className="font-['Special_Elite'] text-sm md:text-base text-white">
                             {album.tracks.length}
                           </span>
                         </div>
@@ -168,9 +238,9 @@ export function FeaturedAlbumsSection() {
                     </div>
 
                     {/* Album Info - Card Body */}
-                    <div className="p-6 flex-1 flex flex-col">
+                    <div className="p-4 md:p-5 lg:p-6 flex-1 flex flex-col">
                       {/* Meta info */}
-                      <div className="flex items-center gap-3 mb-3">
+                      <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-3">
                         <div className="flex items-stretch gap-0">
                           <HandDrawnBox
                             color="#8B0000"
@@ -179,12 +249,12 @@ export function FeaturedAlbumsSection() {
                             passes={1}
                             padding="0"
                           >
-                            <div className="bg-[#8B0000] p-1.5 flex items-center justify-center">
-                              <Calendar size={12} className="text-white" />
+                            <div className="bg-[#8B0000] p-1 md:p-1.5 flex items-center justify-center">
+                              <Calendar size={10} className="md:w-3 md:h-3 text-white" />
                             </div>
                           </HandDrawnBox>
                           <span 
-                            className="font-mono text-sm text-black uppercase px-3 bg-white relative flex items-center"
+                            className="font-mono text-xs md:text-sm text-black uppercase px-2 md:px-3 bg-white relative flex items-center"
                             style={{
                               backgroundImage: `url(${getGafferTexture('white')})`,
                               backgroundSize: 'cover',
@@ -202,12 +272,12 @@ export function FeaturedAlbumsSection() {
                             passes={1}
                             padding="0"
                           >
-                            <div className="bg-[#8B0000] p-1.5 flex items-center justify-center">
-                              <Disc size={12} className="text-white" />
+                            <div className="bg-[#8B0000] p-1 md:p-1.5 flex items-center justify-center">
+                              <Disc size={10} className="md:w-3 md:h-3 text-white" />
                             </div>
                           </HandDrawnBox>
                           <span 
-                            className="font-mono text-sm text-black px-3 bg-white relative flex items-center"
+                            className="font-mono text-xs md:text-sm text-black px-2 md:px-3 bg-white relative flex items-center"
                             style={{
                               backgroundImage: `url(${getGafferTexture('white')})`,
                               backgroundSize: 'cover',
@@ -219,22 +289,23 @@ export function FeaturedAlbumsSection() {
                         </div>
                       </div>
 
-                      <h3 className="text-2xl font-black text-[#E0E0E0] uppercase tracking-tight mb-3 mt-2 group-hover:text-[#8B0000] transition-colors">
+                      <h3 className="text-xl sm:text-2xl font-black text-[#E0E0E0] uppercase tracking-tight mb-2 md:mb-3 mt-2 group-hover:text-[#8B0000] transition-colors line-clamp-2">
                         {album.title}
                       </h3>
 
                       {/* Excerpt */}
-                      <p className="font-mono text-sm text-[#E0E0E0]/60 leading-relaxed line-clamp-3 mb-4 flex-1">
+                      <p className="font-mono text-xs sm:text-sm text-[#E0E0E0]/60 leading-relaxed line-clamp-3 mb-3 md:mb-4 flex-1">
                         {album.description.split('\n')[0]}
                       </p>
 
                       {/* CTA */}
-                      <div className="flex items-center justify-between gap-4">
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
                         {/* Track count label - Left aligned */}
                         <Button
                           as="button"
                           variant="secondary"
                           size="sm"
+                          className="w-full sm:w-auto"
                         >
                           {album.tracks.length} pistes
                         </Button>
@@ -244,8 +315,10 @@ export function FeaturedAlbumsSection() {
                           as="button"
                           variant="primary"
                           size="sm"
+                          className="w-full sm:w-auto"
                         >
-                          VOIR L'ALBUM
+                          <span className="hidden md:inline">VOIR L'ALBUM</span>
+                          <span className="md:hidden">VOIR</span>
                           <ArrowRight size={12} />
                         </Button>
                       </div>

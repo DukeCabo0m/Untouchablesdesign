@@ -1,44 +1,94 @@
-import { useParams, Link } from 'react-router';
-import { useState } from 'react';
-import { motion } from 'motion/react';
 import { GlitchText } from '@/app/components/GlitchText';
-import { CommentSection } from '@/app/components/CommentSection';
-import { ArrowLeft, Music, Languages, Lightbulb, ExternalLink, Clock } from 'lucide-react';
-import { albums } from '@/app/data/albums';
+import { PageHeader } from '@/app/components/PageHeader';
+import { useParams, Link } from 'react-router';
+import { Music, Calendar, User, MessageSquare, Heart, Play, ChevronLeft, Languages, Lightbulb, ExternalLink } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+import { albumsApi, commentsApi } from '@/app/utils/api';
 
 export function TrackDetailPage() {
   const { albumSlug, trackSlug } = useParams<{ albumSlug: string; trackSlug: string }>();
+  const [album, setAlbum] = useState<any>(null);
+  const [track, setTrack] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [comments, setComments] = useState<any[]>([]);
+  const [commentCount, setCommentCount] = useState(0);
+  const [showCommentForm, setShowCommentForm] = useState(false);
   const [activeTab, setActiveTab] = useState<'lyrics' | 'translation' | 'meaning'>('lyrics');
 
-  // Find album and track
-  const album = albums.find(a => a.slug === albumSlug);
-  const track = album?.tracks.find(t => 
-    t.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') === trackSlug
-  );
-
-  // Mock comments data
-  const trackComments = [
-    {
-      id: 1,
-      user: 'KornFreak93',
-      avatar: 'https://i.pravatar.cc/150?img=33',
-      date: '2026-01-19',
-      text: 'Ces paroles m\'ont toujours parlé. Merci pour la traduction et l\'analyse !'
-    },
-    {
-      id: 2,
-      user: 'MetalPoet',
-      avatar: 'https://i.pravatar.cc/150?img=54',
-      date: '2026-01-15',
-      text: 'L\'interprétation sur le contexte personnel de Jonathan est fascinante. Ça donne une toute nouvelle profondeur au morceau.'
+  useEffect(() => {
+    async function loadTrack() {
+      if (!albumSlug || !trackSlug) return;
+      
+      try {
+        setIsLoading(true);
+        console.log('[TrackDetailPage] Loading track:', { albumSlug, trackSlug });
+        
+        // Get all albums and find by slug
+        const albums = await albumsApi.getAll();
+        const foundAlbum = albums.find((a: any) => a.slug === albumSlug);
+        
+        if (!foundAlbum) {
+          setError('Album non trouvé');
+          setIsLoading(false);
+          return;
+        }
+        
+        // Find track in album's tracklist
+        const foundTrack = foundAlbum.tracklist?.find((t: any) => t.slug === trackSlug);
+        
+        if (!foundTrack) {
+          setError('Piste non trouvée');
+          setIsLoading(false);
+          return;
+        }
+        
+        console.log('[TrackDetailPage] Found track:', foundTrack);
+        
+        // Load comments from backend
+        try {
+          const trackComments = await commentsApi.getByEntity('track', foundTrack.id || `${albumSlug}-${trackSlug}`);
+          setComments(trackComments);
+          setCommentCount(trackComments.length);
+          console.log('[TrackDetailPage] Loaded comments:', trackComments.length);
+        } catch (err) {
+          console.error('[TrackDetailPage] Failed to load comments:', err);
+          setComments([]);
+          setCommentCount(0);
+        }
+        
+        setAlbum(foundAlbum);
+        setTrack(foundTrack);
+        setError(null);
+      } catch (err) {
+        console.error('[TrackDetailPage] Failed to load track:', err);
+        setError('Impossible de charger la piste');
+      } finally {
+        setIsLoading(false);
+      }
     }
-  ];
+    loadTrack();
+  }, [albumSlug, trackSlug]);
 
-  if (!album || !track) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-black text-[#E0E0E0] mb-4">TRACK NON TROUVÉ</h1>
+          <h1 className="text-4xl font-black text-[#E0E0E0] mb-4">CHARGEMENT...</h1>
+          <Link to="/discography" className="text-[#8B0000] font-mono text-sm hover:underline">
+            &lt;&lt; RETOUR À LA DISCOGRAPHIE
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-black text-[#E0E0E0] mb-4">ERREUR : {error}</h1>
           <Link to="/discography" className="text-[#8B0000] font-mono text-sm hover:underline">
             &lt;&lt; RETOUR À LA DISCOGRAPHIE
           </Link>
@@ -52,10 +102,10 @@ export function TrackDetailPage() {
       <div className="max-w-7xl mx-auto">
         {/* Back Button */}
         <Link 
-          to={`/discography/${albumSlug}`}
-          className="inline-flex items-center gap-2 text-[#8B0000] font-mono text-xs uppercase mb-12 hover:text-[#E0E0E0] transition-colors cursor-none"
+          to={`/discography/album/${albumSlug}`}
+          className="inline-flex items-center gap-2 text-[#8B0000] font-mono text-xs uppercase mb-12 hover:text-[#E0E0E0] transition-colors cursor-pointer"
         >
-          <ArrowLeft size={16} />
+          <ChevronLeft size={16} />
           RETOUR À L'ALBUM
         </Link>
 
@@ -123,7 +173,7 @@ export function TrackDetailPage() {
                       href={track.streamingLinks.spotify}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 bg-[#1DB954]/10 border border-[#1DB954]/30 hover:bg-[#1DB954]/30 transition-colors cursor-none"
+                      className="p-2 bg-[#1DB954]/10 border border-[#1DB954]/30 hover:bg-[#1DB954]/30 transition-colors cursor-pointer"
                       title="Écouter sur Spotify"
                     >
                       <svg className="w-6 h-6 fill-[#1DB954]" viewBox="0 0 24 24">
@@ -136,7 +186,7 @@ export function TrackDetailPage() {
                       href={track.streamingLinks.appleMusic}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 bg-[#FA243C]/10 border border-[#FA243C]/30 hover:bg-[#FA243C]/30 transition-colors cursor-none"
+                      className="p-2 bg-[#FA243C]/10 border border-[#FA243C]/30 hover:bg-[#FA243C]/30 transition-colors cursor-pointer"
                       title="Écouter sur Apple Music"
                     >
                       <svg className="w-6 h-6 fill-[#FA243C]" viewBox="0 0 24 24">
@@ -149,7 +199,7 @@ export function TrackDetailPage() {
                       href={track.streamingLinks.youtube}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 bg-[#FF0000]/10 border border-[#FF0000]/30 hover:bg-[#FF0000]/30 transition-colors cursor-none"
+                      className="p-2 bg-[#FF0000]/10 border border-[#FF0000]/30 hover:bg-[#FF0000]/30 transition-colors cursor-pointer"
                       title="Écouter sur YouTube Music"
                     >
                       <svg className="w-6 h-6 fill-[#FF0000]" viewBox="0 0 24 24">
@@ -171,7 +221,7 @@ export function TrackDetailPage() {
           >
             <div className="mb-6">
               <div className="flex items-center gap-3 mb-4">
-                <Clock size={20} className="text-[#8B0000]" />
+                <Calendar size={20} className="text-[#8B0000]" />
                 <span className="font-black text-2xl text-[#8B0000]">{track.duration}</span>
               </div>
               <h1
@@ -195,7 +245,7 @@ export function TrackDetailPage() {
               <div className="flex gap-4 mb-8">
                 <button
                   onClick={() => setActiveTab('lyrics')}
-                  className={`flex items-center gap-2 px-6 py-3 border-2 transition-all font-black text-sm uppercase tracking-wider cursor-none ${
+                  className={`flex items-center gap-2 px-6 py-3 border-2 transition-all font-black text-sm uppercase tracking-wider cursor-pointer ${
                     activeTab === 'lyrics'
                       ? 'bg-[#8B0000] border-[#8B0000] text-[#E0E0E0]'
                       : 'bg-transparent border-[#E0E0E0]/30 text-[#E0E0E0] hover:border-[#8B0000] hover:text-[#8B0000]'
@@ -206,7 +256,7 @@ export function TrackDetailPage() {
                 </button>
                 <button
                   onClick={() => setActiveTab('translation')}
-                  className={`flex items-center gap-2 px-6 py-3 border-2 transition-all font-black text-sm uppercase tracking-wider cursor-none ${
+                  className={`flex items-center gap-2 px-6 py-3 border-2 transition-all font-black text-sm uppercase tracking-wider cursor-pointer ${
                     activeTab === 'translation'
                       ? 'bg-[#8B0000] border-[#8B0000] text-[#E0E0E0]'
                       : 'bg-transparent border-[#E0E0E0]/30 text-[#E0E0E0] hover:border-[#8B0000] hover:text-[#8B0000]'
@@ -217,7 +267,7 @@ export function TrackDetailPage() {
                 </button>
                 <button
                   onClick={() => setActiveTab('meaning')}
-                  className={`flex items-center gap-2 px-6 py-3 border-2 transition-all font-black text-sm uppercase tracking-wider cursor-none ${
+                  className={`flex items-center gap-2 px-6 py-3 border-2 transition-all font-black text-sm uppercase tracking-wider cursor-pointer ${
                     activeTab === 'meaning'
                       ? 'bg-[#8B0000] border-[#8B0000] text-[#E0E0E0]'
                       : 'bg-transparent border-[#E0E0E0]/30 text-[#E0E0E0] hover:border-[#8B0000] hover:text-[#8B0000]'
@@ -277,7 +327,7 @@ export function TrackDetailPage() {
                     <div className="pt-6 border-t border-[#E0E0E0]/20">
                       <a
                         href="#"
-                        className="inline-flex items-center gap-2 text-[#8B0000] font-mono text-xs uppercase hover:text-[#E0E0E0] transition-colors cursor-none"
+                        className="inline-flex items-center gap-2 text-[#8B0000] font-mono text-xs uppercase hover:text-[#E0E0E0] transition-colors cursor-pointer"
                       >
                         VOIR SUR GENIUS.COM
                         <ExternalLink size={12} />
@@ -316,10 +366,10 @@ export function TrackDetailPage() {
                     </div>
 
                     <div className="pt-6 border-t border-[#E0E0E0]/20 flex gap-4">
-                      <button className="px-4 py-2 bg-[#8B0000] text-[#E0E0E0] font-mono text-xs uppercase border-2 border-[#8B0000] hover:bg-transparent transition-colors cursor-none">
+                      <button className="px-4 py-2 bg-[#8B0000] text-[#E0E0E0] font-mono text-xs uppercase border-2 border-[#8B0000] hover:bg-transparent transition-colors cursor-pointer">
                         PROPOSER UNE TRADUCTION
                       </button>
-                      <button className="px-4 py-2 bg-transparent text-[#E0E0E0] font-mono text-xs uppercase border-2 border-[#8B0000] hover:bg-[#8B0000] transition-colors cursor-none">
+                      <button className="px-4 py-2 bg-transparent text-[#E0E0E0] font-mono text-xs uppercase border-2 border-[#8B0000] hover:bg-[#8B0000] transition-colors cursor-pointer">
                         SIGNALER UNE ERREUR
                       </button>
                     </div>
@@ -398,7 +448,7 @@ export function TrackDetailPage() {
                     </div>
 
                     <div className="pt-6 border-t border-[#E0E0E0]/20">
-                      <button className="px-4 py-2 bg-[#8B0000] text-[#E0E0E0] font-mono text-xs uppercase border-2 border-[#8B0000] hover:bg-transparent transition-colors cursor-none">
+                      <button className="px-4 py-2 bg-[#8B0000] text-[#E0E0E0] font-mono text-xs uppercase border-2 border-[#8B0000] hover:bg-transparent transition-colors cursor-pointer">
                         CONTRIBUER À L'ANALYSE
                       </button>
                     </div>
@@ -415,7 +465,57 @@ export function TrackDetailPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <CommentSection comments={trackComments} />
+          <PageHeader
+            title="Commentaires"
+            subtitle={`(${commentCount} commentaires)`}
+            icon={<MessageSquare size={20} />}
+          />
+          <div className="mt-4">
+            {comments.map((comment) => (
+              <div key={comment.id} className="mb-6">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={comment.avatar}
+                    alt={comment.user}
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <div className="font-mono text-sm text-[#8B0000] uppercase">
+                    {comment.user}
+                  </div>
+                </div>
+                <div className="mt-2 text-[#E0E0E0] leading-relaxed">
+                  {comment.text}
+                </div>
+                <div className="mt-2 text-[#E0E0E0]/80 font-mono text-xs">
+                  {new Date(comment.date).toLocaleDateString('fr-FR')}
+                </div>
+              </div>
+            ))}
+            {showCommentForm && (
+              <div className="mt-6">
+                <textarea
+                  className="w-full p-4 bg-[#0A0A0A] border-2 border-[#8B0000] text-[#E0E0E0] leading-relaxed"
+                  placeholder="Ajoutez votre commentaire..."
+                  rows={4}
+                />
+                <div className="mt-4 flex justify-end">
+                  <button className="px-4 py-2 bg-[#8B0000] text-[#E0E0E0] font-mono text-xs uppercase border-2 border-[#8B0000] hover:bg-transparent transition-colors cursor-pointer">
+                    PUBLIER
+                  </button>
+                </div>
+              </div>
+            )}
+            {!showCommentForm && (
+              <div className="mt-6">
+                <button
+                  className="px-4 py-2 bg-[#8B0000] text-[#E0E0E0] font-mono text-xs uppercase border-2 border-[#8B0000] hover:bg-transparent transition-colors cursor-pointer"
+                  onClick={() => setShowCommentForm(true)}
+                >
+                  AJOUTER UN COMMENTAIRE
+                </button>
+              </div>
+            )}
+          </div>
         </motion.div>
       </div>
     </div>

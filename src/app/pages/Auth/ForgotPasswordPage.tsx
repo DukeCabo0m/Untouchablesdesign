@@ -1,6 +1,8 @@
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router';
 import { useState } from 'react';
+import { motion } from 'motion/react';
+import { GlitchText } from '@/app/components/GlitchText';
 
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -47,7 +49,7 @@ export function ForgotPasswordPage() {
             <Link
               to="/login"
               className="inline-block bg-[#8B0000] hover:bg-[#8B0000]/80 text-[#FFFFFF] font-black text-sm uppercase tracking-wider
-                py-4 px-8 transition-all duration-300 cursor-none
+                py-4 px-8 transition-all duration-300 cursor-pointer
                 border-2 border-[#8B0000] hover:border-[#FFFFFF]"
             >
               RETOUR À LA CONNEXION
@@ -70,7 +72,7 @@ export function ForgotPasswordPage() {
         >
           <Link
             to="/login"
-            className="inline-flex items-center gap-2 text-[#8B0000] hover:text-[#FFFFFF] font-mono text-xs uppercase transition-colors cursor-none"
+            className="inline-flex items-center gap-2 text-[#8B0000] hover:text-[#FFFFFF] font-mono text-xs uppercase transition-colors cursor-pointer"
           >
             <ArrowLeft size={16} />
             Retour à la connexion
@@ -122,7 +124,7 @@ export function ForgotPasswordPage() {
                   required
                   className={`w-full bg-[#0A0A0A] border ${
                     error ? 'border-[#8B0000]' : 'border-[#E0E0E0]/20'
-                  } focus:border-[#8B0000] outline-none text-[#E0E0E0] font-mono text-sm pl-12 pr-4 py-3 transition-colors cursor-none`}
+                  } focus:border-[#8B0000] outline-none text-[#E0E0E0] font-mono text-sm pl-12 pr-4 py-3 transition-colors`}
                 />
               </div>
               {error && (
@@ -141,7 +143,7 @@ export function ForgotPasswordPage() {
             {/* Submit */}
             <button
               type="submit"
-              className="w-full bg-[#8B0000] hover:bg-[#6B0000] text-[#E0E0E0] font-mono text-sm uppercase py-4 transition-colors border border-[#8B0000] hover:border-[#E0E0E0] cursor-none"
+              className="w-full bg-[#8B0000] hover:bg-[#6B0000] text-[#E0E0E0] font-mono text-sm uppercase py-4 transition-colors border border-[#8B0000] hover:border-[#E0E0E0] cursor-pointer"
             >
               ENVOYER LE LIEN
             </button>
@@ -157,13 +159,13 @@ export function ForgotPasswordPage() {
         >
           <p className="font-mono text-xs text-[#E0E0E0]/70 leading-relaxed">
             <span className="text-[#8B0000]">&gt;&gt;</span> Vous vous souvenez de votre mot de passe ?{' '}
-            <Link to="/login" className="text-[#8B0000] hover:underline cursor-none">
+            <Link to="/login" className="text-[#8B0000] hover:underline cursor-pointer">
               Retour à la connexion
             </Link>
           </p>
           <p className="font-mono text-xs text-[#E0E0E0]/70 leading-relaxed mt-3">
             <span className="text-[#8B0000]">&gt;&gt;</span> Pas encore de compte ?{' '}
-            <Link to="/signup" className="text-[#8B0000] hover:underline cursor-none">
+            <Link to="/signup" className="text-[#8B0000] hover:underline cursor-pointer">
               Créer un compte
             </Link>
           </p>

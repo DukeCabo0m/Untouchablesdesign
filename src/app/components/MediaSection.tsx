@@ -1,63 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { GlitchText } from './GlitchText';
 import { GlitchImage } from './GlitchImage';
 import { Play, Image as ImageIcon, Video } from 'lucide-react';
 import { COLORS } from '@/app/constants/colors';
 import { Button } from './Button';
-import { generatePlaceholder } from '@/app/utils/placeholder';
 import { HandDrawnBox } from './HandDrawnBox';
-
-const mediaItems = [
-  {
-    id: 1,
-    type: 'video',
-    title: 'FREAK ON A LEASH',
-    subtitle: 'CLIP OFFICIEL • 1999',
-    image: generatePlaceholder(1080, 720, 'VIDEO'),
-    views: '47M',
-  },
-  {
-    id: 2,
-    type: 'photo',
-    title: 'STUDIO SESSION',
-    subtitle: 'REQUIEM RECORDING • 2022',
-    image: generatePlaceholder(1080, 720, 'STUDIO'),
-    views: '892K',
-  },
-  {
-    id: 3,
-    type: 'audio',
-    title: 'BLIND',
-    subtitle: 'LIVE PARIS • 2019',
-    image: generatePlaceholder(1080, 720, 'LIVE'),
-    views: '2.1M',
-  },
-  {
-    id: 4,
-    type: 'video',
-    title: 'FALLING AWAY FROM ME',
-    subtitle: 'REMASTERED • 2024',
-    image: generatePlaceholder(1080, 720, 'REMASTER'),
-    views: '12M',
-  },
-  {
-    id: 5,
-    type: 'photo',
-    title: 'BACKSTAGE',
-    subtitle: 'HELLFEST • 2023',
-    image: generatePlaceholder(1080, 720, 'BACKSTAGE'),
-    views: '456K',
-  },
-  {
-    id: 6,
-    type: 'video',
-    title: 'ROTTING IN VAIN',
-    subtitle: 'ACOUSTIC SESSION • 2026',
-    image: generatePlaceholder(1080, 720, 'ACOUSTIC'),
-    views: '3.8M',
-  },
-];
+import { mediaApi } from '@/app/utils/api';
 
 const getIcon = (type: string) => {
   switch (type) {
@@ -73,6 +22,26 @@ const getIcon = (type: string) => {
 };
 
 export function MediaSection() {
+  const [mediaItems, setMediaItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMediaItems = async () => {
+      try {
+        setIsLoading(true);
+        const items = await mediaApi.getAll();
+        setMediaItems(items || []);
+      } catch (error) {
+        console.error('[MediaSection] Error fetching media:', error);
+        setMediaItems([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMediaItems();
+  }, []);
+
   return (
     <section id="media" className="relative py-32 px-4 bg-[#0A0A0A]">
       <div className="max-w-7xl mx-auto">

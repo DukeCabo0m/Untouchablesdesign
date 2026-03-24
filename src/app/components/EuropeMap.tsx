@@ -91,7 +91,7 @@ export function EuropeMap({ concerts }: EuropeMapProps) {
               fill={getCountryColor(country)}
               stroke="#E0E0E0"
               strokeWidth="1.5"
-              className="cursor-none transition-all duration-300"
+              className="transition-all duration-300"
               onMouseMove={(e) => handleMouseMove(e, country)}
               onMouseLeave={() => setHoveredCountry(null)}
               initial={{ opacity: 0 }}

@@ -1,25 +1,55 @@
-import { PageHeader } from '@/app/components/PageHeader';
 import { Link } from 'react-router';
-
-// Mock data - premier numéro du fanzine
-const firstIssue = {
-  id: 'issue-1',
-  number: 1,
-  title: 'KORN 2026 : REWIND',
-  date: 'Avril 2026',
-  coverImage: 'https://images.unsplash.com/photo-1760302356448-d3385b5e6272?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWdhemluZSUyMHByaW50JTIwdmludGFnZXxlbnwxfHx8fDE3NjkwMjUwMzF8MA&ixlib=rb-4.1.0&q=80&w=1080',
-  description: "Pourquoi le groupe retourne à l'enregistrement sur bande. De l'analogique au numérique : plongée dans le processus créatif du 15ème album.",
-  pages: 12,
-  status: 'upcoming',
-  highlights: [
-    'RAW POWER : Retour au brut (Enregistrement analogique)',
-    'HERE TO STAY : Rétrospective Untouchables 24 ans après',
-    'BEHIND THE CURTAIN : Histoire de Untouchables.fr',
-    'FAMILY VALUES : Zone communautaire (Tattoos & Collections)',
-  ],
-};
+import { useState, useEffect } from 'react';
+import fanzineCover from 'figma:asset/c8e18dd9f7fde8794d1a37bbfe91e63aaaca5892.png';
+import { motion } from 'motion/react';
+import { Box, Mail, Edit3, BookOpen, ArrowRight } from 'lucide-react';
+import { GlitchText } from '@/app/components/GlitchText';
+import { PageHeader } from '@/app/components/PageHeader';
+import { projectId, publicAnonKey } from '/utils/supabase/info';
 
 export function FanzinePage() {
+  const [latestFanzine, setLatestFanzine] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLatestFanzine = async () => {
+      try {
+        const response = await fetch(
+          `https://${projectId}.supabase.co/functions/v1/make-server-d462d5d8/fanzines/latest`
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          setLatestFanzine(data.fanzine);
+        }
+      } catch (error) {
+        console.error('Error fetching latest fanzine:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLatestFanzine();
+  }, []);
+
+  // Fallback data if no fanzine is available
+  const firstIssue = latestFanzine || {
+    id: 'issue-1',
+    issueNumber: 1,
+    title: 'KORN 2026 : REWIND',
+    publicationDate: 'Avril 2026',
+    coverImage: fanzineCover,
+    description: "Pourquoi le groupe retourne à l'enregistrement sur bande. De l'analogique au numérique : plongée dans le processus créatif du 15ème album.",
+    pages: 12,
+    status: 'upcoming',
+    contentPreview: [
+      'RAW POWER : Retour au brut (Enregistrement analogique)',
+      'HERE TO STAY : Rétrospective Untouchables 24 ans après',
+      'BEHIND THE CURTAIN : Histoire de Untouchables.fr',
+      'FAMILY VALUES : Zone communautaire (Tattoos & Collections)',
+    ],
+  };
+
   return (
     <div className="min-h-screen">
       {/* Page Header */}
@@ -35,7 +65,7 @@ export function FanzinePage() {
       />
 
       <div className="px-4 pb-24 bg-[#0A0A0A]">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1920px] mx-auto">
           {/* What you get */}
           <div className="bg-[#8B0000]/10 border-l-4 border-[#8B0000] p-6 max-w-3xl mb-16">
             <h3 className="font-black text-sm text-[#8B0000] uppercase mb-4">
@@ -43,19 +73,19 @@ export function FanzinePage() {
             </h3>
             <ul className="space-y-2">
               <li className="flex items-start gap-3">
-                <Package size={16} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
+                <Box size={16} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
                 <span className="font-mono text-xs text-[#E0E0E0]/70">
                   <span className="text-[#E0E0E0] font-black">Le Fanzine :</span> 12 pages A4 couleur, finition brochée
                 </span>
               </li>
               <li className="flex items-start gap-3">
-                <Package size={16} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
+                <Box size={16} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
                 <span className="font-mono text-xs text-[#E0E0E0]/70">
                   <span className="text-[#E0E0E0] font-black">Un Poster A3 exclusif</span>
                 </span>
               </li>
               <li className="flex items-start gap-3">
-                <Package size={16} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
+                <Box size={16} className="text-[#8B0000] mt-0.5 flex-shrink-0" />
                 <span className="font-mono text-xs text-[#E0E0E0]/70">
                   <span className="text-[#E0E0E0] font-black">Des Stickers inédits</span>
                 </span>
@@ -77,15 +107,12 @@ export function FanzinePage() {
               </h3>
 
               {/* Cover */}
-              <div className="group cursor-none flex-1 flex flex-col">
+              <div className="group flex-1 flex flex-col">
                 <div className="relative overflow-hidden border-2 border-[#E0E0E0]/20 group-hover:border-[#8B0000] transition-all duration-300 mb-4 aspect-[3/4]">
                   <img
                     src={firstIssue.coverImage}
-                    alt={`Fanzine #${firstIssue.number}`}
+                    alt={`Fanzine #${firstIssue.issueNumber}`}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    style={{
-                      filter: 'contrast(1.5) brightness(0.7) saturate(0.8)',
-                    }}
                   />
 
                   {/* Scanlines */}
@@ -98,13 +125,13 @@ export function FanzinePage() {
 
                   {/* Issue Number Badge */}
                   <div className="absolute top-4 right-4 bg-[#8B0000] w-12 h-12 flex items-center justify-center">
-                    <span className="font-black text-xl text-[#E0E0E0]">#{firstIssue.number}</span>
+                    <span className="font-black text-xl text-[#E0E0E0]">#{firstIssue.issueNumber}</span>
                   </div>
 
                   {/* Coming Soon Badge */}
                   <div className="absolute bottom-0 left-0 right-0 bg-[#8B0000] py-2 px-4">
                     <p className="font-mono text-xs text-[#E0E0E0] uppercase text-center font-black">
-                      {firstIssue.date}
+                      {firstIssue.publicationDate}
                     </p>
                   </div>
                 </div>
@@ -131,7 +158,7 @@ export function FanzinePage() {
                       Au Sommaire :
                     </h5>
                     <ul className="space-y-2">
-                      {firstIssue.highlights.map((highlight, index) => (
+                      {firstIssue.contentPreview.map((highlight, index) => (
                         <li key={index} className="flex items-start gap-2">
                           <span className="text-[#8B0000] mt-1">▸</span>
                           <span className="font-mono text-xs text-[#E0E0E0]/70">
@@ -264,7 +291,7 @@ export function FanzinePage() {
 
                 <Link
                   to="/fanzine/subscribe"
-                  className="block w-full px-6 py-3 bg-[#8B0000] text-[#E0E0E0] font-black text-sm uppercase text-center hover:bg-transparent hover:border-2 hover:border-[#8B0000] transition-all cursor-none mt-auto"
+                  className="block w-full px-6 py-3 bg-[#8B0000] text-[#E0E0E0] font-black text-sm uppercase text-center hover:bg-transparent hover:border-2 hover:border-[#8B0000] transition-all mt-auto"
                 >
                   <Mail size={14} className="inline mr-2" />
                   S'ABONNER (3 MOIS)
@@ -366,8 +393,8 @@ export function FanzinePage() {
                   </div>
 
                   <Link
-                    to="/fanzine/contribute"
-                    className="block w-full px-6 py-3 border-2 border-[#8B0000] text-[#E0E0E0] font-black text-sm uppercase text-center hover:bg-[#8B0000] transition-all cursor-none mt-auto"
+                    to="/contribute"
+                    className="block w-full px-6 py-3 border-2 border-[#8B0000] text-[#E0E0E0] font-black text-sm uppercase text-center hover:bg-[#8B0000] transition-all mt-auto"
                   >
                     <Edit3 size={14} className="inline mr-2" />
                     PROPOSER UN CONTENU
@@ -390,7 +417,7 @@ export function FanzinePage() {
                   </div>
                   <Link
                     to="/fanzine/archive"
-                    className="block w-full px-6 py-3 border-2 border-[#E0E0E0]/30 text-[#E0E0E0] font-mono text-xs uppercase text-center hover:border-[#8B0000] hover:text-[#8B0000] transition-all cursor-none"
+                    className="block w-full px-6 py-3 border-2 border-[#E0E0E0]/30 text-[#E0E0E0] font-mono text-xs uppercase text-center hover:border-[#8B0000] hover:text-[#8B0000] transition-all"
                   >
                     VOIR TOUS LES NUMÉROS
                     <ArrowRight size={14} className="inline ml-2" />

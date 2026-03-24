@@ -23,7 +23,7 @@ export function XRaySection() {
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="relative group overflow-hidden cursor-none"
+            className="relative group overflow-hidden"
           >
             <div className="relative aspect-square">
               <img
@@ -57,7 +57,7 @@ export function XRaySection() {
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="relative group overflow-hidden cursor-none"
+            className="relative group overflow-hidden"
           >
             <div className="relative aspect-square">
               <img
@@ -96,7 +96,7 @@ export function XRaySection() {
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative group overflow-hidden cursor-none"
+            className="relative group overflow-hidden"
           >
             <div className="relative aspect-square">
               <img
@@ -122,7 +122,7 @@ export function XRaySection() {
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex items-center justify-center p-12 border-2 border-[#8B0000] cursor-none"
+            className="flex items-center justify-center p-12 border-2 border-[#8B0000]"
           >
             <div className="font-mono text-[#E0E0E0] text-sm leading-loose">
               <p className="text-[#8B0000] mb-6">&gt;&gt; SYSTEM_MESSAGE:</p>

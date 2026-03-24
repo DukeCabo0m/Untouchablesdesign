@@ -26,16 +26,17 @@
   --font-size: 16px;
   
   /* Typography */
-  --font-heading: 'Martian Mono';
+  --font-heading: 'Stick No Bills';
   --font-body: 'Special Elite', 'Courier New', 'Courier', 'Monaco', monospace;
   
-  /* PALETTE DÉFINITIVE & VERROUILLÉE */
+  /* PALETTE DÉFINITIVE & VERROUILLÉE - Organic Glitch & Shadows */
   --korn-abyssal: #0A0A0A;      /* Neutral 1: Abyssal Grey - Fond */
   --korn-rust: #8B0000;         /* Primary: Dried Rust - Sang séché */
-  --korn-violet: #B900FF;       /* Secondary: Digital Violet - Glitch */
-  --korn-lime: #1EFF00;         /* Accent: Radioactive Lime - Néon */
   --korn-static: #F0F0F0;       /* Neutral 2: Static White - Texte */
   --korn-white: #FFFFFF;
+  --korn-grey-dark: #1A1A1A;
+  --korn-grey-medium: #808080;
+  --korn-grey-light: #CCCCCC;
   
   /* Text color hierarchy for better contrast */
   --text-primary: #FFFFFF;     /* Main text - pure white */
@@ -124,7 +125,6 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    cursor: auto !important; /* Override any cursor-none classes */
   }
 
   body {
@@ -159,42 +159,42 @@
   h1 {
     font-family: var(--font-heading);
     font-size: var(--text-2xl);
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.5;
   }
 
   h2 {
     font-family: var(--font-heading);
     font-size: var(--text-xl);
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.5;
   }
 
   h3 {
     font-family: var(--font-heading);
     font-size: var(--text-lg);
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.5;
   }
 
   h4 {
     font-family: var(--font-heading);
     font-size: var(--text-base);
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.5;
   }
 
   h5 {
     font-family: var(--font-heading);
     font-size: var(--text-base);
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.5;
   }
 
   h6 {
     font-family: var(--font-heading);
     font-size: var(--text-base);
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.5;
   }
 

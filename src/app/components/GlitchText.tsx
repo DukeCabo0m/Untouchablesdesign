@@ -86,8 +86,8 @@ export function GlitchText({ children, className = '', glitchIntensity = 'medium
     <motion.span
       className={`relative inline-block font-heading ${className}`}
       style={{
-        fontFamily: "'Martian Mono'",
-        fontWeight: 600,
+        fontFamily: "'Stick No Bills'",
+        fontWeight: 700,
         WebkitFontSmoothing: 'antialiased',
         MozOsxFontSmoothing: 'grayscale',
         textRendering: 'optimizeLegibility',

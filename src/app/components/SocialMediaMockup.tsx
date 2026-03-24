@@ -48,7 +48,7 @@ export function SocialMediaMockup() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="bg-[#0A0A0A] border border-[#E0E0E0]/20 overflow-hidden cursor-none"
+              className="bg-[#0A0A0A] border border-[#E0E0E0]/20 overflow-hidden"
             >
               {/* Post header */}
               <div className="p-4 border-b border-[#E0E0E0]/20 flex items-center gap-3">
@@ -90,10 +90,10 @@ export function SocialMediaMockup() {
               {/* Post actions */}
               <div className="p-4 border-t border-[#E0E0E0]/20">
                 <div className="flex items-center gap-4 mb-3">
-                  <Heart size={20} className="text-[#E0E0E0] cursor-none" />
-                  <MessageCircle size={20} className="text-[#E0E0E0] cursor-none" />
-                  <Send size={20} className="text-[#E0E0E0] cursor-none" />
-                  <Bookmark size={20} className="text-[#E0E0E0] ml-auto cursor-none" />
+                  <Heart size={20} className="text-[#E0E0E0]" />
+                  <MessageCircle size={20} className="text-[#E0E0E0]" />
+                  <Send size={20} className="text-[#E0E0E0]" />
+                  <Bookmark size={20} className="text-[#E0E0E0] ml-auto" />
                 </div>
                 <p className="font-mono text-xs text-[#E0E0E0] tracking-wider">
                   <GlitchText glitchIntensity="low">{post.caption}</GlitchText>
@@ -110,7 +110,7 @@ export function SocialMediaMockup() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="relative aspect-[9/16] bg-[#0A0A0A] border border-[#8B0000] overflow-hidden cursor-none"
+            className="relative aspect-[9/16] bg-[#0A0A0A] border border-[#8B0000] overflow-hidden"
           >
             {/* Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#8B0000]/20 to-[#0A0A0A]" />
@@ -171,7 +171,7 @@ export function SocialMediaMockup() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="relative aspect-[9/16] overflow-hidden cursor-none"
+            className="relative aspect-[9/16] overflow-hidden"
           >
             <img
               src={generatePlaceholder(1080, 1920, 'STORY')}

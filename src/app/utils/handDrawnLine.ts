@@ -12,7 +12,7 @@ interface Point {
  * Ajoute des variations organiques à un point
  */
 function addVariation(x: number, y: number, intensity: number = 1): Point {
-  const variation = intensity * 0.5;
+  const variation = intensity * 0.8; // Juste milieu entre trop droit et trop ondulé
   return {
     x: x + (Math.random() - 0.5) * variation,
     y: y + (Math.random() - 0.5) * variation,
@@ -52,7 +52,7 @@ export function generateHandDrawnHorizontalLine(
     
     // Point de contrôle au milieu entre les deux points
     const cpX = (previous.x + current.x) / 2;
-    const cpY = (previous.y + current.y) / 2 + (Math.random() - 0.5) * roughness;
+    const cpY = (previous.y + current.y) / 2 + (Math.random() - 0.5) * roughness * 1.3; // Juste milieu pour subtilité
     
     path += ` Q ${cpX},${cpY} ${current.x},${current.y}`;
   }
@@ -87,7 +87,7 @@ export function generateHandDrawnVerticalLine(
     const current = points[i];
     const previous = points[i - 1];
     
-    const cpX = (previous.x + current.x) / 2 + (Math.random() - 0.5) * roughness;
+    const cpX = (previous.x + current.x) / 2 + (Math.random() - 0.5) * roughness * 1.3; // Juste milieu pour subtilité
     const cpY = (previous.y + current.y) / 2;
     
     path += ` Q ${cpX},${cpY} ${current.x},${current.y}`;

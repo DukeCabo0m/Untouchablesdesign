@@ -2,12 +2,30 @@ import { Link } from 'react-router';
 import { motion } from 'motion/react';
 import { GlitchText } from '@/app/components/GlitchText';
 import { PageHeader } from '@/app/components/PageHeader';
-import { getActiveMembers, getFormerMembers } from '@/app/data/members';
 import { ChevronRight, Users, BookOpen } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { membersApi } from '@/app/utils/api';
 
 export function BandPage() {
-  const activeMembers = getActiveMembers();
-  const formerMembers = getFormerMembers();
+  const [members, setMembers] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadMembers() {
+      try {
+        const data = await membersApi.getAll();
+        setMembers(data);
+      } catch (err) {
+        console.error('[BandPage] Failed to load members:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadMembers();
+  }, []);
+
+  const activeMembers = members.filter((m: any) => m.status === 'active');
+  const formerMembers = members.filter((m: any) => m.status === 'former');
 
   return (
     <div className="min-h-screen">
@@ -23,29 +41,29 @@ export function BandPage() {
         glitchIntensity="low"
       />
 
-      <div className="px-4 pb-24 bg-[#0A0A0A]">
-        <div className="max-w-7xl mx-auto">
+      <div className="px-4 md:px-6 lg:px-8 pb-16 md:pb-20 lg:pb-24 bg-[#0A0A0A]">
+        <div className="max-w-[1920px] mx-auto">
           {/* Quick Links */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-24"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-16 md:mb-20 lg:mb-24"
           >
             <Link
               to="/band/biography"
-              className="group relative bg-[#0A0A0A] border-2 border-[#E0E0E0]/20 hover:border-[#8B0000] transition-all p-8 overflow-hidden"
+              className="group relative bg-[#0A0A0A] border-2 border-[#E0E0E0]/20 hover:border-[#8B0000] transition-all p-6 md:p-8 overflow-hidden"
             >
               <div className="absolute inset-0 bg-[#8B0000] opacity-0 group-hover:opacity-10 transition-opacity" />
               <div className="relative z-10">
-                <BookOpen className="w-12 h-12 text-[#8B0000] mb-4" strokeWidth={1.5} />
+                <BookOpen className="w-10 h-10 md:w-12 md:h-12 text-[#8B0000] mb-3 md:mb-4" strokeWidth={1.5} />
                 <h2
-                  className="text-3xl font-black text-[#E0E0E0] uppercase mb-2 tracking-tight"
+                  className="text-2xl md:text-3xl font-black text-[#E0E0E0] uppercase mb-2 tracking-tight"
                   style={{ fontFamily: 'Arial Black, sans-serif' }}
                 >
                   BIOGRAPHIE COMPLÈTE
                 </h2>
-                <p className="font-mono text-sm text-[#E0E0E0]/70 mb-4">
+                <p className="font-mono text-xs md:text-sm text-[#E0E0E0]/70 mb-3 md:mb-4">
                   L'histoire de Korn, de Bakersfield 1993 à aujourd'hui. 30+ ans de révolution nu metal.
                 </p>
                 <div className="flex items-center text-[#8B0000] font-mono text-xs uppercase group-hover:translate-x-2 transition-transform">
@@ -57,18 +75,18 @@ export function BandPage() {
 
             <Link
               to="/band/members"
-              className="group relative bg-[#0A0A0A] border-2 border-[#E0E0E0]/20 hover:border-[#8B0000] transition-all p-8 overflow-hidden"
+              className="group relative bg-[#0A0A0A] border-2 border-[#E0E0E0]/20 hover:border-[#8B0000] transition-all p-6 md:p-8 overflow-hidden"
             >
               <div className="absolute inset-0 bg-[#8B0000] opacity-0 group-hover:opacity-10 transition-opacity" />
               <div className="relative z-10">
-                <Users className="w-12 h-12 text-[#8B0000] mb-4" strokeWidth={1.5} />
+                <Users className="w-10 h-10 md:w-12 md:h-12 text-[#8B0000] mb-3 md:mb-4" strokeWidth={1.5} />
                 <h2
-                  className="text-3xl font-black text-[#E0E0E0] uppercase mb-2 tracking-tight"
+                  className="text-2xl md:text-3xl font-black text-[#E0E0E0] uppercase mb-2 tracking-tight"
                   style={{ fontFamily: 'Arial Black, sans-serif' }}
                 >
                   LES MEMBRES
                 </h2>
-                <p className="font-mono text-sm text-[#E0E0E0]/70 mb-4">
+                <p className="font-mono text-xs md:text-sm text-[#E0E0E0]/70 mb-3 md:mb-4">
                   Découvrez les artistes derrière la légende. Biographies détaillées et parcours.
                 </p>
                 <div className="flex items-center text-[#8B0000] font-mono text-xs uppercase group-hover:translate-x-2 transition-transform">

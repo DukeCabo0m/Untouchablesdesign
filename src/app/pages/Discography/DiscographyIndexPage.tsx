@@ -2,46 +2,85 @@ import { Link } from 'react-router';
 import { GlitchText } from '@/app/components/GlitchText';
 import { PageHeader } from '@/app/components/PageHeader';
 import { Disc3, Radio, ListMusic, Music4, Video } from 'lucide-react';
-
-const categories = [
-  {
-    title: 'ALBUMS STUDIO',
-    href: '/discography/studio',
-    icon: Disc3,
-    description: '14 albums studio qui ont révolutionné le metal',
-    count: '14',
-  },
-  {
-    title: 'ALBUMS LIVE',
-    href: '/discography/live',
-    icon: Radio,
-    description: 'Captures de l\'énergie brute sur scène',
-    count: '3+',
-  },
-  {
-    title: 'COMPILATIONS',
-    href: '/discography/compilations',
-    icon: ListMusic,
-    description: 'Best-of et collections essentielles',
-    count: '5+',
-  },
-  {
-    title: 'SINGLES & EPs',
-    href: '/discography/singles',
-    icon: Music4,
-    description: 'Singles, EPs et raretés',
-    count: '20+',
-  },
-  {
-    title: 'VIDÉOCLIPS',
-    href: '/discography/videos',
-    icon: Video,
-    description: 'Galerie complète des clips officiels',
-    count: '30+',
-  },
-];
+import { useState, useEffect } from 'react';
+import { albumsApi } from '@/app/utils/api';
 
 export function DiscographyIndexPage() {
+  const [stats, setStats] = useState({
+    studioCount: 0,
+    liveCount: 0,
+    compilationCount: 0,
+    singlesCount: 0,
+    totalAlbums: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load albums and calculate stats
+  useEffect(() => {
+    async function loadStats() {
+      try {
+        setIsLoading(true);
+        const albums = await albumsApi.getAll();
+        
+        const studioCount = albums.filter((a: any) => a.type === 'album').length;
+        const liveCount = albums.filter((a: any) => a.type === 'live').length;
+        const compilationCount = albums.filter((a: any) => a.type === 'compilation').length;
+        const singlesCount = albums.filter((a: any) => a.type === 'single' || a.type === 'ep').length;
+        
+        setStats({
+          studioCount,
+          liveCount,
+          compilationCount,
+          singlesCount,
+          totalAlbums: albums.length,
+        });
+      } catch (err) {
+        console.error('[DiscographyIndexPage] Failed to load stats:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadStats();
+  }, []);
+
+  const categories = [
+    {
+      title: 'ALBUMS STUDIO',
+      href: '/discography/studio',
+      icon: Disc3,
+      description: `${stats.studioCount} albums studio qui ont révolutionné le metal`,
+      count: isLoading ? '...' : String(stats.studioCount),
+    },
+    {
+      title: 'ALBUMS LIVE',
+      href: '/discography/live',
+      icon: Radio,
+      description: 'Captures de l\'énergie brute sur scène',
+      count: isLoading ? '...' : String(stats.liveCount),
+    },
+    {
+      title: 'COMPILATIONS',
+      href: '/discography/compilations',
+      icon: ListMusic,
+      description: 'Best-of et collections essentielles',
+      count: isLoading ? '...' : String(stats.compilationCount),
+    },
+    {
+      title: 'SINGLES & EPs',
+      href: '/discography/singles',
+      icon: Music4,
+      description: 'Singles, EPs et raretés',
+      count: isLoading ? '...' : String(stats.singlesCount),
+    },
+    {
+      title: 'VIDÉOCLIPS',
+      href: '/discography/videos',
+      icon: Video,
+      description: 'Galerie complète des clips officiels',
+      count: '30+', // Static for now
+    },
+  ];
+
   return (
     <div className="min-h-screen">
       {/* Page Header */}
@@ -57,14 +96,14 @@ export function DiscographyIndexPage() {
       />
 
       <div className="px-4 pb-24 bg-[#0A0A0A]">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1920px] mx-auto">
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-24">
             {[
-              { label: 'ALBUMS VENDUS', value: '40M+' },
-              { label: 'GRAMMY AWARDS', value: '2' },
-              { label: '#1 BILLBOARD', value: '7' },
-              { label: 'ANNÉES ACTIF', value: '30+' },
+              { label: 'ÉCOUTES MENSUELLES', value: '40M+' },
+              { label: 'GRAMMYS', value: '2' },
+              { label: 'MEMBRES', value: '7' },
+              { label: 'ANNÉES DE CARRIÈRE', value: '30+' },
             ].map((stat, i) => (
               <div
                 key={i}

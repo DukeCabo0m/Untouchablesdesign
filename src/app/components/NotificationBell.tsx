@@ -3,81 +3,102 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Bell, MessageCircle, UserPlus, Award, X } from 'lucide-react';
 import { HandDrawnBox } from './HandDrawnBox';
 import { COLORS } from '@/app/constants/colors';
+import { projectId, publicAnonKey } from '/utils/supabase/info';
 
 interface Notification {
   id: string;
-  type: 'mention' | 'reply' | 'follow' | 'badge';
-  title: string;
+  type: 'mention' | 'reply' | 'like' | 'follow' | 'comment' | 'article' | 'system';
   message: string;
-  time: string;
+  time?: string;
   read: boolean;
-  link?: string;
+  link?: string | null;
+  fromUsername?: string | null;
+  createdAt: string;
 }
-
-const mockNotifications: Notification[] = [
-  {
-    id: '1',
-    type: 'mention',
-    title: 'KornFreak666 vous a mentionné',
-    message: 'Dans "Discussion sur le nouvel album"',
-    time: 'Il y a 5 min',
-    read: false,
-  },
-  {
-    id: '2',
-    type: 'reply',
-    title: 'Nouvelle réponse',
-    message: 'BlindFaith a répondu à votre commentaire',
-    time: 'Il y a 23 min',
-    read: false,
-  },
-  {
-    id: '3',
-    type: 'badge',
-    title: 'Nouveau badge débloqué !',
-    message: 'Vous avez obtenu "Vétéran" (100+ posts)',
-    time: 'Il y a 1h',
-    read: false,
-  },
-  {
-    id: '4',
-    type: 'follow',
-    title: 'Nouveau follower',
-    message: 'RottenVain suit maintenant votre profil',
-    time: 'Il y a 3h',
-    read: true,
-  },
-  {
-    id: '5',
-    type: 'reply',
-    title: 'Nouvelle réponse',
-    message: 'FallingAway a répondu à votre post',
-    time: 'Il y a 5h',
-    read: true,
-  },
-];
 
 const getNotificationIcon = (type: string) => {
   switch (type) {
     case 'mention':
       return <MessageCircle size={16} className="text-[#8B0000]" />;
     case 'reply':
+    case 'comment':
       return <MessageCircle size={16} className="text-[#8B0000]" />;
     case 'follow':
       return <UserPlus size={16} className="text-[#8B0000]" />;
-    case 'badge':
+    case 'like':
+    case 'article':
+    case 'system':
       return <Award size={16} className="text-[#8B0000]" />;
     default:
       return <Bell size={16} className="text-[#8B0000]" />;
   }
 };
 
+// Format relative time
+const formatRelativeTime = (dateString: string): string => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return 'À l\'instant';
+  if (diffMins < 60) return `Il y a ${diffMins} min`;
+  if (diffHours < 24) return `Il y a ${diffHours}h`;
+  if (diffDays < 7) return `Il y a ${diffDays}j`;
+  return date.toLocaleDateString('fr-FR');
+};
+
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
+
+  // Fetch notifications
+  const fetchNotifications = async () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/make-server-d462d5d8/notifications`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setNotifications(data.notifications || []);
+      }
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch on mount and when dropdown opens
+  useEffect(() => {
+    fetchNotifications();
+    
+    // Poll every 30 seconds for new notifications
+    const interval = setInterval(fetchNotifications, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchNotifications();
+    }
+  }, [isOpen]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -91,18 +112,72 @@ export function NotificationBell() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const markAsRead = (id: string) => {
+  const markAsRead = async (id: string) => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+
+    // Optimistic update
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read: true } : n))
     );
+
+    try {
+      await fetch(
+        `https://${projectId}.supabase.co/functions/v1/make-server-d462d5d8/notifications/${id}/read`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
   };
 
-  const markAllAsRead = () => {
+  const markAllAsRead = async () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+
+    // Optimistic update
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+
+    try {
+      await fetch(
+        `https://${projectId}.supabase.co/functions/v1/make-server-d462d5d8/notifications/read-all`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+    }
   };
 
-  const deleteNotification = (id: string) => {
+  const deleteNotification = async (id: string) => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+
+    // Optimistic update
     setNotifications((prev) => prev.filter((n) => n.id !== id));
+
+    try {
+      await fetch(
+        `https://${projectId}.supabase.co/functions/v1/make-server-d462d5d8/notifications/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error deleting notification:', error);
+    }
   };
 
   return (
@@ -216,18 +291,15 @@ export function NotificationBell() {
                           {/* Content */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between gap-2">
-                              <h4 className="font-mono text-sm font-bold text-[#E0E0E0] mb-1">
-                                {notification.title}
-                              </h4>
+                              <p className="font-mono text-sm text-[#E0E0E0] mb-2">
+                                {notification.message}
+                              </p>
                               {!notification.read && (
                                 <div className="w-2 h-2 bg-[#8B0000] rounded-full flex-shrink-0 mt-1" />
                               )}
                             </div>
-                            <p className="font-mono text-xs text-[#E0E0E0]/70 mb-2">
-                              {notification.message}
-                            </p>
                             <span className="font-mono text-[10px] text-[#E0E0E0]/50">
-                              {notification.time}
+                              {formatRelativeTime(notification.createdAt)}
                             </span>
                           </div>
 
