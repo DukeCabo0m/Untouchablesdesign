@@ -18,31 +18,51 @@ export function HeroSection() {
 
   return (
     <section className="relative h-[100svh] md:min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background video - YouTube embed in full cover mode */}
+      {/* Background video - YouTube with hidden controls */}
       <div className="absolute inset-0 overflow-hidden">
-        <iframe
-          src="https://www.youtube.com/embed/pr3x7tS__dE?autoplay=1&mute=1&loop=1&playlist=pr3x7tS__dE&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
-          title="Korn Live Background"
-          allow="autoplay; encrypted-media"
+        {/* Outer container - enlarged to push controls outside */}
+        <div
+          className="absolute"
           style={{
-            filter: 'grayscale(100%)',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            width: '300vw',
-            height: '300vh',
-            transform: 'translate(-50%, -50%)',
+            top: '-20%',
+            left: '-20%',
+            width: '140%',
+            height: '140%',
             pointerEvents: 'none',
-            border: 'none',
           }}
-        />
+        >
+          <iframe
+            src="https://www.youtube.com/embed/pr3x7tS__dE?autoplay=1&mute=1&loop=1&playlist=pr3x7tS__dE&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1&fs=0&iv_load_policy=3"
+            title="Korn Live Background"
+            allow="autoplay; encrypted-media"
+            style={{
+              filter: 'grayscale(100%)',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              width: '177.77vh',
+              height: '100vw',
+              minWidth: '100%',
+              minHeight: '100%',
+              transform: 'translate(-50%, -50%)',
+              pointerEvents: 'none',
+              border: 'none',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
+        {/* Larger masks to hide all YouTube UI */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent z-[5]" />
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent z-[5]" />
+        <div className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent z-[5]" />
+        <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent z-[5]" />
       </div>
 
       {/* Dark overlay pour améliorer la lisibilité */}
-      <div className="absolute inset-0 bg-[#0A0A0A] opacity-70" />
+      <div className="absolute inset-0 bg-[#0A0A0A] opacity-70 z-20" />
 
       {/* Content */}
-      <div className="relative z-10 text-center px-4 md:px-6 lg:px-8 max-w-5xl mx-auto">
+      <div className="relative z-30 text-center px-4 md:px-6 lg:px-8 max-w-5xl mx-auto">
         {/* Logo/Brand */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -96,7 +116,7 @@ export function HeroSection() {
 
       {/* Bottom ticker */}
       <motion.div
-        className="absolute bottom-0 left-0 w-full py-2 md:py-3 overflow-hidden"
+        className="absolute bottom-0 left-0 w-full py-2 md:py-3 overflow-hidden z-30"
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         transition={{ delay: 1.5, duration: 0.5 }}
